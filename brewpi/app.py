@@ -5,7 +5,7 @@ import sys
 
 from flask import Flask, render_template
 
-from brewpi import commands, public, user
+from brewpi import api, commands, heater, public, user
 from brewpi.extensions import (
     bcrypt,
     cache,
@@ -50,7 +50,9 @@ def register_extensions(app):
 def register_blueprints(app):
     """Register Flask blueprints."""
     app.register_blueprint(public.views.blueprint)
+    app.register_blueprint(api.views.blueprint)
     app.register_blueprint(user.views.blueprint)
+    app.register_blueprint(heater.views.blueprint)
     return None
 
 
@@ -73,7 +75,7 @@ def register_shellcontext(app):
 
     def shell_context():
         """Shell context objects."""
-        return {"db": db, "User": user.models.User}
+        return {"db": db, "User": user.models.User, "Heater": heater.models.Heater}
 
     app.shell_context_processor(shell_context)
 

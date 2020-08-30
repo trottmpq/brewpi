@@ -4,13 +4,7 @@ import datetime as dt
 
 from flask_login import UserMixin
 
-from brewpi.database import (
-    Column,
-    PkModel,
-    db,
-    reference_col,
-    relationship,
-)
+from brewpi.database import Column, PkModel, db, reference_col, relationship
 from brewpi.extensions import bcrypt
 
 

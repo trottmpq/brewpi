@@ -5,7 +5,7 @@ import sys
 
 from flask import Flask, render_template
 
-from brewpi import api, commands, heater, public, user
+from brewpi import api, commands, heater, kettle, public, temp_sensor, user
 from brewpi.extensions import (
     bcrypt,
     cache,
@@ -53,6 +53,8 @@ def register_blueprints(app):
     app.register_blueprint(api.views.blueprint)
     app.register_blueprint(user.views.blueprint)
     app.register_blueprint(heater.views.blueprint)
+    app.register_blueprint(temp_sensor.views.blueprint)
+    app.register_blueprint(kettle.views.blueprint)
     return None
 
 

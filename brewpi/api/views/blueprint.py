@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 """API views."""
 from flask import Blueprint
+from flask_restful import Api
 
 from .heater import HeaterApi, HeaterItemApi
+from .kettle import KettleApi, KettleItemApi
 from .tempsensor import TempSensorApi, TempSensorItemApi
 
-blueprint = Blueprint("api", __name__, url_prefix="/api", static_folder="../static")
+blueprint = Blueprint("api", __name__, url_prefix="/api")
+api = Api(blueprint)
 
-blueprint.add_url_rule("/heater", view_func=HeaterApi.as_view("heater_api"))
-blueprint.add_url_rule(
-    "/heater/<id>", view_func=HeaterItemApi.as_view("heater_item_api")
-)
-blueprint.add_url_rule("/tempsensor", view_func=TempSensorApi.as_view("tempsensor_api"))
-blueprint.add_url_rule(
-    "/tempsensor/<id>", view_func=TempSensorItemApi.as_view("tempsensor_item_api")
-)
+api.add_resource(KettleApi, "/kettle")
+api.add_resource(KettleItemApi, "/kettle/<id>")
+api.add_resource(HeaterApi, "/heater")
+api.add_resource(HeaterItemApi, "/heater/<id>")
+api.add_resource(TempSensorApi, "/tempsensor")
+api.add_resource(TempSensorItemApi, "/tempsensor/<id>")

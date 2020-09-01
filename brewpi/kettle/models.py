@@ -11,8 +11,10 @@ class Kettle(PkModel):
     name = Column(db.String(80), unique=True, nullable=False)
     heater_id = reference_col("heaters", nullable=True)
     heater = relationship("Heater", backref="kettles")
+    tempsense_id = reference_col("tempsensors", nullable=True)
+    tempsense = relationship("TempSensor", backref="kettles")
 
-    def __init__(self, name, gpio_num, **kwargs):
+    def __init__(self, name, **kwargs):
         """Create instance."""
         super().__init__(name=name, **kwargs)
 
@@ -24,5 +26,7 @@ class Kettle(PkModel):
         """Represent instance as a dict."""
         return {
             "id": self.id,
-            "name": self.name
+            "name": self.name,
+            "heater_id": self.heater_id,
+            "tempsense_id": self.tempsense_id,
         }

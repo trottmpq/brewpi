@@ -96,6 +96,16 @@ class TestHeater:
         assert heater.state is False
         assert Heater.query.get(heater.id) is heater
 
+    def test_create_method_kwargs(self):
+        """Create a heater."""
+        data = {"name": "foo", "gpio_num": 1}
+        heater = Heater.create(**data)
+
+        assert "foo" == heater.name
+        assert 1 == heater.gpio_num
+        assert heater.state is False
+        assert Heater.query.get(heater.id) is heater
+
     def test_update_method(self):
         """Update a heater."""
         heater = Heater.create(name="foo", gpio_num=1)

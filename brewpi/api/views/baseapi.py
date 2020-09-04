@@ -1,41 +1,31 @@
 # -*- coding: utf-8 -*-
 """Heater API views."""
-from flask import current_app, jsonify, make_response
-from flask_restful import Resource, abort, marshal, reqparse
+from flask import current_app, request
+from flask_restful import Resource, abort
 
 
 class BaseApi(Resource):
     """View for '/api/heater' ."""
 
-    def __init__(self):
-        """Initialise the Base API Class."""
-        self.fields = None
-        self.model = None
-        self.reqparse = reqparse.RequestParser()
-
     def get(self):
         """Return the entire inventory collection."""
         results = self.model.query.all()
-        results_array = [result.serialize() for result in results]
-        return jsonify(results_array)
+        self.schema.many = True
+        response = self.schema.dump(results)
+        self.schema.many = False
+        return response
 
     def post(self):
         """Create an item."""
-        args = self.reqparse.parse_args()
-        data = dict(marshal(args, self.fields))
+        args = request.get_json()
+        data = self.schema.load(args)
         current_app.logger.info(f"New Item Data: {data}")
         new_item = self.model.create(**data)
-        return new_item.serialize(), 201
+        return self.schema.jsonify(new_item)
 
 
 class BaseItemApi(Resource):
     """/api/heater/<id>."""
-
-    def __init__(self):
-        """Initialise the Base API Class."""
-        self.fields = None
-        self.model = None
-        self.reqparse = reqparse.RequestParser()
 
     def abort_if_item_doesnt_exist(self, id):
         """Return a 404 if item doesn't exist."""
@@ -54,21 +44,24 @@ class BaseItemApi(Resource):
     def get(self, id):
         """Get an item."""
         item = self.abort_if_item_doesnt_exist(id)
-        return jsonify(item.serialize())
+        return self.schema.dump(item)
 
     def put(self, id):
         """Update/replace an item."""
         item = self.abort_if_item_doesnt_exist(id)
-        args = self.reqparse.parse_args()
-        for k, v in args.items():
-            if v is not None:
-                if hasattr(item, k):
-                    setattr(item, k, v)
-        item.save()
-        return make_response(jsonify(item.serialize()))
+        args = request.get_json()
+        data = self.schema.validate(args, partial=True)
+        if not data:
+            for k, v in args.items():
+                if v is not None:
+                    if hasattr(item, k):
+                        setattr(item, k, v)
+            item.save()
+            return self.schema.dump(item)
+        return abort(404, message='Invalid Fields. Cannot Update Item')
 
     def delete(self, id):
         """Delete an item."""
         item = self.abort_if_item_doesnt_exist(id)
         item.delete()
-        return jsonify({}), 204
+        return self.schema.dump(item)

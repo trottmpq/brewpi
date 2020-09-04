@@ -5,7 +5,7 @@ import sys
 
 from flask import Flask, render_template
 
-from brewpi import api, commands, heater, kettle, public, temp_sensor, user
+from brewpi import api, commands, devices, public, user
 from brewpi.extensions import (
     bcrypt,
     cache,
@@ -14,6 +14,7 @@ from brewpi.extensions import (
     debug_toolbar,
     flask_static_digest,
     login_manager,
+    ma,
     migrate,
 )
 
@@ -39,6 +40,7 @@ def register_extensions(app):
     bcrypt.init_app(app)
     cache.init_app(app)
     db.init_app(app)
+    ma.init_app(app)
     csrf_protect.init_app(app)
     login_manager.init_app(app)
     debug_toolbar.init_app(app)
@@ -50,11 +52,9 @@ def register_extensions(app):
 def register_blueprints(app):
     """Register Flask blueprints."""
     app.register_blueprint(public.views.blueprint)
-    app.register_blueprint(api.views.blueprint)
     app.register_blueprint(user.views.blueprint)
-    app.register_blueprint(heater.views.blueprint)
-    app.register_blueprint(temp_sensor.views.blueprint)
-    app.register_blueprint(kettle.views.blueprint)
+    app.register_blueprint(devices.views.blueprint)
+    app.register_blueprint(api.views.blueprint)
     return None
 
 

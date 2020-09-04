@@ -14,6 +14,11 @@ SQLAlchemy = "*"
 psycopg2-binary = "*"
 # Migrations
 Flask-Migrate = "*"
+# Schemas
+marshmallow-sqlalchemy = "*"
+flask-marshmallow = "*"
+# API
+flask-restful = "*"
 # Forms
 email-validator = "==1.1.1"
 Flask-WTF = "==0.14.3"
@@ -34,8 +39,6 @@ Flask-DebugToolbar = "==0.11.0"
 # Environment variable parsing
 environs = "==8.0.0"
 simple-pid = "*"
-flask-restful = "*"
-requests = "*"
 
 [dev-packages]
 # Testing

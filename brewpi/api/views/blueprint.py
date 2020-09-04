@@ -5,7 +5,7 @@ from flask_restful import Api
 
 from .heater import HeaterApi, HeaterItemApi
 from .kettle import KettleApi, KettleItemApi
-from .tempsensor import TempSensorListApi, TempSensorItemApi, TempSensorTempApi
+from .tempsensor import TempSensorItemApi, TempSensorListApi, TempSensorTempApi
 
 blueprint = Blueprint("api", __name__, url_prefix="/api")
 api = Api(blueprint)

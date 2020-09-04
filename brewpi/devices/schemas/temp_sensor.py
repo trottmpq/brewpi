@@ -21,4 +21,4 @@ class TempSensorTempSchema(ma.SQLAlchemyAutoSchema):
         """A Temperature Sensor Schema Metaclass."""
 
         model = TempSensor
-        fields = ['temperature']
+        fields = ["temperature"]

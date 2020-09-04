@@ -11,7 +11,7 @@ class TempSensor(PkModel):
     name = Column(db.String(80), unique=True, nullable=False)
     gpio_num = Column(db.Integer(), nullable=False)
     temperature = Column(db.Float(), default=False, nullable=False)
-    kettle = relationship('Kettle', backref="TempSensor", lazy='dynamic')
+    kettle = relationship("Kettle", backref="TempSensor", lazy="dynamic")
 
     def __init__(self, name, gpio_num, **kwargs):
         """Create instance."""

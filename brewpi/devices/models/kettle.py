@@ -9,7 +9,7 @@ class Kettle(PkModel):
 
     __tablename__ = "kettles"
     name = Column(db.String(80), unique=True, nullable=False)
-    heater = relationship('Heater', back_populates="kettle")
+    heater = relationship("Heater", back_populates="kettle")
     heater_id = reference_col("heaters", nullable=True)
     tempsense = relationship("TempSensor", back_populates="kettle")
     tempsense_id = reference_col("tempsensors", nullable=True)

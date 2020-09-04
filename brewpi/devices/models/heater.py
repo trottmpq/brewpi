@@ -11,7 +11,7 @@ class Heater(PkModel):
     name = Column(db.String(80), unique=True, nullable=False)
     gpio_num = Column(db.Integer(), nullable=False)
     state = Column(db.Boolean(), default=False, nullable=False)
-    kettle = relationship('Kettle', backref="Heater", lazy='dynamic')
+    kettle = relationship("Kettle", backref="Heater", lazy="dynamic")
 
     def __init__(self, name, gpio_num, **kwargs):
         """Create instance."""

@@ -58,7 +58,7 @@ class BaseItemApi(Resource):
                         setattr(item, k, v)
             item.save()
             return self.schema.dump(item)
-        return abort(404, message='Invalid Fields. Cannot Update Item')
+        return abort(404, message="Invalid Fields. Cannot Update Item")
 
     def delete(self, id):
         """Delete an item."""

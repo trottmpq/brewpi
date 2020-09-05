@@ -1,3 +1,3 @@
-from .heater import HeaterSchema  # noqa
+from .heater import HeaterSchema, HeaterStateSchema  # noqa
 from .kettle import KettleSchema  # noqa
 from .temp_sensor import TempSensorSchema, TempSensorTempSchema  # noqa

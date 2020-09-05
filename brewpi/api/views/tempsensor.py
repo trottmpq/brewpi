@@ -4,24 +4,24 @@
 from brewpi.devices.models import TempSensor
 from brewpi.devices.schemas import TempSensorSchema, TempSensorTempSchema
 
-from .baseapi import BaseApi, BaseItemApi
+from .baseapi import ListApi, ModelApi, ReadOnlyApi
 
 
-class TempSensorListApi(BaseApi):
+class TempSensorListApi(ListApi):
     """View for '/api/tempsensor' ."""
 
     model = TempSensor
     schema = TempSensorSchema()
 
 
-class TempSensorItemApi(BaseItemApi):
+class TempSensorItemApi(ModelApi):
     """/api/tempsensor/<id>."""
 
     model = TempSensor
     schema = TempSensorSchema()
 
 
-class TempSensorTempApi(BaseItemApi):
+class TempSensorTempApi(ReadOnlyApi):
     """/api/tempsensor/<id>/temperature."""
 
     model = TempSensor

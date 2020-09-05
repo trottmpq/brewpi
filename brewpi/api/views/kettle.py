@@ -4,17 +4,17 @@
 from brewpi.devices.models import Kettle
 from brewpi.devices.schemas import KettleSchema
 
-from .baseapi import BaseApi, BaseItemApi
+from .baseapi import ListApi, ModelApi
 
 
-class KettleApi(BaseApi):
+class KettleApi(ListApi):
     """View for '/api/kettle' ."""
 
     model = Kettle
     schema = KettleSchema()
 
 
-class KettleItemApi(BaseItemApi):
+class KettleItemApi(ModelApi):
     """/api/kettle/<id>."""
 
     model = Kettle

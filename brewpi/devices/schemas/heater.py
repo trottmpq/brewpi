@@ -12,3 +12,12 @@ class HeaterSchema(ma.SQLAlchemyAutoSchema):
         """A Heater Schema Metaclass."""
 
         model = Heater
+
+class HeaterStateSchema(ma.SQLAlchemyAutoSchema):
+    """A Heater Schema."""
+
+    class Meta:
+        """A Heater Schema Metaclass."""
+
+        model = Heater
+        fields = ['state']

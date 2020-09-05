@@ -85,7 +85,7 @@ class DeleteMixin:
         item.delete()
         return self.schema.dump(item)
 
-    def abort_if_item_does_exist(self, id):
+    def abort_if_item_doesnt_exist(self, id):
         """Return a 404 if item doesn't exist."""
         item = self.model.get_by_id(id)
         if item:

@@ -4,6 +4,7 @@
 from brewpi.database import Column, PkModel, db, relationship
 
 
+from brewpi.devices.drivers.temp_sensor import TempSensorDriver
 class TempSensor(PkModel):
     """A Temperature Sensor."""
 
@@ -22,6 +23,10 @@ class TempSensor(PkModel):
     def current_temperature(self):
         """Return the current state."""
         return self.temperature
+
+    def update(self):
+        self.temperature = TempSensorDriver.temperature(1)
+        self.save()
 
     def __repr__(self):
         """Represent instance as a unique string."""

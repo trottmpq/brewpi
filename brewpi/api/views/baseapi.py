@@ -36,6 +36,9 @@ class RetrieveMixin:
         """Get an item."""
         id = kwargs.get("id")
         item = self.abort_if_item_doesnt_exist(id)
+        if self.model.update:
+            instance = self.model.query.get(id)
+            self.model.update(instance)
         return self.schema.dump(item)
 
     def abort_if_item_doesnt_exist(self, id):

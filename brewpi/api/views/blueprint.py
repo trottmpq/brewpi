@@ -3,7 +3,7 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from .heater import HeaterListApi, HeaterItemApi, HeaterStateApi
+from .heater import HeaterItemApi, HeaterListApi, HeaterStateApi
 from .kettle import KettleApi, KettleItemApi
 from .tempsensor import TempSensorItemApi, TempSensorListApi, TempSensorTempApi
 

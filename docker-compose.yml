@@ -20,24 +20,24 @@ services:
     image: "brewpi-development"
     ports:
       - "5000:5000"
-      - "2992:2992"
+      - "3000:3000"
     <<: *default_volumes
 
-  flask-prod:
-    build:
-      context: .
-      target: production
-      args:
-        <<: *build_args
-    image: "brewpi-production"
-    ports:
-      - "5000:5000"
-    environment:
-      FLASK_ENV: production
-      FLASK_DEBUG: 0
-      LOG_LEVEL: info
-      GUNICORN_WORKERS: 4
-    <<: *default_volumes
+  # flask-prod:
+  #   build:
+  #     context: .
+  #     target: production
+  #     args:
+  #       <<: *build_args
+  #   image: "brewpi-production"
+  #   ports:
+  #     - "5000:5000"
+  #   environment:
+  #     FLASK_ENV: production
+  #     FLASK_DEBUG: 0
+  #     LOG_LEVEL: info
+  #     GUNICORN_WORKERS: 4
+  #   <<: *default_volumes
 
   manage:
     build:

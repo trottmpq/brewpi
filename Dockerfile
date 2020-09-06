@@ -1,5 +1,5 @@
 # ==================================== BASE ====================================
-ARG INSTALL_PYTHON_VERSION=${INSTALL_PYTHON_VERSION:-3.7}
+ARG INSTALL_PYTHON_VERSION=${INSTALL_PYTHON_VERSION:-3.8}
 FROM python:${INSTALL_PYTHON_VERSION}-slim-buster AS base
 
 RUN apt-get update
@@ -9,8 +9,12 @@ RUN apt-get install -y \
 
 ARG INSTALL_NODE_VERSION=${INSTALL_NODE_VERSION:-12}
 RUN curl -sL https://deb.nodesource.com/setup_${INSTALL_NODE_VERSION}.x | bash -
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - 
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update
 RUN apt-get install -y \
     nodejs \
+    yarn \
     && apt-get -y autoclean
 
 WORKDIR /app
@@ -23,23 +27,23 @@ RUN useradd -m sid
 RUN chown -R sid:sid /app
 USER sid
 ENV PATH="/home/sid/.local/bin:${PATH}"
-RUN npm install
 
 # ================================= DEVELOPMENT ================================
 FROM base AS development
 RUN pipenv install --dev
-EXPOSE 2992
+# RUN yarn
+EXPOSE 3000
 EXPOSE 5000
-CMD [ "pipenv", "run", "npm", "start" ]
+CMD [ "pipenv", "run", "yarn", "start" ]
 
 # ================================= PRODUCTION =================================
-FROM base AS production
-RUN pipenv install
-COPY supervisord.conf /etc/supervisor/supervisord.conf
-COPY supervisord_programs /etc/supervisor/conf.d
-EXPOSE 5000
-ENTRYPOINT ["/bin/bash", "shell_scripts/supervisord_entrypoint.sh"]
-CMD ["-c", "/etc/supervisor/supervisord.conf"]
+# FROM base AS production
+# RUN pipenv install
+# COPY supervisord.conf /etc/supervisor/supervisord.conf
+# COPY supervisord_programs /etc/supervisor/conf.d
+# EXPOSE 5000
+# ENTRYPOINT ["/bin/bash", "shell_scripts/supervisord_entrypoint.sh"]
+# CMD ["-c", "/etc/supervisor/supervisord.conf"]
 
 # =================================== MANAGE ===================================
 FROM base AS manage

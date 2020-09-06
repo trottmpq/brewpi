@@ -11,6 +11,7 @@ class TempSensor(PkModel):
     __tablename__ = "tempsensors"
     name = Column(db.String(80), unique=True, nullable=False)
     gpio_num = Column(db.Integer(), nullable=False)
+    activeLow = Column(db.Boolean(), default=True, nullable=False)
     temperature = Column(db.Float(), default=False, nullable=False)
     kettle = relationship("Kettle", backref="TempSensor", lazy="dynamic")
 
@@ -25,7 +26,7 @@ class TempSensor(PkModel):
         return self.temperature
 
     def update(self):
-        self.temperature = TempSensorDriver.temperature(1)
+        self.temperature = TempSensorDriver.read(self.gpio_num, self.activeLow)
         self.save()
 
     def __repr__(self):

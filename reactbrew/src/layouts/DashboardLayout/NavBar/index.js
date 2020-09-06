@@ -8,17 +8,37 @@ import {
   List,
   makeStyles
 } from '@material-ui/core';
-import {
-  Home as HomeIcon,
-} from 'react-feather';
+import { FaBeer } from "react-icons/fa";
+import { RiTempColdLine } from "react-icons/ri";
+import { GiHeatHaze, GiCookingPot, GiWaterDrop } from "react-icons/gi";
 import NavItem from './NavItem';
 
 const items = [
   {
     href: '/app/home',
-    icon: HomeIcon,
-    title: 'Home'
-  }
+    icon: FaBeer,
+    title: 'Home',
+  },
+  {
+    href: '/app/tempsensors',
+    icon: RiTempColdLine,
+    title: 'Temp Sensors',
+  },
+  {
+    href: '/app/heaters',
+    icon: GiHeatHaze,
+    title: 'Heaters',
+  },
+  {
+    href: '/app/kettles',
+    icon: GiCookingPot,
+    title: 'Kettles',
+  },
+  {
+    href: '/app/pumps',
+    icon: GiWaterDrop,
+    title: 'Pumps',
+  },
 ];
 
 const useStyles = makeStyles(() => ({

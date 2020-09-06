@@ -5,18 +5,17 @@ import PropTypes from 'prop-types';
 import {
   AppBar,
   Box,
-  Typography,
+  Hidden,
+  IconButton,
   Toolbar,
+  Typography,
   makeStyles
 } from '@material-ui/core';
-import Logo from 'src/components/Logo'; 
+import MenuIcon from '@material-ui/icons/Menu';
+import Logo from 'src/components/Logo';
 
 const useStyles = makeStyles(() => ({
-  root: {},
-  avatar: {
-    width: 60,
-    height: 60
-  }
+  root: {}
 }));
 
 const TopBar = ({
@@ -44,6 +43,14 @@ const TopBar = ({
           M&H Brew Co.
         </Typography>
         <Box flexGrow={1} />
+        <Hidden lgUp>
+          <IconButton
+            color="inherit"
+            onClick={onMobileNavOpen}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Hidden>
       </Toolbar>
     </AppBar>
   );

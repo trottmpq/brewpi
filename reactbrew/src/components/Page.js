@@ -12,8 +12,14 @@ const Page = forwardRef(({
       ref={ref}
       {...rest}
     >
-      <Helmet>
+      <Helmet 
+        defaultTitle="M&H BrewCo."
+        titleTemplate="M&H BrewCo. - %s"
+      >
         <title>{title}</title>
+        <html lang='en' />
+        <meta name="description" content="M&H BrewCo. Brew Controller" />
+        <noscript>You need to enable JavaScript to run this app.</noscript>
       </Helmet>
       {children}
     </div>

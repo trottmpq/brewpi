@@ -4,6 +4,10 @@ import DashboardLayout from 'src/layouts/DashboardLayout';
 import MainLayout from 'src/layouts/MainLayout';
 import HomePageView from 'src/views/HomePageView';
 import NotFoundView from 'src/views/errors/NotFoundView';
+import TempSensorView from 'src/views/TempSensorView';
+import HeaterView from 'src/views/HeaterView';
+import KettleView from 'src/views/KettleView';
+import PumpView from 'src/views/PumpView';
 
 const routes = [
   {
@@ -11,6 +15,10 @@ const routes = [
     element: <DashboardLayout />,
     children: [
       { path: 'home', element: <HomePageView /> },
+      { path: 'tempsensors', element: <TempSensorView /> },
+      { path: 'heaters', element: <HeaterView /> },
+      { path: 'kettles', element: <KettleView /> },
+      { path: 'pumps', element: <PumpView /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   },

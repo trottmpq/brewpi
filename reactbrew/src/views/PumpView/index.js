@@ -15,13 +15,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const HomePage = () => {
+const Pump = () => {
   const classes = useStyles();
 
   return (
     <Page
       className={classes.root}
-      title="Home"
+      title="Pumps"
     >
       <Container maxWidth={false}>
         <Grid
@@ -35,7 +35,7 @@ const HomePage = () => {
             xl={3}
             xs={12}
           >
-            <p>HOME PAGE</p>
+            <p>Pump</p>
           </Grid>
         </Grid>
       </Container>
@@ -43,4 +43,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Pump;

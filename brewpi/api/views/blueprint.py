@@ -6,6 +6,7 @@ from flask_restful import Api
 from .heater import HeaterItemApi, HeaterListApi, HeaterStateApi
 from .kettle import KettleApi, KettleItemApi
 from .tempsensor import TempSensorItemApi, TempSensorListApi, TempSensorTempApi
+from .pump import PumpItemApi, PumpListApi, PumpStateApi
 
 blueprint = Blueprint("api", __name__, url_prefix="/api")
 api = Api(blueprint)
@@ -18,3 +19,6 @@ api.add_resource(HeaterStateApi, "/heater/<id>/state")
 api.add_resource(TempSensorListApi, "/tempsensor")
 api.add_resource(TempSensorItemApi, "/tempsensor/<id>")
 api.add_resource(TempSensorTempApi, "/tempsensor/<id>/temperature")
+api.add_resource(PumpListApi, "/pump")
+api.add_resource(PumpItemApi, "/pump/<id>")
+api.add_resource(PumpStateApi, "/pump/<id>/state")

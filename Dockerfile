@@ -9,8 +9,12 @@ RUN apt-get install -y \
 
 ARG INSTALL_NODE_VERSION=${INSTALL_NODE_VERSION:-12}
 RUN curl -sL https://deb.nodesource.com/setup_${INSTALL_NODE_VERSION}.x | bash -
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - 
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update
 RUN apt-get install -y \
     nodejs \
+    yarn \
     && apt-get -y autoclean
 
 WORKDIR /app
@@ -23,12 +27,11 @@ RUN useradd -m sid
 RUN chown -R sid:sid /app
 USER sid
 ENV PATH="/home/sid/.local/bin:${PATH}"
-RUN npm install -g yarn
-RUN yarn
 
 # ================================= DEVELOPMENT ================================
 FROM base AS development
 RUN pipenv install --dev
+# RUN yarn
 EXPOSE 3000
 EXPOSE 5000
 CMD [ "pipenv", "run", "yarn", "start" ]

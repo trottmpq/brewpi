@@ -36,9 +36,8 @@ class RetrieveMixin:
         """Get an item."""
         id = kwargs.get("id")
         item = self.abort_if_item_doesnt_exist(id)
-        if self.model.update:
-            instance = self.model.query.get(id)
-            self.model.update(instance)
+        if item.update:
+            item.update()
         return self.schema.dump(item)
 
     def abort_if_item_doesnt_exist(self, id):
@@ -64,6 +63,8 @@ class UpdateMixin:
                     if hasattr(item, k):
                         setattr(item, k, v)
             item.save()
+            if item.update:
+                item.update()
             return self.schema.dump(item)
         return abort(404, message="Invalid Fields. Cannot Update Item")
 

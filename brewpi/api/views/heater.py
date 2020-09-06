@@ -4,7 +4,7 @@
 from brewpi.devices.models import Heater
 from brewpi.devices.schemas import HeaterSchema, HeaterStateSchema
 
-from .baseapi import ListApi, ModelApi
+from .baseapi import ListApi, ModelApi, RetrieveUpdateApi
 
 
 class HeaterListApi(ListApi):
@@ -21,7 +21,7 @@ class HeaterItemApi(ModelApi):
     schema = HeaterSchema()
 
 
-class HeaterStateApi(ModelApi):
+class HeaterStateApi(RetrieveUpdateApi):
     """/api/heater/<id>."""
 
     model = Heater

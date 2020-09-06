@@ -3,6 +3,7 @@
 
 from brewpi.database import Column, PkModel, db, relationship
 
+from brewpi.devices.drivers.gpio_control import GpioControl
 
 class Heater(PkModel):
     """A Heater."""
@@ -11,6 +12,7 @@ class Heater(PkModel):
     name = Column(db.String(80), unique=True, nullable=False)
     gpio_num = Column(db.Integer(), nullable=False)
     state = Column(db.Boolean(), default=False, nullable=False)
+    activeLow = Column(db.Boolean(), default=False, nullable=False)
     kettle = relationship("Kettle", backref="Heater", lazy="dynamic")
 
     def __init__(self, name, gpio_num, **kwargs):
@@ -21,11 +23,18 @@ class Heater(PkModel):
     def turn_on(self):
         """Turn heater on."""
         self.state = True
+        GpioControl.write(self.gpio_num, True, self.activeLow)
 
     def turn_off(self):
         """Turn heater off."""
         self.state = False
+        GpioControl.write(self.gpio_num, False, self.activeLow)
 
+    def update(self):
+        if self.state:
+            self.turn_on()
+        else:
+            self.turn_off()
     @property
     def current_state(self):
         """Return the current state."""

@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   Container,
-  Grid
+  Typography
 } from '@material-ui/core';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/styles';
 import Page from 'src/components/Page';
-import Heaters from './heaters';
+import HeaterList from './heaterlist';
 
 
 const styles = theme => ({
@@ -27,20 +29,16 @@ class Heater extends Component {
         title="Heaters"
       >
         <Container maxWidth={false}>
-          <Grid
-            container
-            spacing={3}
-          >
-            <Grid
-              item
-              lg={3}
-              sm={6}
-              xl={3}
-              xs={12}
-            >
-              <Heaters heaters={this.state.heaters} />
-            </Grid>
-          </Grid>
+          <Typography variant="h1" component="h2">
+            Heater List
+          </Typography>
+          <HeaterList heaters={this.state.heaters} />
+        </Container>
+        <Container maxWidth={false}>
+
+        <Fab color="primary" aria-label="add" position="absolute" bottom="10px" right="10px">
+            <AddIcon />
+          </Fab>
         </Container>
       </Page>
     )

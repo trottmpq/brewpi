@@ -31,10 +31,9 @@ ENV PATH="/home/sid/.local/bin:${PATH}"
 # ================================= DEVELOPMENT ================================
 FROM base AS development
 RUN pipenv install --dev
-# RUN yarn
+RUN yarn
 EXPOSE 3000
 EXPOSE 5000
-CMD [ "pipenv", "run", "yarn", "start" ]
 
 # ================================= PRODUCTION =================================
 # FROM base AS production
@@ -48,4 +47,4 @@ CMD [ "pipenv", "run", "yarn", "start" ]
 # =================================== MANAGE ===================================
 FROM base AS manage
 COPY --from=development /home/sid/.local/share/virtualenvs/ /home/sid/.local/share/virtualenvs/
-ENTRYPOINT [ "pipenv", "run", "flask" ]
+ENTRYPOINT [ "pipenv", "run", "yarn", "start" ]

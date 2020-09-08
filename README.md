@@ -46,8 +46,14 @@ Run the following commands to bootstrap your environment if you are unable to ru
 cd brewpi
 pipenv install --dev
 pipenv shell
-npm install
-npm start  # run the webpack dev server and flask server using concurrently
+curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+source ~/.profile
+nvm install 12
+nvm use 12
+npm install -g yarn
+yarn
+cp .env.example .env
+yarn start # run the webpack dev server and flask server using concurrently
 ```
 
 You will see a pretty welcome screen.

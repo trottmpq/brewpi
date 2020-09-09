@@ -26,7 +26,7 @@ class TempSensor(PkModel):
         return self.temperature
 
     def update(self):
-        self.temperature = TempSensorDriver.read(self.gpio_num, self.activeLow)
+        self.temperature = TempSensorDriver.getTemp_degc(self.gpio_num, self.activeLow)
         self.save()
 
     def __repr__(self):

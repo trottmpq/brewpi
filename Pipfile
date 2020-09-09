@@ -4,46 +4,34 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-# Flask
 Flask = "*"
 Werkzeug = "*"
 click = ">=5.0"
-# Database
 Flask-SQLAlchemy = "*"
 SQLAlchemy = "*"
-psycopg2-binary = "*"
-# Migrations
 Flask-Migrate = "*"
-# Schemas
 marshmallow-sqlalchemy = "*"
 flask-marshmallow = "*"
-# API
 flask-restful = "*"
-# Forms
 email-validator = "==1.1.1"
 Flask-WTF = "==0.14.3"
 WTForms = "==2.3.3"
-# Deployment
 gevent = "==20.6.2"
 gunicorn = ">=19.1.1"
 supervisor = "==4.2.1"
-# Flask Static Digest
 Flask-Static-Digest = "==0.1.3"
-# Caching
 Flask-Caching = ">=1.0.0"
-# Debug toolbar
 Flask-DebugToolbar = "==0.11.0"
-# Environment variable parsing
 environs = "==8.0.0"
 simple-pid = "*"
+spidev = "*"
+"rpi.gpio" = "*"
 
 [dev-packages]
-# Testing
 pytest = "*"
 WebTest = "*"
 factory-boy = "*"
 pdbpp = "*"
-# Lint and code style
 black = "==19.10b0"
 flake8 = "*"
 flake8-blind-except = "*"

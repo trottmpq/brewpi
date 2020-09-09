@@ -86,7 +86,7 @@ except:
             max = 100
             n = datetime.now().time()
             seconds = float(n.second) + float(n.microsecond)/1000000.0
-            return (math.sin(seconds*2*math.pi/60/gpio) + 1)*max/2
+            return (math.sin(seconds*2*math.pi/60/(gpio+1)) + 1)*max/2
 class pt100():
 
 

@@ -1,44 +1,38 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {
-  Box,
-  Drawer,
-  Hidden,
-  List,
-  makeStyles
-} from '@material-ui/core';
-import { FaBeer } from "react-icons/fa";
-import { RiTempColdLine } from "react-icons/ri";
-import { GiHeatHaze, GiCookingPot, GiWaterDrop } from "react-icons/gi";
+import { Box, Drawer, Hidden, List, makeStyles } from '@material-ui/core';
+import { FaBeer } from 'react-icons/fa';
+import { RiTempColdLine } from 'react-icons/ri';
+import { GiHeatHaze, GiCookingPot, GiWaterDrop } from 'react-icons/gi';
 import NavItem from './NavItem';
 
 const items = [
   {
     href: '/app/home',
     icon: FaBeer,
-    title: 'Home',
+    title: 'Home'
   },
   {
     href: '/app/tempsensors',
     icon: RiTempColdLine,
-    title: 'Temp Sensors',
+    title: 'Temp Sensors'
   },
   {
     href: '/app/heaters',
     icon: GiHeatHaze,
-    title: 'Heaters',
+    title: 'Heaters'
   },
   {
     href: '/app/kettles',
     icon: GiCookingPot,
-    title: 'Kettles',
+    title: 'Kettles'
   },
   {
     href: '/app/pumps',
     icon: GiWaterDrop,
-    title: 'Pumps',
-  },
+    title: 'Pumps'
+  }
 ];
 
 const useStyles = makeStyles(() => ({
@@ -69,14 +63,10 @@ const NavBar = ({ onMobileClose, openMobile }) => {
   }, [location.pathname]);
 
   const content = (
-    <Box
-      height="100%"
-      display="flex"
-      flexDirection="column"
-    >
+    <Box height="100%" display="flex" flexDirection="column">
       <Box p={2}>
         <List>
-          {items.map((item) => (
+          {items.map(item => (
             <NavItem
               href={item.href}
               key={item.title}
@@ -86,7 +76,6 @@ const NavBar = ({ onMobileClose, openMobile }) => {
           ))}
         </List>
       </Box>
-
     </Box>
   );
 

@@ -33,30 +33,18 @@ class Heater extends Component {
           <Typography variant="h1" component="h2">
             Heater List
           </Typography>
-          <HeaterList heaters={this.state.heaters} />
+          <HeaterList/>
           <Fab
             color="primary"
             aria-label="add"
             className={classes.fab}
+            onClick={() => { alert('clicked') }}
           >
             <AddIcon />
           </Fab>
         </Container>
       </Page>
     );
-  }
-
-  state = {
-    heaters: []
-  };
-
-  componentDidMount() {
-    fetch('/api/heater')
-      .then(res => res.json())
-      .then(data => {
-        this.setState({ heaters: data });
-      })
-      .catch(console.log);
   }
 }
 Heater.propTypes = {

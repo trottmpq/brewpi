@@ -27,7 +27,7 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
         <RouterLink to="/">
           <Logo />
         </RouterLink>
-        <Typography align="center" color="white" variant="h1">
+        <Typography align="center" color="textPrimary" variant="h1">
           M&H Brew Co.
         </Typography>
         <Box flexGrow={1} />

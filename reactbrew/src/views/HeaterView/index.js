@@ -13,6 +13,14 @@ const styles = theme => ({
     minHeight: '100%',
     paddingBottom: theme.spacing(3),
     paddingTop: theme.spacing(3)
+  },
+  fab: {
+    margin: 0,
+    top: 'auto',
+    left: 'auto',
+    bottom: 20,
+    right: 20,
+    position: 'fixed'
   }
 });
 
@@ -26,14 +34,10 @@ class Heater extends Component {
             Heater List
           </Typography>
           <HeaterList heaters={this.state.heaters} />
-        </Container>
-        <Container maxWidth={false}>
           <Fab
             color="primary"
             aria-label="add"
-            position="absolute"
-            bottom="10px"
-            right="10px"
+            className={classes.fab}
           >
             <AddIcon />
           </Fab>

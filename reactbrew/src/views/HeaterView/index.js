@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Container, Typography } from '@material-ui/core';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/styles';
 import Page from 'src/components/Page';
 import HeaterList from './heaterlist';
+import HeaterForm from './heaterpost';
 
 const styles = theme => ({
   root: {
@@ -34,14 +33,7 @@ class Heater extends Component {
             Heater List
           </Typography>
           <HeaterList/>
-          <Fab
-            color="primary"
-            aria-label="add"
-            className={classes.fab}
-            onClick={() => { alert('clicked') }}
-          >
-            <AddIcon />
-          </Fab>
+          <HeaterForm/>
         </Container>
       </Page>
     );

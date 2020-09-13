@@ -30,7 +30,7 @@ class HeaterList extends Component {
     return (
       <Grid container spacing={3}>
         {this.state.heaters.map(heater => (
-          <Grid item lg={3} sm={6} xl={3} xs={12}>
+          <Grid item lg={3} sm={6} xl={3} xs={12} key={heater.id}>
             <Heater heater={heater} />
           </Grid>
         ))}

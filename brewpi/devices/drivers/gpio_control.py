@@ -1,17 +1,17 @@
 #Gets / Sets a GPIO on the RPi
 try:
-    import RPi.GPIO
+    import RPi.GPIO as GPIO
 
     class GpioControl:
         def write(number, on, activeLow=False):
             GPIO.setwarnings(False)
             GPIO.setmode(GPIO.BCM)
-            GPIO.setup(gpio, GPIO.OUT)
+            GPIO.setup(number, GPIO.OUT)
             high = on ^ activeLow
             if high:
-                GPIO.output(gpio, GPIO.HIGH) 
+                GPIO.output(number, GPIO.HIGH) 
             else:
-                GPIO.output(gpio, GPIO.LOW) 
+                GPIO.output(number, GPIO.LOW) 
 
         def read(number, activeLow=False):
             GPIO.setwarnings(False)

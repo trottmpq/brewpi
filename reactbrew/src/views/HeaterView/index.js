@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Container, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 import Page from 'src/components/Page';
-import HeaterList from './heaterlist';
+import ItemCardList from 'src/components/ItemCardList';
 import HeaterForm from './heaterpost';
 
 const styles = theme => ({
@@ -32,7 +32,7 @@ class Heater extends Component {
           <Typography variant="h1" component="h2">
             Heater List
           </Typography>
-          <HeaterList/>
+          <ItemCardList URL='/api/heater'/>
           <HeaterForm/>
         </Container>
       </Page>

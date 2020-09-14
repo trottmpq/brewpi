@@ -1,30 +1,47 @@
-import React from 'react';
-import { Container, Grid, makeStyles } from '@material-ui/core';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Container, Typography } from '@material-ui/core';
+import { withStyles } from '@material-ui/styles';
 import Page from 'src/components/Page';
+import ItemCardList from 'src/components/ItemCardList';
+import TempSensorForm from './tempsensorform';
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
   root: {
     backgroundColor: theme.palette.background.dark,
     minHeight: '100%',
     paddingBottom: theme.spacing(3),
     paddingTop: theme.spacing(3)
+  },
+  fab: {
+    margin: 0,
+    top: 'auto',
+    left: 'auto',
+    bottom: 20,
+    right: 20,
+    position: 'fixed'
   }
-}));
+});
 
-const TempSensor = () => {
-  const classes = useStyles();
-
-  return (
-    <Page className={classes.root} title="Temp Sensors">
-      <Container maxWidth={false}>
-        <Grid container spacing={3}>
-          <Grid item lg={3} sm={6} xl={3} xs={12}>
-            <p>Temp Sensor</p>
-          </Grid>
-        </Grid>
-      </Container>
-    </Page>
-  );
+class TempSensor extends Component {
+  render() {
+    const { classes } = this.props;
+    return (
+      <Page className={classes.root} title="Pumps">
+        <Container maxWidth={false}>
+          <Typography variant="h1" component="h2">
+            Temp Sensor List
+          </Typography>
+          <ItemCardList URL='/api/tempsensor'/>
+          <TempSensorForm/>
+        </Container>
+      </Page>
+    );
+  }
 };
 
-export default TempSensor;
+TempSensor.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(TempSensor);

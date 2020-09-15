@@ -24,6 +24,7 @@ environs = "==8.0.0"
 simple-pid = "*"
 spidev = {version = "*", sys_platform = "=='armv7l'"}
 "rpi.gpio" = {version = "*", sys_platform = "=='armv7l'"}
+pybeerxml = "*"
 
 [dev-packages]
 pytest = "*"

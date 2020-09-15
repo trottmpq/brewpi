@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f7307fd8195ac72b088475bf1238fedeedba82c4bd5fdc532362020f77d5f661"
+            "sha256": "dcf7a647ab3f2f1e0099f3fa71752265022148fd1e5127b49d87b81cb5f29071"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -224,6 +224,14 @@
             ],
             "index": "pypi",
             "version": "==0.23.1"
+        },
+        "pybeerxml": {
+            "hashes": [
+                "sha256:3763bc24b2a83321dc500013dc80a5c534f8b75d349ef5bd465b6a415644cb8b",
+                "sha256:fb7c9042c7f0d0d9125a6fb3b4b2755f834e182aca239e3496c2975afe142731"
+            ],
+            "index": "pypi",
+            "version": "==1.0.8"
         },
         "python-dateutil": {
             "hashes": [

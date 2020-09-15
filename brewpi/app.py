@@ -3,7 +3,7 @@
 import logging
 import sys
 
-from flask import Flask, render_template
+from flask import Flask, jsonify
 
 from brewpi import api, commands, devices
 from brewpi.extensions import (
@@ -59,7 +59,7 @@ def register_errorhandlers(app):
         """Render error template."""
         # If a HTTPException, pull the `code` attribute; default to 500
         error_code = getattr(error, "code", 500)
-        return render_template(f"{error_code}.html"), error_code
+        return jsonify(error=str(error_code)), error_code
 
     for errcode in [401, 404, 500]:
         app.errorhandler(errcode)(render_error)

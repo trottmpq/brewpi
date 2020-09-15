@@ -3,16 +3,19 @@
 from flask import current_app, request
 from flask_restful import Resource, abort
 
-
 class ListMixin:
     """List all available model instances."""
-
+    #Called when getting list of all
     def get(self, *args, **kwargs):
         """Return the entire inventory collection."""
         results = self.model.query.all()
+        for r in results:
+            if r.update:
+                r.update()
         self.schema.many = True
         response = self.schema.dump(results)
         self.schema.many = False
+        #this needs to call update() if available. 
         return response
 
 
@@ -31,7 +34,7 @@ class CreateMixin:
 
 class RetrieveMixin:
     """Retrieve a model instance."""
-
+    #Called when unique item is got
     def get(self, *args, **kwargs):
         """Get an item."""
         id = kwargs.get("id")
@@ -83,6 +86,7 @@ class DeleteMixin:
         """Delete an item."""
         id = kwargs.get("id")
         item = self.abort_if_item_doesnt_exist(id)
+        current_app.logger.info("Deleting id {}".format(id))
         item.delete()
         return self.schema.dump(item)
 

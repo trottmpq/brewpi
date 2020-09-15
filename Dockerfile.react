@@ -1,0 +1,14 @@
+# ================================= React Server ===============================
+FROM node:12-alpine as react
+
+WORKDIR /app
+
+COPY . .
+
+ENV PATH /app/node_modules/.bin:$PATH
+
+RUN yarn
+
+EXPOSE 3000
+
+ENTRYPOINT ["yarn", "react-server"]

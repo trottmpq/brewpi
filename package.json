@@ -5,7 +5,7 @@
     ],
     "scripts": {
         "start": "yarn --cwd reactbrew start",
-        "react-server": "yarn --cwd react-scripts start",
+        "react-server": "yarn --cwd reactbrew react-server",
         "flask-server": "pipenv run flask run --host=0.0.0.0",
         "build": "yarn --cwd reactbrew build",
         "test": "yarn --cwd reactbrew test",

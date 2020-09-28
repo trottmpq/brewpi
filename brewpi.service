@@ -1,0 +1,12 @@
+[Unit]
+Description=Brewpi service
+After=network.target
+StartLimitIntervalSec=1
+[Service]
+Type=simple
+RestartSec=1
+User=seblovett
+ExecStart=/bin/bash /home/seblovett/brewpi/start.sh
+
+[Install]
+WantedBy=multi-user.target

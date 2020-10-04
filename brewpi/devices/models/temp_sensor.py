@@ -2,9 +2,9 @@
 """Temperature models."""
 
 from brewpi.database import Column, PkModel, db, relationship
-
-
 from brewpi.devices.drivers.temp_sensor import TempSensorDriver
+
+
 class TempSensor(PkModel):
     """A Temperature Sensor."""
 

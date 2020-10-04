@@ -2,8 +2,8 @@
 """Pump models."""
 
 from brewpi.database import Column, PkModel, db, relationship
-
 from brewpi.devices.drivers.gpio_control import GpioControl
+
 
 class Pump(PkModel):
     """A Pump."""
@@ -35,6 +35,7 @@ class Pump(PkModel):
             self.turn_on()
         else:
             self.turn_off()
+
     @property
     def current_state(self):
         """Return the current state."""

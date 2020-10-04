@@ -3,9 +3,11 @@
 from flask import current_app, request
 from flask_restful import Resource, abort
 
+
 class ListMixin:
     """List all available model instances."""
-    #Called when getting list of all
+
+    # Called when getting list of all
     def get(self, *args, **kwargs):
         """Return the entire inventory collection."""
         results = self.model.query.all()
@@ -15,7 +17,7 @@ class ListMixin:
         self.schema.many = True
         response = self.schema.dump(results)
         self.schema.many = False
-        #this needs to call update() if available. 
+        # this needs to call update() if available.
         return response
 
 
@@ -34,7 +36,8 @@ class CreateMixin:
 
 class RetrieveMixin:
     """Retrieve a model instance."""
-    #Called when unique item is got
+
+    # Called when unique item is got
     def get(self, *args, **kwargs):
         """Get an item."""
         id = kwargs.get("id")

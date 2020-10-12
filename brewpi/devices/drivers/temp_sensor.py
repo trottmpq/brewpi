@@ -1,10 +1,13 @@
 # If we aren't on an RPi, this module still provides dummy data for testing.
+import numpy as np
 
 try:
     import RPi.GPIO as GPIO
     import spidev
 
     class TempSensorDriver:
+        """SPI Temp Sensor Driver."""
+
         REG_CONFIG = 0x00
         REG_RTD_MSB = 0x01
         REG_RTD_LSB = 0x02
@@ -19,96 +22,100 @@ try:
         RREF = 430  # reference resistor in Ohms
         CONFIG = 0xD1
 
-        def setup(gpio, activeLow):
-            if gpio:
+        def __init__(self, gpio_number, active_low=True):
+            """Initialise SPI Chip."""
+            self.gpio_number = gpio_number
+            self.active_low = active_low
+            if self.gpio_number:
                 GPIO.setwarnings(False)
                 GPIO.setmode(GPIO.BCM)
-                GPIO.setup(gpio, GPIO.OUT)
-                TempSensorDriver.chip_select(False, gpio, activeLow)
+                GPIO.setup(self.gpio_number, GPIO.OUT)
+                self.chip_select(False)
 
-            TempSensorDriver.write_spi(
-                gpio, TempSensorDriver.REG_CONFIG, [TempSensorDriver.CONFIG], activeLow
-            )  # set up device
-            r = TempSensorDriver.read_spi(
-                gpio, TempSensorDriver.REG_CONFIG, 1, activeLow
-            )[
-                0
-            ]  # read config back
-            if r != TempSensorDriver.CONFIG:
+            self.spi_bus = spidev.SpiDev()
+            self.spi_bus.max_speed_hz = 5000
+            self.spi_bus.mode = 1
+
+            self.write_spi(self.REG_CONFIG, [self.CONFIG])  # set up device
+            r = self.read_spi(self.REG_CONFIG, 1)[0]  # read config back
+            if r != self.CONFIG:
                 print("Error setting config")
 
-        def chip_select(select, gpio, activeLow):
-            if gpio:  # 0 or none, rely on normal SPI CS
-                if select == activeLow:
+        def chip_select(self, select):
+            """Set chip select if not normal SPI CS."""
+            if self.gpio_number:  # 0 or none, rely on normal SPI CS
+                if select == self.active_low:
                     en = GPIO.LOW
                 else:
                     en = GPIO.HIGH
-                GPIO.output(gpio, en)  # enable
+                GPIO.output(self.gpio_number, en)  # enable
 
-        def read_spi(gpio, reg, length, activeLow):
-            rtd = spidev.SpiDev()
-            rtd.open(0, 0)
-            rtd.max_speed_hz = 5000
-            rtd.mode = 1
+        def read_spi(self, reg, length):
+            """Read."""
+            # rtd = spidev.SpiDev()
+            self.spi_bus.open(0, 0)
+            # rtd.max_speed_hz = 5000
+            # rtd.mode = 1
             d = [0] * (length + 1)
             d[0] = reg
-            TempSensorDriver.chip_select(True, gpio, activeLow)
-            r = rtd.xfer2(d)
-            TempSensorDriver.chip_select(False, gpio, activeLow)
-            rtd.close()
+            self.chip_select(True)
+            r = self.spi_bus.xfer2(d)
+            self.chip_select(False)
+            self.spi_bus.close()
             return r[1:]
 
-        def write_spi(gpio, reg, data, activeLow):
-            rtd = spidev.SpiDev()
-            rtd.open(0, 0)
-            rtd.max_speed_hz = 5000
-            rtd.mode = 1
+        def write_spi(self, reg, data):
+            """Write."""
+            # rtd = spidev.SpiDev()
+            self.spi_bus.open(0, 0)
+            # rtd.max_speed_hz = 5000
+            # rtd.mode = 1
             d = list()
-            d.append(reg + TempSensorDriver.WRITE_FLAG)
+            d.append(reg + self.WRITE_FLAG)
             d.extend(data)
-            TempSensorDriver.chip_select(True, gpio, activeLow)
-            r = rtd.xfer2(d)
-            TempSensorDriver.chip_select(False, gpio, activeLow)
-            rtd.close()
+            self.chip_select(True)
+            self.spi_bus.xfer2(d)
+            self.chip_select(False)
+            self.spi_bus.close()
             return
 
-        def getTemp_degc(gpio, activeLow=True):
-            TempSensorDriver.setup(gpio, activeLow)
-            r = TempSensorDriver.read_spi(
-                gpio, TempSensorDriver.REG_RTD_MSB, 2, activeLow
-            )
+        def get_temp_c(self):
+            """Get Temperature in degrees Celcius."""
+            r = self.read_spi(self.REG_RTD_MSB, 2)
             rtdval = r[0] * 256 + r[1]
             if (rtdval % 2) == 1:  # lowest bit is a fault flag
-                r = TempSensorDriver.read_spi(
-                    gpio, TempSensorDriver.REG_FLT_STATUS, 1, activeLow
-                )[0]
+                r = self.read_spi(self.REG_FLT_STATUS, 1)[0]
                 print("Error 0x{:02x} detected".format(r))
-                TempSensorDriver.write_spi(
-                    gpio,
-                    TempSensorDriver.REG_CONFIG,
-                    [TempSensorDriver.CONFIG + 2],
-                    activeLow,
-                )  # try clear fault
+                self.write_spi(self.REG_CONFIG, [self.CONFIG + 2])  # try clear fault
                 return None  # if fault is cleared, should read okay next time.
             rtdval = rtdval / 2
-            rtdval = float(rtdval) * float(TempSensorDriver.RREF) / 32768.0
-            temp = pt100.interp_resist_to_temp(rtdval)
+            rtdval = float(rtdval) * float(self.RREF) / 32768.0
+            temp = PT100.interp_resist_to_temp(rtdval)
             return temp
 
 
-except:
+except ImportError:
     import math
     from datetime import datetime
 
     class TempSensorDriver:
-        def getTemp_degc(gpio, activeLow=True):
+        """Dummy Temp Sensor Driver."""
+
+        def __init__(self, gpio_number, active_low):
+            """Initialise Temp Sensor Driver."""
+            self.gpio_number = gpio_number
+            self.active_low = active_low
+
+        def get_temp_c(self):
+            """Get Temperature in degrees Celcius."""
             max = 100
             n = datetime.now().time()
             seconds = float(n.second) + float(n.microsecond) / 1000000.0
-            return (math.sin(seconds * 2 * math.pi / 60 / (gpio + 1)) + 1) * max / 2
+            return (math.sin(seconds * 2 * math.pi / 60 / (self.gpio_number + 1)) + 1) * max / 2
 
 
-class pt100:
+class PT100:
+    """Class to convert resistance to temperature."""
 
     temperature_vals = list(range(-200, 850 + 1))
     resistance_vals = [  # 18.52 Ohm correspond to a temperature of -200 deg C
@@ -1163,25 +1170,24 @@ class pt100:
         389.90,
         390.19,
         390.48,
-    ]  # 390.48 Ohm Pt100 resistance at 850 deg C
+    ]  # 390.48 Ohm PT100 resistance at 850 deg C
 
-    def interp_resist_to_temp(resist):
-        try:
-            import numpy as np
-
-            return np.interp(resist, pt100.resistance_vals, pt100.temperature_vals)
-        except:
-            if resist < pt100.resistance_vals[0] or resist > pt100.resistance_vals[-1]:
-                raise ValueError("Value out of range")
-            i = 0
-            while resist > pt100.resistance_vals[i + 1]:
-                i += 1
-            delta_r = pt100.resistance_vals[i + 1] - pt100.resistance_vals[i]
-            delta_t = 1.0
-            cur_dr = resist - pt100.resistance_vals[i]
-            temp = pt100.temperature_vals[i] + cur_dr / delta_r
-            return temp
+    def interp_resist_to_temp(self, resist):
+        """Interpolate resistance table to estimate temperature."""
+        return np.interp(resist, self.resistance_vals, self.temperature_vals)
+        # except ImportError:
+        #     if resist < self.resistance_vals[0] or resist > self.resistance_vals[-1]:
+        #         raise ValueError("Value out of range")
+        #     i = 0
+        #     while resist > self.resistance_vals[i + 1]:
+        #         i += 1
+        #     delta_r = self.resistance_vals[i + 1] - self.resistance_vals[i]
+        #     delta_t = 1.0
+        #     cur_dr = resist - self.resistance_vals[i]
+        #     temp = self.temperature_vals[i] + cur_dr / delta_r
+        #     return temp
 
 
 if "__main__" == __name__:
-    print(TempSensorDriver.getTemp_degc(0))
+    temp_sensor = TempSensorDriver(0)
+    print(temp_sensor.get_temp_c())

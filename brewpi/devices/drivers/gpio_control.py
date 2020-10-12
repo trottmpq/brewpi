@@ -1,42 +1,46 @@
-# Gets / Sets a GPIO on the RPi
+"""Gets / Sets a GPIO on the RPi."""
 try:
-    import RPi.GPIO as GPIO
+    import RPi.GPIO as GPIO # noqa
 
     class GpioControl:
-        def write(number, on, activeLow=False):
+        """Raspberry PI GPIO Control Class."""
+
+        def write(self, number, on, active_low=False):
             GPIO.setwarnings(False)
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(number, GPIO.OUT)
-            high = on ^ activeLow
+            high = on ^ active_low
             if high:
                 GPIO.output(number, GPIO.HIGH)
             else:
                 GPIO.output(number, GPIO.LOW)
 
-        def read(number, activeLow=False):
+        def read(self, number, active_low=False):
             GPIO.setwarnings(False)
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(number, GPIO.IN)
 
             if GPIO.input(number) == GPIO.HIGH:
-                return not activeLow
+                return not active_low
             else:
-                return activeLow
+                return active_low
             #             | AL= False | AL= True  |
             # GPIO HIGH   | True      | False     |
             # GPIO LOW    | False     | True      |
 
 
-except:
+except ImportError:
     from flask import current_app
 
     class GpioControl:
-        def write(number, on, activeLow=False):
-            if on:
-                current_app.logger.info("Write output {} ON\n".format(number))
-            else:
-                current_app.logger.info("Write output {} OFF\n".format(number))
+        """Dummy GPIO Control Class."""
 
-        def read(number, activeLow=False):
-            print("Read input {}\n".format(number))
-            return not activeLow
+        def write(self, number, on, active_low=False):
+            if on:
+                current_app.logger.info(f"Write output {number} ON\n")
+            else:
+                current_app.logger.info(f"Write output {number} OFF\n")
+
+        def read(self, number, active_low=False):
+            print(f"Read input {number}\n")
+            return not active_low

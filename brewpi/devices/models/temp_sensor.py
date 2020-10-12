@@ -19,6 +19,7 @@ class TempSensor(PkModel):
         """Create instance."""
         super().__init__(name=name, gpio_num=gpio_num, **kwargs)
         self.temperature = 0.0
+        self.temp_sensor = TempSensorDriver(self.gpio_num, self.activeLow)
 
     @property
     def current_temperature(self):
@@ -26,7 +27,7 @@ class TempSensor(PkModel):
         return self.temperature
 
     def update(self):
-        self.temperature = TempSensorDriver.getTemp_degc(self.gpio_num, self.activeLow)
+        self.temperature = self.temp_sensor.get_temp_c()
         self.save()
 
     def __repr__(self):

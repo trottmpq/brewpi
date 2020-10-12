@@ -7,15 +7,7 @@ from flask import Flask, jsonify
 from flask_wtf.csrf import CSRFError
 
 from brewpi import api, commands, devices
-from brewpi.extensions import (
-    cache,
-    csrf_protect,
-    db,
-    debug_toolbar,
-    flask_static_digest,
-    ma,
-    migrate,
-)
+from brewpi.extensions import csrf_protect, db, ma, migrate
 
 
 def create_app(config_object="brewpi.settings"):
@@ -36,13 +28,10 @@ def create_app(config_object="brewpi.settings"):
 
 def register_extensions(app):
     """Register Flask extensions."""
-    cache.init_app(app)
     db.init_app(app)
     ma.init_app(app)
     csrf_protect.init_app(app)
-    debug_toolbar.init_app(app)
     migrate.init_app(app, db)
-    flask_static_digest.init_app(app)
     return None
 
 
@@ -68,6 +57,8 @@ def register_errorhandlers(app):
     @app.errorhandler(CSRFError)
     def handle_csrf_error(e):
         return jsonify(reason=e.description), 400
+
+    return None
 
 
 def register_shellcontext(app):

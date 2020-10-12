@@ -4,5 +4,12 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.exclude": {
+			"**/__pycache__": true
+		},
+		"python.linting.flake8Enabled": true,
+		"python.linting.enabled": true,
+		"python.formatting.provider": "black"
+	}
 }

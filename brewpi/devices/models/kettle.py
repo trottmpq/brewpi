@@ -15,7 +15,7 @@ class Kettle(PkModel):
     tempsense_id = reference_col("tempsensors", nullable=True)
     pump = relationship("Pump", back_populates="kettle")
     pump_id = reference_col("pump", nullable=True)
-    
+
     def __init__(self, name, **kwargs):
         """Create instance."""
         super().__init__(name=name, **kwargs)

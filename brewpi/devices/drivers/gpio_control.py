@@ -1,4 +1,4 @@
-#Gets / Sets a GPIO on the RPi
+# Gets / Sets a GPIO on the RPi
 try:
     import RPi.GPIO as GPIO
 
@@ -9,33 +9,34 @@ try:
             GPIO.setup(number, GPIO.OUT)
             high = on ^ activeLow
             if high:
-                GPIO.output(number, GPIO.HIGH) 
+                GPIO.output(number, GPIO.HIGH)
             else:
-                GPIO.output(number, GPIO.LOW) 
+                GPIO.output(number, GPIO.LOW)
 
         def read(number, activeLow=False):
             GPIO.setwarnings(False)
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(number, GPIO.IN)
 
-            if(GPIO.input(number) == GPIO.HIGH):
+            if GPIO.input(number) == GPIO.HIGH:
                 return not activeLow
             else:
-                return activeLow 
+                return activeLow
             #             | AL= False | AL= True  |
             # GPIO HIGH   | True      | False     |
             # GPIO LOW    | False     | True      |
 
-except: 
+
+except:
     from flask import current_app
+
     class GpioControl:
         def write(number, on, activeLow=False):
             if on:
                 current_app.logger.info("Write output {} ON\n".format(number))
-            else: 
+            else:
                 current_app.logger.info("Write output {} OFF\n".format(number))
 
         def read(number, activeLow=False):
-            print("Read input {}\n".format(number))    
+            print("Read input {}\n".format(number))
             return not activeLow
-

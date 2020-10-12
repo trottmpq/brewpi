@@ -4,17 +4,10 @@ import logging
 import sys
 
 from flask import Flask, jsonify
+from flask_wtf.csrf import CSRFError
 
 from brewpi import api, commands, devices
-from brewpi.extensions import (
-    cache,
-    csrf_protect,
-    db,
-    debug_toolbar,
-    flask_static_digest,
-    ma,
-    migrate,
-)
+from brewpi.extensions import csrf_protect, db, ma, migrate
 
 
 def create_app(config_object="brewpi.settings"):
@@ -35,13 +28,10 @@ def create_app(config_object="brewpi.settings"):
 
 def register_extensions(app):
     """Register Flask extensions."""
-    cache.init_app(app)
     db.init_app(app)
     ma.init_app(app)
     csrf_protect.init_app(app)
-    debug_toolbar.init_app(app)
     migrate.init_app(app, db)
-    flask_static_digest.init_app(app)
     return None
 
 
@@ -55,14 +45,19 @@ def register_blueprints(app):
 def register_errorhandlers(app):
     """Register error handlers."""
 
+    @app.errorhandler(401)
+    @app.errorhandler(404)
+    @app.errorhandler(500)
     def render_error(error):
         """Render error template."""
         # If a HTTPException, pull the `code` attribute; default to 500
         error_code = getattr(error, "code", 500)
         return jsonify(error=str(error_code)), error_code
 
-    for errcode in [401, 404, 500]:
-        app.errorhandler(errcode)(render_error)
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(e):
+        return jsonify(reason=e.description), 400
+
     return None
 
 

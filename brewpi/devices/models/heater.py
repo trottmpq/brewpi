@@ -12,8 +12,9 @@ class Heater(PkModel):
     name = Column(db.String(80), unique=True, nullable=False)
     gpio_num = Column(db.Integer(), nullable=False)
     state = Column(db.Boolean(), default=False, nullable=False)
-    activeLow = Column(db.Boolean(), default=False, nullable=False)
-    kettle = relationship("Kettle", backref="Heater", lazy="dynamic")
+    active_low = Column(db.Boolean(), default=False, nullable=False)
+    kettle_id = Column(db.Integer(), db.ForeignKey("kettles.id"), nullable=True)
+    kettle = relationship("Kettle", back_populates="heater")
 
     def __init__(self, name, gpio_num, **kwargs):
         """Create instance."""
@@ -23,14 +24,15 @@ class Heater(PkModel):
     def turn_on(self):
         """Turn heater on."""
         self.state = True
-        GpioControl.write(self.gpio_num, True, self.activeLow)
+        GpioControl.write(self.gpio_num, True, self.active_low)
 
     def turn_off(self):
         """Turn heater off."""
         self.state = False
-        GpioControl.write(self.gpio_num, False, self.activeLow)
+        GpioControl.write(self.gpio_num, False, self.active_low)
 
     def update(self):
+        """Update state."""
         if self.state:
             self.turn_on()
         else:

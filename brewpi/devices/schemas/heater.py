@@ -12,6 +12,7 @@ class HeaterSchema(ma.SQLAlchemyAutoSchema):
         """A Heater Schema Metaclass."""
 
         model = Heater
+        include_fk = True
 
 
 class HeaterStateSchema(ma.SQLAlchemyAutoSchema):

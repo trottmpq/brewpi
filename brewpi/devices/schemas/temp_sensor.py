@@ -12,6 +12,7 @@ class TempSensorSchema(ma.SQLAlchemyAutoSchema):
         """A Temperature Sensor Schema Metaclass."""
 
         model = TempSensor
+        include_fk = True
 
 
 class TempSensorTempSchema(ma.SQLAlchemyAutoSchema):

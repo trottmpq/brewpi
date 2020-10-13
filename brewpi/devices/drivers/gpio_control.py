@@ -1,11 +1,12 @@
 """Gets / Sets a GPIO on the RPi."""
 try:
-    import RPi.GPIO as GPIO # noqa
+    import RPi.GPIO as GPIO  # noqa
 
     class GpioControl:
         """Raspberry PI GPIO Control Class."""
 
         def write(self, number, on, active_low=False):
+            """Write value to GPIO."""
             GPIO.setwarnings(False)
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(number, GPIO.OUT)
@@ -16,6 +17,7 @@ try:
                 GPIO.output(number, GPIO.LOW)
 
         def read(self, number, active_low=False):
+            """Read value from GPIO."""
             GPIO.setwarnings(False)
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(number, GPIO.IN)
@@ -36,11 +38,13 @@ except ImportError:
         """Dummy GPIO Control Class."""
 
         def write(self, number, on, active_low=False):
+            """Pretend to write to gpio."""
             if on:
                 current_app.logger.info(f"Write output {number} ON\n")
             else:
                 current_app.logger.info(f"Write output {number} OFF\n")
 
         def read(self, number, active_low=False):
+            """Pretend to read from gpio."""
             print(f"Read input {number}\n")
             return not active_low

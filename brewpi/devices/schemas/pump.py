@@ -12,6 +12,7 @@ class PumpSchema(ma.SQLAlchemyAutoSchema):
         """A Pump Schema Metaclass."""
 
         model = Pump
+        include_fk = True
 
 
 class PumpStateSchema(ma.SQLAlchemyAutoSchema):

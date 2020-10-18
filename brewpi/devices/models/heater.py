@@ -19,24 +19,18 @@ class Heater(PkModel):
     def __init__(self, name, gpio_num, **kwargs):
         """Create instance."""
         super().__init__(name=name, gpio_num=gpio_num, **kwargs)
-        self.state = False
 
     def turn_on(self):
         """Turn heater on."""
         self.state = True
         GpioControl.write(self.gpio_num, True, self.active_low)
+        self.save()
 
     def turn_off(self):
         """Turn heater off."""
         self.state = False
         GpioControl.write(self.gpio_num, False, self.active_low)
-
-    def update(self):
-        """Update state."""
-        if self.state:
-            self.turn_on()
-        else:
-            self.turn_off()
+        self.save()
 
     @property
     def current_state(self):

@@ -24,7 +24,6 @@ class TestHeater:
         assert heater.gpio_num == 1
         assert heater.state is False
         assert Heater.query.get(heater.id) is heater
-        print(Heater.query.get(heater.id))
 
     def test_create_method(self):
         """Create a heater."""
@@ -52,11 +51,11 @@ class TestHeater:
         heater.update(gpio_num=2)
         assert 2 == heater.gpio_num
 
-    def test_turn_on_off(self):
-        """Test null password."""
+    def test_turn_on_turn_off(self):
+        """Test turns on then off."""
         heater = Heater.create(name="foo", gpio_num=1)
-        assert heater.current_state is False
+        assert Heater.query.get(heater.id).current_state is False
         heater.turn_on()
-        assert heater.current_state is True
+        assert Heater.query.get(heater.id).current_state is True
         heater.turn_off()
-        assert heater.current_state is False
+        assert Heater.query.get(heater.id).current_state is False

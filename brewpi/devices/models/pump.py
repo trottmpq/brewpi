@@ -25,18 +25,13 @@ class Pump(PkModel):
         """Turn Pump on."""
         self.state = True
         GpioControl.write(self.gpio_num, True, self.active_low)
+        self.save()
 
     def turn_off(self):
         """Turn Pump off."""
         self.state = False
         GpioControl.write(self.gpio_num, False, self.active_low)
-
-    def update(self):
-        """Update state."""
-        if self.state:
-            self.turn_on()
-        else:
-            self.turn_off()
+        self.save()
 
     @property
     def current_state(self):

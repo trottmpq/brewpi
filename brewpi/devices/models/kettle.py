@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Kettle models."""
+import threading
+import time
 
 from brewpi.database import Column, PkModel, db, relationship
 
@@ -15,9 +17,12 @@ class Kettle(PkModel):
     pump = relationship("Pump", back_populates="kettle", uselist=False)
     heater = relationship("Heater", back_populates="kettle", uselist=False)
 
+    hyst_window = 5.0
+
     def __init__(self, name, **kwargs):
         """Create instance."""
         super().__init__(name=name, **kwargs)
+        self.control_loop = threading.Thread(target=self.hysteresis_loop)
 
     def __repr__(self):
         """Represent instance as a unique string."""
@@ -41,3 +46,15 @@ class Kettle(PkModel):
                 self.pump.turn_on()
             else:
                 self.pump.turn_off()
+
+    def hysteresis_loop(self):
+        while self.is_running:
+            temp_c = self.current_temp()  # Current temperature
+
+            if self.heater.state is True:
+                if temp_c + self.hyst_window < self.target_temp:
+                    self.heater_enable(False)
+            if self.heater.state is False:
+                if temp_c - self.hyst_window > self.target_temp:
+                    self.heater_enable(True)
+            time.sleep(1)

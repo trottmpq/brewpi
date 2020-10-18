@@ -3,7 +3,7 @@
 
 import pytest
 
-from brewpi.devices.models import Kettle, Heater, Pump
+from brewpi.devices.models import Heater, Kettle, Pump
 
 
 @pytest.mark.usefixtures("db")

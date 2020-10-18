@@ -1,8 +1,8 @@
-# If we aren't on an RPi, this module still provides dummy data for testing.
+"""Temp Sensor Driver. If we aren't on an RPi, this module still provides dummy data for testing."""
 import numpy as np
 
 try:
-    import RPi.GPIO as GPIO
+    import RPi.GPIO as GPIO  # noqa
     import spidev
 
     class TempSensorDriver:
@@ -103,7 +103,7 @@ except ImportError:
 
         def __init__(self, gpio_number, active_low):
             """Initialise Temp Sensor Driver."""
-            self.gpio_number = gpio_number
+            self.gpio = gpio_number
             self.active_low = active_low
 
         def get_temp_c(self):
@@ -111,7 +111,8 @@ except ImportError:
             max = 100
             n = datetime.now().time()
             seconds = float(n.second) + float(n.microsecond) / 1000000.0
-            return (math.sin(seconds * 2 * math.pi / 60 / (self.gpio_number + 1)) + 1) * max / 2
+            temp_sin = math.sin(seconds * 2 * math.pi / 60 / (self.gpio + 1))
+            return temp_sin * max / 2
 
 
 class PT100:

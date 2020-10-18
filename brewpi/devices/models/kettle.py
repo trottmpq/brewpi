@@ -29,11 +29,12 @@ class Kettle(PkModel):
         return f"<Kettle({self.name})>"
 
     def current_temp(self):
+        """Get current temp of kettle."""
         if self.temp_sensor:
-            self.temp_sensor.update()
             return self.temp_sensor.current_temperature
 
     def heater_enable(self, state):
+        """Turn heater in kettle on or off."""
         if self.heater:
             if state:
                 self.heater.turn_on()
@@ -41,6 +42,7 @@ class Kettle(PkModel):
                 self.heater.turn_off()
 
     def pump_enable(self, state):
+        """Turn pump in kettle on or off."""
         if self.pump:
             if state:
                 self.pump.turn_on()
@@ -48,6 +50,7 @@ class Kettle(PkModel):
                 self.pump.turn_off()
 
     def hysteresis_loop(self):
+        """Hysterises loop to turn hold the kettle as a set temperature."""
         while self.is_running:
             temp_c = self.current_temp()  # Current temperature
 

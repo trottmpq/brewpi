@@ -55,9 +55,9 @@ class Kettle(PkModel):
             temp_c = self.current_temp()  # Current temperature
 
             if self.heater.state is True:
-                if temp_c + self.hyst_window < self.target_temp:
+                if temp_c > self.target_temp+self.hyst_window:
                     self.heater_enable(False)
             if self.heater.state is False:
-                if temp_c - self.hyst_window > self.target_temp:
+                if temp_c < self.target_temp -self.hyst_window:
                     self.heater_enable(True)
-            time.sleep(1)
+            time.sleep(5)

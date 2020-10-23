@@ -1,0 +1,19 @@
+# -*- coding: utf-8 -*-
+"""API views."""
+from flask import Blueprint
+from flask_restx import Api
+
+from .heater import api as heaterns
+from .pump import api as pumpns
+
+blueprint = Blueprint("devices", __name__, url_prefix="/devices")
+
+api = Api(
+    blueprint,
+    title="Devices",
+    version="1.0",
+    description="Api to control all the various devices in the brewery",
+)
+
+api.add_namespace(heaterns)
+api.add_namespace(pumpns)

@@ -22,6 +22,7 @@ spidev = {version = "*", sys_platform = "=='armv7l'"}
 "rpi.gpio" = {version = "*", sys_platform = "=='armv7l'"}
 pybeerxml = "*"
 numpy = "*"
+flask-restx = "*"
 
 [dev-packages]
 pytest = "*"

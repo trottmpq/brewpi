@@ -7,7 +7,7 @@ from flask import Flask, jsonify
 from flask_wtf.csrf import CSRFError
 
 from brewpi import api, commands, devices
-from brewpi.extensions import csrf_protect, db, ma, migrate
+from brewpi.extensions import csrf_protect, db, ma, migrate, restx
 
 
 def create_app(config_object="brewpi.settings"):
@@ -32,6 +32,7 @@ def register_extensions(app):
     ma.init_app(app)
     csrf_protect.init_app(app)
     migrate.init_app(app, db)
+    restx.init_app(app)
     return None
 
 

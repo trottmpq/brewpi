@@ -24,13 +24,13 @@ class Heater(PkModel):
         """Turn heater on."""
         self.state = True
         GpioControl.write(self.gpio_num, True, self.active_low)
-        self.save()
+        self.update()
 
     def turn_off(self):
         """Turn heater off."""
         self.state = False
         GpioControl.write(self.gpio_num, False, self.active_low)
-        self.save()
+        self.update()
 
     @property
     def current_state(self):

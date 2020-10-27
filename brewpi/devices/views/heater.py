@@ -36,10 +36,6 @@ nsmodelstat = api.model(
     },
 )
 
-parser = api.parser()
-parser.add_argument(
-    "state", type=bool, required=True, help="The desired Heater state", location="form"
-)
 
 @api.route("/")
 class HeaterList(Resource):
@@ -57,7 +53,7 @@ class HeaterList(Resource):
     @api.expect(nsmodel)
     def post(self):
         """Create a new Heater."""
-        schema = HeaterSchema(many=True)
+        schema = HeaterSchema()
         # print(api.payload)
         # return Heater.create(**api.payload), 201
         data = schema.load(request.get_json())
@@ -92,7 +88,8 @@ class HeaterItem(Resource):
 class HeaterItemState(Resource):
     """Retrieve a heater instance."""
 
-    @api.doc("get_heater")
+    @api.doc("get_heater_state")
+    @api.doc(model=nsmodelstat)
     @api.marshal_with(nsmodelstat)
     def get(self, id):
         """Fetch the current heater state."""
@@ -103,7 +100,7 @@ class HeaterItemState(Resource):
             api.abort(404, message="Heater {} doesn't exist".format(id))
         return schema.dump(query)
 
-    @api.doc(parser=parser)
+    @api.doc(model=nsmodelstat, body=nsmodelstat)
     @api.expect(nsmodelstat)
     def put(self, id):
         """Update the heater state."""
@@ -111,13 +108,11 @@ class HeaterItemState(Resource):
         query = Heater.get_by_id(id)
         if not query:
             api.abort(404, message="Heater {} doesn't exist".format(id))
-        args = parser.parse_args()
-        data = schema.validate(args)
-        if not data:
-            if args["state"] is True:
-                query.turn_on()
-                return schema.dump(query)
-            if args["state"] is False:
-                query.turn_off()
-                return schema.dump(query)
+        data = schema.load(request.get_json())
+        if data.get("state") is True:
+            query.turn_on()
+            return schema.dump(query)
+        if data.get("state") is False:
+            query.turn_off()
+            return schema.dump(query)
         return api.abort(404, message="Invalid Fields. Cannot Update Item")

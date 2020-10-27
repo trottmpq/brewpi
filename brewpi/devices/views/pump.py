@@ -36,10 +36,6 @@ nsmodelstat = api.model(
     },
 )
 
-parser = api.parser()
-parser.add_argument(
-    "state", type=bool, required=True, help="The desired Pump state", location="form"
-)
 
 @api.route("/")
 class PumpList(Resource):
@@ -90,7 +86,8 @@ class PumpItem(Resource):
 class PumpItemState(Resource):
     """Retrieve a pump instance."""
 
-    @api.doc("get_pump")
+    @api.doc("get_pump_state")
+    @api.doc(model=nsmodelstat)
     @api.marshal_with(nsmodelstat)
     def get(self, id):
         """Fetch the current pump state."""
@@ -101,7 +98,7 @@ class PumpItemState(Resource):
             api.abort(404, message="Pump {} doesn't exist".format(id))
         return schema.dump(query)
 
-    @api.doc(parser=parser)
+    @api.doc(model=nsmodelstat, body=nsmodelstat)
     @api.expect(nsmodelstat)
     def put(self, id):
         """Update the pump state."""
@@ -109,14 +106,11 @@ class PumpItemState(Resource):
         query = Pump.get_by_id(id)
         if not query:
             api.abort(404, message="Pump {} doesn't exist".format(id))
-        args = parser.parse_args()
-        current_app.logger.info(f'args: {args}')
-        data = schema.validate(args)
-        if not data:
-            if args["state"] is True:
-                query.turn_on()
-                return schema.dump(query)
-            if args["state"] is False:
-                query.turn_off()
-                return schema.dump(query)
+        data = schema.load(request.get_json())
+        if data.get("state") is True:
+            query.turn_on()
+            return schema.dump(query)
+        if data.get("state") is False:
+            query.turn_off()
+            return schema.dump(query)
         return api.abort(404, message="Invalid Fields. Cannot Update Item")

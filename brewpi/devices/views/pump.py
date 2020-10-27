@@ -96,7 +96,7 @@ class PumpItemState(Resource):
         query = Pump.get_by_id(id)
         if not query:
             api.abort(404, message="Pump {} doesn't exist".format(id))
-        return schema.dump(query)
+        return schema.dump({'state': query.current_state})
 
     @api.doc(model=nsmodelstat, body=nsmodelstat)
     @api.expect(nsmodelstat)

@@ -5,6 +5,7 @@ from flask_restx import Api
 
 from .heater import api as heaterns
 from .pump import api as pumpns
+from .temp_sensor import api as tempsensorns
 
 blueprint = Blueprint("devices", __name__, url_prefix="/devices")
 
@@ -17,3 +18,4 @@ api = Api(
 
 api.add_namespace(heaterns)
 api.add_namespace(pumpns)
+api.add_namespace(tempsensorns)

@@ -74,15 +74,46 @@ class TempSensorItem(Resource):
 
     @api.doc("get_temp_sensor")
     @api.marshal_with(nsmodel)
+    @api.response(404, "Temp Sensor does not exist")
     def get(self, id):
         """Fetch a TempSensor given its identifier."""
 
         schema = TempSensorSchema()
         query = TempSensor.get_by_id(id)
-        query.current_temperature
         if not query:
-            api.abort(404, message="TempSensor {} doesn't exist".format(id))
+            api.abort(404, message=f"TempSensor {id} doesn't exist")
+        query.current_temperature
         return schema.dump(query)
+
+    @api.doc("delete_tempsensor")
+    @api.response(204, "Temp Sensor deleted")
+    @api.response(404, "Temp Sensor does not exist")
+    def delete(self, id):
+        """Delete a tempsensor given its identifier."""
+        tempsense = TempSensor.get_by_id(id)
+        if not tempsense:
+            api.abort(404, message=f"TempSensor {id} doesn't exist")
+        tempsense.delete()
+        return "", 204
+
+    @api.expect(nsmodel)
+    @api.marshal_with(nsmodel)
+    def put(self, id):
+        """Update a tempsensor given its identifier."""
+        schema = TempSensorSchema()
+        tempsense = TempSensor.get_by_id(id)
+        if not tempsense:
+            api.abort(404, message=f"TempSensor {id} doesn't exist")
+
+        data = schema.load(request.get_json(), partial=True)
+        if data:
+            for k, v in data.items():
+                if v is not None:
+                    if hasattr(tempsense, k):
+                        setattr(tempsense, k, v)
+            tempsense.update()
+            return schema.dump(tempsense)
+        return api.abort(404, message="Invalid Fields. Cannot Update tempsensor")
 
 
 @api.route("/<id>/temperature")
@@ -100,5 +131,5 @@ class TempSensorItemState(Resource):
         schema = TempSensorTempSchema()
         query = TempSensor.get_by_id(id)
         if not query:
-            api.abort(404, message="TempSensor {} doesn't exist".format(id))
-        return schema.dump({'temperature': query.current_temperature})
+            api.abort(404, message=f"TempSensor {id} doesn't exist")
+        return schema.dump({"temperature": query.current_temperature})

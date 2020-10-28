@@ -1,5 +1,6 @@
 """Temp Sensor Driver. If we aren't on an RPi, this module still provides dummy data for testing."""
 import numpy as np
+from flask import current_app
 
 try:
     import RPi.GPIO as GPIO  # noqa
@@ -24,6 +25,7 @@ try:
 
         def __init__(self, gpio_number, active_low=True):
             """Initialise SPI Chip."""
+            self.pt100 = PT100()
             self.gpio_number = gpio_number
             self.active_low = active_low
             if self.gpio_number:
@@ -32,14 +34,10 @@ try:
                 GPIO.setup(self.gpio_number, GPIO.OUT)
                 self.chip_select(False)
 
-            self.spi_bus = spidev.SpiDev()
-            self.spi_bus.max_speed_hz = 5000
-            self.spi_bus.mode = 1
-
             self.write_spi(self.REG_CONFIG, [self.CONFIG])  # set up device
             r = self.read_spi(self.REG_CONFIG, 1)[0]  # read config back
             if r != self.CONFIG:
-                print("Error setting config")
+                current_app.logger.error("Error setting config")
 
         def chip_select(self, select):
             """Set chip select if not normal SPI CS."""
@@ -52,31 +50,31 @@ try:
 
         def read_spi(self, reg, length):
             """Read."""
-            # rtd = spidev.SpiDev()
-            self.spi_bus.open(0, 0)
-            # rtd.max_speed_hz = 5000
-            # rtd.mode = 1
+            rtd = spidev.SpiDev()
+            rtd.open(0, 0)
+            rtd.max_speed_hz = 5000
+            rtd.mode = 1
             d = [0] * (length + 1)
             d[0] = reg
             self.chip_select(True)
-            r = self.spi_bus.xfer2(d)
+            r = rtd.xfer2(d)
             self.chip_select(False)
-            self.spi_bus.close()
+            rtd.close()
             return r[1:]
 
         def write_spi(self, reg, data):
             """Write."""
-            # rtd = spidev.SpiDev()
-            self.spi_bus.open(0, 0)
-            # rtd.max_speed_hz = 5000
-            # rtd.mode = 1
+            rtd = spidev.SpiDev()
+            rtd.open(0, 0)
+            rtd.max_speed_hz = 5000
+            rtd.mode = 1
             d = list()
             d.append(reg + self.WRITE_FLAG)
             d.extend(data)
             self.chip_select(True)
-            self.spi_bus.xfer2(d)
+            rtd.xfer2(d)
             self.chip_select(False)
-            self.spi_bus.close()
+            rtd.close()
             return
 
         def get_temp_c(self):
@@ -85,12 +83,12 @@ try:
             rtdval = r[0] * 256 + r[1]
             if (rtdval % 2) == 1:  # lowest bit is a fault flag
                 r = self.read_spi(self.REG_FLT_STATUS, 1)[0]
-                print("Error 0x{:02x} detected".format(r))
+                current_app.logger.error("Error 0x{:02x} detected".format(r))
                 self.write_spi(self.REG_CONFIG, [self.CONFIG + 2])  # try clear fault
                 return None  # if fault is cleared, should read okay next time.
             rtdval = rtdval / 2
             rtdval = float(rtdval) * float(self.RREF) / 32768.0
-            temp = PT100.interp_resist_to_temp(rtdval)
+            temp = self.pt100.interp_resist_to_temp(rtdval)
             return temp
 
 

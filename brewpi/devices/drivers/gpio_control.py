@@ -46,5 +46,5 @@ except ImportError:
 
         def read(self, number, active_low=False):
             """Pretend to read from gpio."""
-            print(f"Read input {number}\n")
+            current_app.logger.info(f"Read input {number}\n")
             return not active_low

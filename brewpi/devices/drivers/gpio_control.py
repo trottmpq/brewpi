@@ -5,7 +5,7 @@ try:
     class GpioControl:
         """Raspberry PI GPIO Control Class."""
 
-        def write(self, number, on, active_low=False):
+        def write(number, on, active_low=False):
             """Write value to GPIO."""
             GPIO.setwarnings(False)
             GPIO.setmode(GPIO.BCM)
@@ -16,7 +16,7 @@ try:
             else:
                 GPIO.output(number, GPIO.LOW)
 
-        def read(self, number, active_low=False):
+        def read(number, active_low=False):
             """Read value from GPIO."""
             GPIO.setwarnings(False)
             GPIO.setmode(GPIO.BCM)
@@ -37,14 +37,14 @@ except ImportError:
     class GpioControl:
         """Dummy GPIO Control Class."""
 
-        def write(self, number, on, active_low=False):
+        def write(number, on, active_low=False):
             """Pretend to write to gpio."""
             if on:
                 current_app.logger.info(f"Write output {number} ON\n")
             else:
                 current_app.logger.info(f"Write output {number} OFF\n")
 
-        def read(self, number, active_low=False):
+        def read(number, active_low=False):
             """Pretend to read from gpio."""
             current_app.logger.info(f"Read input {number}\n")
             return not active_low

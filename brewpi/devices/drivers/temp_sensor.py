@@ -89,7 +89,7 @@ try:
             rtdval = rtdval / 2
             rtdval = float(rtdval) * float(self.RREF) / 32768.0
             temp = self.pt100.interp_resist_to_temp(rtdval)
-            return temp
+            return round(temp, 2)
 
 
 except ImportError:

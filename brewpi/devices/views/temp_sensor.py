@@ -132,4 +132,7 @@ class TempSensorItemState(Resource):
         query = TempSensor.get_by_id(id)
         if not query:
             api.abort(404, message=f"TempSensor {id} doesn't exist")
+        current_app.logger.info(
+            f"{query.name} on gpio {query.gpio_num} reads {query.current_temperature:.2f}C"
+        )
         return schema.dump({"temperature": query.current_temperature})

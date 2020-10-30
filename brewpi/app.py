@@ -6,7 +6,7 @@ import sys
 from flask import Flask, jsonify
 from flask_wtf.csrf import CSRFError
 
-from brewpi import api, commands, devices
+from brewpi import commands, devices
 from brewpi.extensions import csrf_protect, db, ma, migrate, restx
 
 
@@ -39,7 +39,6 @@ def register_extensions(app):
 def register_blueprints(app):
     """Register Flask blueprints."""
     app.register_blueprint(devices.views.blueprint)
-    app.register_blueprint(api.views.blueprint)
     return None
 
 

@@ -81,6 +81,35 @@ class HeaterItem(Resource):
             api.abort(404, message="Heater {} doesn't exist".format(id))
         return schema.dump(query)
 
+    @api.doc("delete_heater")
+    @api.response(204, "Heater deleted")
+    @api.response(404, "Heater does not exist")
+    def delete(self, id):
+        """Delete a heater given its identifier."""
+        heater = Heater.get_by_id(id)
+        if not heater:
+            api.abort(404, message=f"Heater {id} doesn't exist")
+        heater.delete()
+        return "", 204
+
+    @api.expect(nsmodel)
+    @api.marshal_with(nsmodel)
+    def put(self, id):
+        """Update a heater given its identifier."""
+        schema = HeaterSchema()
+        heater = Heater.get_by_id(id)
+        if not heater:
+            api.abort(404, message=f"Heater {id} doesn't exist")
+
+        data = schema.load(request.get_json(), partial=True)
+        if data:
+            for key, value in data.items():
+                if value is not None:
+                    if hasattr(heater, key):
+                        setattr(heater, key, value)
+            heater.update()
+            return schema.dump(heater)
+        return api.abort(404, message="Invalid Fields. Cannot Update heater")
 
 @api.route("/<id>/state")
 @api.param("id", "The Heater identifier")

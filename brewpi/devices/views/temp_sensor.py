@@ -107,10 +107,10 @@ class TempSensorItem(Resource):
 
         data = schema.load(request.get_json(), partial=True)
         if data:
-            for k, v in data.items():
-                if v is not None:
-                    if hasattr(tempsense, k):
-                        setattr(tempsense, k, v)
+            for key, value in data.items():
+                if value is not None:
+                    if hasattr(tempsense, key):
+                        setattr(tempsense, key, value)
             tempsense.update()
             return schema.dump(tempsense)
         return api.abort(404, message="Invalid Fields. Cannot Update tempsensor")

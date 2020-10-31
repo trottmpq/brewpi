@@ -78,6 +78,36 @@ class PumpItem(Resource):
         if not query:
             api.abort(404, message="Pump {} doesn't exist".format(id))
         return schema.dump(query)
+    
+    @api.doc("delete_pump")
+    @api.response(204, "Pump deleted")
+    @api.response(404, "Pump does not exist")
+    def delete(self, id):
+        """Delete a tempsensor given its identifier."""
+        pump = Pump.get_by_id(id)
+        if not pump:
+            api.abort(404, message=f"Pump {id} doesn't exist")
+        pump.delete()
+        return "", 204
+
+    @api.expect(nsmodel)
+    @api.marshal_with(nsmodel)
+    def put(self, id):
+        """Update a pump given its identifier."""
+        schema = PumpSchema()
+        pump = Pump.get_by_id(id)
+        if not pump:
+            api.abort(404, message=f"Pump {id} doesn't exist")
+
+        data = schema.load(request.get_json(), partial=True)
+        if data:
+            for key, value in data.items():
+                if value is not None:
+                    if hasattr(pump, key):
+                        setattr(pump, key, value)
+            pump.update()
+            return schema.dump(pump)
+        return api.abort(404, message="Invalid Fields. Cannot Update pump")
 
 
 @api.route("/<id>/state")

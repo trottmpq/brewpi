@@ -10,14 +10,14 @@ class TestHeater:
 
     def test_is_empty(self, testapp):
         """Get empty heater list."""
-        response = testapp.get("/api/heater")
+        response = testapp.get("/devices/Heater/")
         assert response.status_int == 200
         assert response.content_type == "application/json"
         assert response.json == []
 
     def test_create(self, testapp):
         """Create a heater."""
-        response = testapp.post_json("/api/heater", dict(name="Heater1", gpio_num=1))
+        response = testapp.post_json("/devices/Heater/", dict(name="Heater1", gpio_num=1))
         assert response.status_int == 200
         assert response.content_type == "application/json"
         assert response.json == {
@@ -31,9 +31,9 @@ class TestHeater:
 
     def test_get_list(self, testapp):
         """Test heater list view."""
-        testapp.post_json("/api/heater", dict(name="Heater1", gpio_num=1))
-        testapp.post_json("/api/heater", dict(name="Heater2", gpio_num=2))
-        response = testapp.get("/api/heater")
+        testapp.post_json("/devices/Heater/", dict(name="Heater1", gpio_num=1))
+        testapp.post_json("/devices/Heater/", dict(name="Heater2", gpio_num=2))
+        response = testapp.get("/devices/Heater/")
         assert response.status_int == 200
         assert response.content_type == "application/json"
         assert response.json == [

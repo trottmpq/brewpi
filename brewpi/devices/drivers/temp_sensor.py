@@ -38,8 +38,7 @@ try:
             self.write_spi(self._MAX31865_CONFIG_REG, [self.CONFIG])  # set up device
             r = self.read_spi(self._MAX31865_CONFIG_REG, 1)[0]  # read config back
             if r != self.CONFIG:
-                pass
-                # current_app.logger.error("Error setting config")
+                current_app.logger.error("Error setting config")
 
         def chip_select(self, select):
             """Set chip select if not normal SPI CS."""
@@ -85,7 +84,7 @@ try:
             rtdval = r[0] * 256 + r[1]
             if (rtdval % 2) == 1:  # lowest bit is a fault flag
                 r = self.read_spi(self.REG_FLT_STATUS, 1)[0]
-                # current_app.logger.error("Error 0x{:02x} detected".format(r))
+                current_app.logger.error("Error 0x{:02x} detected".format(r))
                 self.write_spi(
                     self._MAX31865_CONFIG_REG, [self.CONFIG + 2]
                 )  # clear fault
@@ -119,7 +118,9 @@ try:
                 # must be normalized to 100 ohms.
                 raw_reading /= self.RTD_NOM
                 raw_reading *= 100
-                temp = -242.02 + (2.2228 * raw_reading) + (2.5859e-3 * math.pow(raw_reading, 2))
+                temp = -242.02
+                temp += 2.2228 * raw_reading
+                temp += 2.5859e-3 * math.pow(raw_reading, 2)
 
             return temp
 

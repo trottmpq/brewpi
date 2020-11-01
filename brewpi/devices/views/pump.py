@@ -83,7 +83,7 @@ class PumpItem(Resource):
     @api.response(204, "Pump deleted")
     @api.response(404, "Pump does not exist")
     def delete(self, id):
-        """Delete a tempsensor given its identifier."""
+        """Delete a pump given its identifier."""
         pump = Pump.get_by_id(id)
         if not pump:
             api.abort(404, message=f"Pump {id} doesn't exist")

@@ -89,3 +89,61 @@ class RecipeItem(Resource):
             return schema.dump(recipe)
         return api.abort(404, message="Invalid Fields. Cannot Update recipe")
 
+
+@api.route("/<id>/yeasts")
+@api.param("id", "The Recipe identifier")
+@api.response(404, "Recipe not found")
+class RecipeItemYeast(Resource):
+    """Retrieve recipe yeasts."""
+    @api.doc("get_recipe_yeasts")
+    def get(self, id):
+        """Fetch the yeasts used in a recipe."""
+        schema = RecipeSchema()
+        recipe = Recipe.get_by_id(id)
+        if not recipe:
+            api.abort(404, message="Recipe {} doesn't exist".format(id))
+        return schema.dump_yeasts(recipe)
+
+@api.route("/<id>/miscs")
+@api.param("id", "The Recipe identifier")
+@api.response(404, "Recipe not found")
+class RecipeItemMiscs(Resource):
+    """Retrieve the miscs of a recipe."""
+    @api.doc("get_recipe_miscs")
+    def get(self, id):
+        """Fetch the miscs of a recipe."""
+        schema = RecipeSchema()
+        recipe = Recipe.get_by_id(id)
+        if not recipe:
+            api.abort(404, message="Recipe {} doesn't exist".format(id))
+        return schema.dump_miscs(recipe)
+
+
+@api.route("/<id>/fermentables")
+@api.param("id", "The Recipe identifier")
+@api.response(404, "Recipe not found")
+class RecipeItemFermentables(Resource):
+    """Retrieve the recipe fermentables"""
+    @api.doc("get_recipe_fermentables")
+    def get(self, id):
+        """Retrieve the recipe fermentables"""
+        schema = RecipeSchema()
+        recipe = Recipe.get_by_id(id)
+        if not recipe:
+            api.abort(404, message="Recipe {} doesn't exist".format(id))
+        return schema.dump_fermentables(recipe)
+
+
+@api.route("/<id>/hops")
+@api.param("id", "The Recipe identifier")
+@api.response(404, "Recipe not found")
+class RecipeItemHops(Resource):
+    """Retrieve the hops of a recipe."""
+    @api.doc("get_recipe_yeast")
+    def get(self, id):
+        """Fetch the hops of a recipe."""
+        schema = RecipeSchema()
+        recipe = Recipe.get_by_id(id)
+        if not recipe:
+            api.abort(404, message="Recipe {} doesn't exist".format(id))
+        return schema.dump_hops(recipe)

@@ -11,7 +11,7 @@ nsmodel = api.model(
     "Recipe",
     {
         "id": fields.Integer(readonly=True, description="Recipe Identifier"),
-        "xml": fields.String(required=True, description="Recipe XML file"),
+        "xml": fields.String(required=True, description="Recipe XML file", example="brewpi/recipes/xml/sierranevada.xml"),
     },
 )
 

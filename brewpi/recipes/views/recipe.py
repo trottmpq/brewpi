@@ -147,3 +147,47 @@ class RecipeItemHops(Resource):
         if not recipe:
             api.abort(404, message="Recipe {} doesn't exist".format(id))
         return schema.dump_hops(recipe)
+
+@api.route("/<id>/style")
+@api.param("id", "The Recipe identifier")
+@api.response(404, "Recipe not found")
+class RecipeItemHops(Resource):
+    """Retrieve the style of a recipe."""
+    @api.doc("get_recipe_style")
+    def get(self, id):
+        """Fetch the style of a recipe."""
+        schema = RecipeSchema()
+        recipe = Recipe.get_by_id(id)
+        if not recipe:
+            api.abort(404, message="Recipe {} doesn't exist".format(id))
+        return schema.dump_style(recipe)
+
+
+@api.route("/<id>/waters")
+@api.param("id", "The Recipe identifier")
+@api.response(404, "Recipe not found")
+class RecipeItemHops(Resource):
+    """Retrieve the waters of a recipe."""
+    @api.doc("get_recipe_water")
+    def get(self, id):
+        """Fetch the waters of a recipe."""
+        schema = RecipeSchema()
+        recipe = Recipe.get_by_id(id)
+        if not recipe:
+            api.abort(404, message="Recipe {} doesn't exist".format(id))
+        return schema.dump_waters(recipe)
+
+
+@api.route("/<id>/mash")
+@api.param("id", "The Recipe identifier")
+@api.response(404, "Recipe not found")
+class RecipeItemHops(Resource):
+    """Retrieve the mash and mash steps of a recipe."""
+    @api.doc("get_recipe_mash")
+    def get(self, id):
+        """Fetch the style of a recipe."""
+        schema = RecipeSchema()
+        recipe = Recipe.get_by_id(id)
+        if not recipe:
+            api.abort(404, message="Recipe {} doesn't exist".format(id))
+        return schema.dump_mash(recipe)

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Container, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 import Page from 'src/components/Page';
-import ItemCardList from 'src/components/ItemCardList';
+import KettleCardList from './KettleCardList';
 import KettleForm from './kettleform';
 
 const styles = theme => ({
@@ -32,7 +32,7 @@ class Kettle extends Component {
           <Typography variant="h1" component="h2">
             Kettle List
           </Typography>
-          <ItemCardList URL='/api/kettle'/>
+          <KettleCardList URL='/devices/Kettle/'/>
           <KettleForm/>
         </Container>
       </Page>

@@ -20,3 +20,9 @@ class KettleSchema(ma.SQLAlchemyAutoSchema):
     temp_sensor = fields.Nested(TempSensorSchema, many=False)
     pump = fields.Nested(PumpSchema, many=False)
     heater = fields.Nested(HeaterSchema, many=False)
+
+
+class KettleStateSchema(ma.Schema):
+    """A schema for state in a kettle."""
+
+    state = fields.Bool()

@@ -3,7 +3,7 @@ from flask import current_app, request
 from flask_restx import Namespace, Resource, fields
 
 from ..models import Kettle
-from ..schemas import KettleSchema
+from ..schemas import KettleSchema, KettleStateSchema
 from .heater import nsmodel as heatermodel
 from .pump import nsmodel as pumpmodel
 from .temp_sensor import nsmodel as tempsensormodel
@@ -144,7 +144,6 @@ class KettleItemTemperature(Resource):
     def get(self, id):
         """Fetch the current temp_sensor state."""
 
-        # schema = KettleSchema()
         query = Kettle.get_by_id(id)
         if not query:
             api.abort(404, message=f"kettle {id} doesn't exist")
@@ -172,7 +171,6 @@ class KettleItemHeaterState(Resource):
     def get(self, id):
         """Fetch the current heater state."""
 
-        # schema = KettleSchema()
         query = Kettle.get_by_id(id)
         if not query:
             api.abort(404, message=f"kettle {id} doesn't exist")
@@ -184,6 +182,28 @@ class KettleItemHeaterState(Resource):
             f"{query.name}, {query.heater.name} on gpio {query.heater.gpio_num} reads {current_state}"
         )
         return {"state": current_state}
+
+    @api.expect(nsmodelheaterstate)
+    @api.marshal_with(nsmodelheaterstate)
+    def put(self, id):
+        """Update a kettles heater given its identifier."""
+        schema = KettleStateSchema()
+        kettle = Kettle.get_by_id(id)
+        if not kettle:
+            api.abort(404, message=f"Kettle {id} doesn't exist")
+        if not kettle.heater:
+            api.abort(404, message=f"kettle {id} doesn't have a heater configured.")
+
+        data = schema.load(request.get_json(), partial=True)
+        if data:
+            print(data)
+            if data.get("state") is True:
+                kettle.heater.turn_on()
+            if data.get("state") is False:
+                kettle.heater.turn_off()
+
+            return schema.dump({"state": kettle.heater.current_state})
+        return api.abort(404, message="Invalid Fields. Cannot Update kettle")
 
 
 @api.route("/<id>/pumpstate")
@@ -198,7 +218,6 @@ class KettleItemPumpState(Resource):
     def get(self, id):
         """Fetch the current pump state."""
 
-        # schema = KettleSchema()
         query = Kettle.get_by_id(id)
         if not query:
             api.abort(404, message=f"kettle {id} doesn't exist")
@@ -210,3 +229,25 @@ class KettleItemPumpState(Resource):
             f"{query.name}, {query.pump.name} on gpio {query.pump.gpio_num} reads {current_state}"
         )
         return {"state": current_state}
+
+    @api.expect(nsmodelpumpstate)
+    @api.marshal_with(nsmodelpumpstate)
+    def put(self, id):
+        """Update a kettles pump given its identifier."""
+        schema = KettleStateSchema()
+        kettle = Kettle.get_by_id(id)
+        if not kettle:
+            api.abort(404, message=f"Kettle {id} doesn't exist")
+        if not kettle.pump:
+            api.abort(404, message=f"kettle {id} doesn't have a pump configured.")
+
+        data = schema.load(request.get_json(), partial=True)
+        if data:
+            print(data)
+            if data.get("state") is True:
+                kettle.pump.turn_on()
+            if data.get("state") is False:
+                kettle.pump.turn_off()
+
+            return schema.dump({"state": kettle.pump.current_state})
+        return api.abort(404, message="Invalid Fields. Cannot Update kettle")

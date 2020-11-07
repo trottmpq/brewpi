@@ -4,7 +4,7 @@
   "licence": "MIT",
   "version": "1.0.0",
   "private": true,
-  "proxy": "http://flask:5000",
+  "proxy": "http://localhost:5000",
   "scripts": {
     "start": "concurrently -n \"FLASK,REACT\" -c \"bgBlue.bold,bgMagenta.bold\" \"yarn flask-server\" \"yarn react-server\"",
     "react-server": "react-scripts start",

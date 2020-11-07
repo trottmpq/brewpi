@@ -27,12 +27,12 @@ class TempSensor extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <Page className={classes.root} title="Pumps">
+      <Page className={classes.root} title="Temperature Sensors">
         <Container maxWidth={false}>
           <Typography variant="h1" component="h2">
             Temp Sensor List
           </Typography>
-          <ItemCardList URL='/api/tempsensor'/>
+          <ItemCardList URL='/devices/TempSensor/'/>
           <TempSensorForm/>
         </Container>
       </Page>

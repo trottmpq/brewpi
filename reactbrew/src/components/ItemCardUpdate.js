@@ -44,7 +44,7 @@ class ItemCardUpdate extends Component {
               })}
               onSubmit={(values, { setSubmitting }) => {
                 setTimeout(() => {
-                  fetch('/api/tempsensor/1', {
+                  fetch('/devices/TempSensor/1', {
                     method: 'PUT',
                     body: JSON.stringify(values, null, 2),
                     headers: { 'Content-Type': 'application/json' }

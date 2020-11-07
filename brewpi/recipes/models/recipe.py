@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """Recipe models."""
 
-from brewpi.database import Column, PkModel, db, relationship
 from pybeerxml.parser import Parser
-import os
+
+from brewpi.database import Column, PkModel, db
+
 
 class Recipe(PkModel):
     """A recipe."""
@@ -18,9 +19,7 @@ class Recipe(PkModel):
         p = Parser()
         recipe = p.parse(xml)[0]
         name = recipe.name
-        super().__init__(name=name, xml=xml,beerpy=recipe,**kwargs)
-        
-
+        super().__init__(name=name, xml=xml, beerpy=recipe, **kwargs)
 
     def __repr__(self):
         """Represent instance as a unique string."""

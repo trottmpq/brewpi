@@ -111,6 +111,7 @@ class HeaterItem(Resource):
             return schema.dump(heater)
         return api.abort(404, message="Invalid Fields. Cannot Update heater")
 
+
 @api.route("/<id>/state")
 @api.param("id", "The Heater identifier")
 @api.response(404, "Heater not found")

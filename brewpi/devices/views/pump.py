@@ -78,7 +78,7 @@ class PumpItem(Resource):
         if not query:
             api.abort(404, message="Pump {} doesn't exist".format(id))
         return schema.dump(query)
-    
+
     @api.doc("delete_pump")
     @api.response(204, "Pump deleted")
     @api.response(404, "Pump does not exist")

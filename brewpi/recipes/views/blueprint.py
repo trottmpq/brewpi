@@ -3,7 +3,6 @@
 from flask import Blueprint
 from flask_restx import Api
 
-
 from .recipe import api as recipens
 
 blueprint = Blueprint("recipes", __name__, url_prefix="/recipes")
@@ -16,4 +15,3 @@ api = Api(
 )
 
 api.add_namespace(recipens)
-

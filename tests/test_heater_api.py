@@ -17,7 +17,9 @@ class TestHeater:
 
     def test_create(self, testapp):
         """Create a heater."""
-        response = testapp.post_json("/devices/Heater/", dict(name="Heater1", gpio_num=1))
+        response = testapp.post_json(
+            "/devices/Heater/", dict(name="Heater1", gpio_num=1)
+        )
         assert response.status_int == 200
         assert response.content_type == "application/json"
         assert response.json == {

@@ -11,10 +11,13 @@ nsmodel = api.model(
     "Recipe",
     {
         "id": fields.Integer(readonly=True, description="Recipe Identifier"),
-        "xml": fields.String(required=True, description="Recipe XML file", example="brewpi/recipes/xml/sierranevada.xml"),
+        "xml": fields.String(
+            required=True,
+            description="Recipe XML file",
+            example="brewpi/recipes/xml/sierranevada.xml",
+        ),
     },
 )
-
 
 
 @api.route("/")
@@ -58,7 +61,6 @@ class RecipeItem(Resource):
             api.abort(404, message="Recipe {} doesn't exist".format(id))
         return schema.dump(query)
 
-    
     @api.doc("delete_recipe")
     @api.response(204, "Recipe deleted")
     @api.response(404, "Recipe does not exist")
@@ -95,6 +97,7 @@ class RecipeItem(Resource):
 @api.response(404, "Recipe not found")
 class RecipeItemYeast(Resource):
     """Retrieve recipe yeasts."""
+
     @api.doc("get_recipe_yeasts")
     def get(self, id):
         """Fetch the yeasts used in a recipe."""
@@ -104,11 +107,13 @@ class RecipeItemYeast(Resource):
             api.abort(404, message="Recipe {} doesn't exist".format(id))
         return schema.dump_yeasts(recipe)
 
+
 @api.route("/<id>/miscs")
 @api.param("id", "The Recipe identifier")
 @api.response(404, "Recipe not found")
 class RecipeItemMiscs(Resource):
     """Retrieve the miscs of a recipe."""
+
     @api.doc("get_recipe_miscs")
     def get(self, id):
         """Fetch the miscs of a recipe."""
@@ -123,10 +128,11 @@ class RecipeItemMiscs(Resource):
 @api.param("id", "The Recipe identifier")
 @api.response(404, "Recipe not found")
 class RecipeItemFermentables(Resource):
-    """Retrieve the recipe fermentables"""
+    """Retrieve the recipe fermentables."""
+
     @api.doc("get_recipe_fermentables")
     def get(self, id):
-        """Retrieve the recipe fermentables"""
+        """Retrieve the recipe fermentables."""
         schema = RecipeSchema()
         recipe = Recipe.get_by_id(id)
         if not recipe:
@@ -139,6 +145,7 @@ class RecipeItemFermentables(Resource):
 @api.response(404, "Recipe not found")
 class RecipeItemHops(Resource):
     """Retrieve the hops of a recipe."""
+
     @api.doc("get_recipe_yeast")
     def get(self, id):
         """Fetch the hops of a recipe."""
@@ -148,11 +155,13 @@ class RecipeItemHops(Resource):
             api.abort(404, message="Recipe {} doesn't exist".format(id))
         return schema.dump_hops(recipe)
 
+
 @api.route("/<id>/style")
 @api.param("id", "The Recipe identifier")
 @api.response(404, "Recipe not found")
-class RecipeItemHops(Resource):
+class RecipeItemStyle(Resource):
     """Retrieve the style of a recipe."""
+
     @api.doc("get_recipe_style")
     def get(self, id):
         """Fetch the style of a recipe."""
@@ -166,8 +175,9 @@ class RecipeItemHops(Resource):
 @api.route("/<id>/waters")
 @api.param("id", "The Recipe identifier")
 @api.response(404, "Recipe not found")
-class RecipeItemHops(Resource):
+class RecipeItemWaters(Resource):
     """Retrieve the waters of a recipe."""
+
     @api.doc("get_recipe_water")
     def get(self, id):
         """Fetch the waters of a recipe."""
@@ -181,8 +191,9 @@ class RecipeItemHops(Resource):
 @api.route("/<id>/mash")
 @api.param("id", "The Recipe identifier")
 @api.response(404, "Recipe not found")
-class RecipeItemHops(Resource):
+class RecipeItemMash(Resource):
     """Retrieve the mash and mash steps of a recipe."""
+
     @api.doc("get_recipe_mash")
     def get(self, id):
         """Fetch the style of a recipe."""

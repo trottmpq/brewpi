@@ -1,6 +1,7 @@
 """Recipe schemas."""
 
 from brewpi.extensions import ma
+
 from ..models import Recipe
 
 
@@ -12,8 +13,9 @@ class RecipeSchema(ma.SQLAlchemyAutoSchema):
 
         model = Recipe
         include_fk = True
-    
+
     def dump_yeasts(self, data):
+        """Serialize yeasts."""
         recipe = data.beerpy
         yeasts = list()
         for yeast in recipe.yeasts:
@@ -39,8 +41,9 @@ class RecipeSchema(ma.SQLAlchemyAutoSchema):
             # y["culture_date"] = yeast.culture_date
             yeasts.append(y)
         return yeasts
-    
+
     def dump_hops(self, data):
+        """Serialize Hops."""
         recipe = data.beerpy
         hops = list()
         for hop in recipe.hops:
@@ -65,12 +68,11 @@ class RecipeSchema(ma.SQLAlchemyAutoSchema):
             hops.append(h)
         return hops
 
-
     def dump_fermentables(self, data):
-        recipe = data.beerpy
-        fermentables=list()
-        for fermentable in recipe.fermentables:
-            f=dict()
+        """Serialize Fermentables."""
+        fermentables = list()
+        for fermentable in data.beerpy.fermentables:
+            f = dict()
             f["name"] = fermentable.name
             f["version"] = fermentable.version
             f["type"] = fermentable.type
@@ -92,10 +94,10 @@ class RecipeSchema(ma.SQLAlchemyAutoSchema):
         return fermentables
 
     def dump_miscs(self, data):
-        recipe = data.beerpy
-        miscs=list()
-        for misc in recipe.miscs:
-            m=dict()
+        """Serialize Miscs."""
+        miscs = list()
+        for misc in data.beerpy.miscs:
+            m = dict()
             m["name"] = misc.name
             m["type"] = misc.type
             m["use"] = misc.use
@@ -108,6 +110,7 @@ class RecipeSchema(ma.SQLAlchemyAutoSchema):
         return miscs
 
     def dump_style(self, data):
+        """Serialize Style."""
         recipe = data.beerpy
         s = dict()
         style = recipe.style
@@ -133,12 +136,13 @@ class RecipeSchema(ma.SQLAlchemyAutoSchema):
         s["notes"] = style.notes
         # s["profile"] = style.profile
         # s["ingredients"] = style.ingredients
-        # s["examples"] = style.examples        
-        return(s)
+        # s["examples"] = style.examples
+        return s
 
     def dump_recipe(self, data):
+        """Serialize Recipe."""
         recipe = data.beerpy
-        r=dict()
+        r = dict()
         r["name"] = recipe.name
         r["version"] = recipe.version
         r["type"] = recipe.type
@@ -169,7 +173,7 @@ class RecipeSchema(ma.SQLAlchemyAutoSchema):
         r["carbonation_temp"] = recipe.carbonation_temp
         r["priming_sugar_equiv"] = recipe.priming_sugar_equiv
         r["keg_priming_factor"] = recipe.keg_priming_factor
-        #extensions
+        # extensions
         r["est_og"] = recipe.est_og
         r["est_fg"] = recipe.est_fg
         r["est_color"] = recipe.est_color
@@ -184,6 +188,7 @@ class RecipeSchema(ma.SQLAlchemyAutoSchema):
         return r
 
     def dump_waters(self, data):
+        """Serialize Water."""
         waters = data.beerpy.waters
         ws = list()
         for water in waters:
@@ -201,7 +206,9 @@ class RecipeSchema(ma.SQLAlchemyAutoSchema):
             w["notes"] = water.notes
             ws.append(w)
         return ws
+
     def dump_mash(self, data):
+        """Serialize Mash."""
         mash = data.beerpy.mash
         m = dict()
         m["name"] = mash.name
@@ -233,9 +240,10 @@ class RecipeSchema(ma.SQLAlchemyAutoSchema):
         m["mash_steps"] = sps
         return m
 
-    def dump_beerpy(self,data):
-        ret_recipe=dict()
-        recipe = data.beerpy
+    def dump_beerpy(self, data):
+        """Serialize full xml."""
+        ret_recipe = dict()
+        # recipe = data.beerpy
         ret_recipe = self.dump_recipe(data)
         ret_recipe["id"] = data.id
         ret_recipe["hops"] = self.dump_hops(data)
@@ -248,13 +256,12 @@ class RecipeSchema(ma.SQLAlchemyAutoSchema):
         return ret_recipe
 
     def dump(self, in_data, **kwargs):
+        """Serialize List."""
         ret_recipes = list()
-        
-        if(type(in_data) is list):
+
+        if type(in_data) is list:
             for data in in_data:
                 ret_recipes.append(self.dump_beerpy(data))
             return ret_recipes
         else:
             return self.dump_beerpy(in_data)
-
-

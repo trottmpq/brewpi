@@ -136,14 +136,14 @@ class ItemCard extends Component {
                 Temperature
                 </Grid>
                 <Grid item xs={6}>
-                {this.props.data.temperature}
+                {    this.props.data["temp_sensor"] != null ? this.props.data.temp_sensor.temperature : 0 }
                 </Grid>
                 <Grid item xs={6}>
                 Pump
                 </Grid>
                 <Grid item xs={6}>
                         <Switch
-                        checked={this.state.checkedB}
+                        checked={    this.props.data["pump"] != null ? this.props.data.pump.state : false }
                         onChange={this.handleChange}
                         name="pumpOn"
                         color="primary"/>

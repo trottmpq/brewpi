@@ -9,18 +9,10 @@ import { withStyles } from '@material-ui/styles';
 import CardActions from '@material-ui/core/CardActions';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Switch from '@material-ui/core/Switch';
 import EditIcon from '@material-ui/icons/Edit';
 import Slider from '@material-ui/core/Slider';
-
 import Dialog from '@material-ui/core/Dialog';
-import Button from '@material-ui/core/Button';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
-import CloseIcon from '@material-ui/icons/Close';
-
 import KettleCardUpdate from './KettleCardUpdate'
 
 const styles = theme => ({
@@ -45,37 +37,12 @@ const styles = theme => ({
     gridGap: theme.spacing(3),
   },
 });
-const DialogTitle = withStyles(styles)((props) => {
-    const { children, classes, onClose, ...other } = props;
-    return (
-      <MuiDialogTitle disableTypography className={classes.root} {...other}>
-        <Typography variant="h6">{children}</Typography>
-        {onClose ? (
-          <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
-            <CloseIcon />
-          </IconButton>
-        ) : null}
-      </MuiDialogTitle>
-    );
-  });
-  
-  const DialogContent = withStyles((theme) => ({
-    root: {
-      padding: theme.spacing(2),
-    },
-  }))(MuiDialogContent);
-  
-  const DialogActions = withStyles((theme) => ({
-    root: {
-      margin: 0,
-      padding: theme.spacing(1),
-    },
-  }))(MuiDialogActions);
+
 
 
 class ItemCard extends Component {
 
-    state = { editOpen: false, is_running : false};
+    state = { editOpen: false};
     showEdit = () => {
         this.state.editOpen = true;
       };
@@ -103,9 +70,7 @@ class ItemCard extends Component {
     }, 400);
 
   };
-  tmphandleChange = (event) => {
-    this.state.is_running = event.target.checked
-  };
+ 
 
   tempChange = (event, value, id) => {
     var baseStr = "/devices/Kettle/"
@@ -166,7 +131,7 @@ class ItemCard extends Component {
                     onChange={this.handleChange}
                     name={String(this.props.data.id).concat("/heaterstate")}
                     color="primary"
-                    disabled = {(this.props.data["heater"] == null || this.state.is_running) ? true : false }
+                    disabled = {(this.props.data["heater"] == null || this.props.data.is_running) ? true : false }
                     />
                 </Grid>
                 <Grid item xs={6}>
@@ -174,9 +139,9 @@ class ItemCard extends Component {
                 </Grid>
                 <Grid item xs={6}>
                     <Switch
-                    checked={ this.state.is_running }
-                    onChange={this.tmphandleChange}
-                    name={String(this.props.data.id).concat("/heaterstate")}
+                    checked={ this.props.data.is_running }
+                    onChange={this.handleChange}
+                    name={String(this.props.data.id).concat("/controlloop")}
                     color="primary"
                     disabled = {this.props.data["heater"] != null ? false : true }
                     />

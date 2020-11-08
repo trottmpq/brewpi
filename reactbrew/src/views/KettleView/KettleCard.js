@@ -71,6 +71,23 @@ class ItemCard extends Component {
 
   };
  
+  
+  hystChange = (event, value, id) => {
+    var baseStr = "/devices/Kettle/"
+    var endpointStr = baseStr.concat(id)
+    
+    var values={ hyst_window: value }
+    setTimeout(() => {
+        fetch(endpointStr, {
+        method: 'PUT',
+        body: JSON.stringify(values, null, 2),
+        headers: { 'Content-Type': 'application/json' }
+        })
+        .then(res => res.json())
+        .catch(error => console.error('Error:', error))
+        .then(response => console.log('Success:', response));
+    }, 400);
+  };
 
   tempChange = (event, value, id) => {
     var baseStr = "/devices/Kettle/"
@@ -88,6 +105,7 @@ class ItemCard extends Component {
         .then(response => console.log('Success:', response));
     }, 400);
   };
+
 
   valuetext(value) {
     return `${value}°C`;
@@ -147,7 +165,7 @@ class ItemCard extends Component {
                     />
                 </Grid>
                 <Grid item xs={6}>
-                Target Temperaure
+                Target Temperature
                 </Grid>
                 <Grid item xs={6}>
                 <Slider
@@ -164,6 +182,28 @@ class ItemCard extends Component {
                     onChangeCommitted={(e, val) => this.tempChange(e, val, this.props.data.id)}
                     />
                 </Grid>
+
+
+                <Grid item xs={6}>
+                Hysteresis
+                </Grid>
+                <Grid item xs={6}>
+                <Slider
+                    name="Hysteresis"
+                    defaultValue={0}
+                    getAriaValueText={this.valuetext}
+                    aria-labelledby="discrete-slider"
+                    valueLabelDisplay="auto"
+                    color="secondary"
+                    step={1}
+                    min={1}
+                    max={10}
+                    // value = {this.props.data.target_temp}
+                    onChangeCommitted={(e, val) => this.hystChange(e, val, this.props.data.id)}
+                    />
+                </Grid>
+
+
             </Grid>
         </Typography>
 

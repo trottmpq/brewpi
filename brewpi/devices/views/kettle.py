@@ -18,8 +18,8 @@ nsmodel = api.model(
         "target_temp": fields.Float(
             default=0.0, description="Kettle target temperature"
         ),
-        "is_running" : fields.Boolean(required=True, description="Control loop running"),
-        "hyst_window" : fields.Float(
+        "is_running": fields.Boolean(required=True, description="Control loop running"),
+        "hyst_window": fields.Float(
             default=0.0, description="Kettle temperature hysteresis"
         ),
         "temp_sensor": fields.Nested(tempsensormodel, allow_null=True),

@@ -3,6 +3,7 @@
 import threading
 import time
 
+import simple_pid
 from flask import current_app
 
 from brewpi.database import Column, PkModel, db, relationship
@@ -75,6 +76,29 @@ class Kettle(PkModel):
             time.sleep(5)
         self.heater_enable(False)
 
+    def pid_loop(self):
+        """PID Loop. Values are from craftbeerpi which are roughly the same as ours. hopefully ok?."""
+        p = 44
+        i = 165
+        d = 4
+        sample_time = 5
+        pid = simple_pid.PID(
+            p, i, d, setpoint=self.target_temp
+        )  # dont think this can be changed once started.
+        pid.output_limits = (0, 100)
+        pid.sample_time = sample_time
+
+        t = threading.currentThread()
+        while getattr(t, "is_running", True):
+            heat_percent = pid(self.current_temp())
+            heating_time = pid.sample_time * (heat_percent / 100)
+            wait_time = pid.sample_time - heating_time
+            self.heater_enable(True)
+            time.sleep(heating_time)
+            self.heater_enable(False)
+            time.sleep(wait_time)
+        self.heater_enable(False)
+
     def thread_function(self):
         """Dummy function to prove threading."""
         t = threading.currentThread()
@@ -88,7 +112,7 @@ class Kettle(PkModel):
         # Creat thread if doesn't already exist.
         if not current_app.threads.get(f"{self.name}_id"):
             current_app.threads[f"{self.name}_id"] = threading.Thread(
-                target=self.thread_function
+                target=self.pid_loop
             )
         if not current_app.threads[f"{self.name}_id"].is_alive():
             current_app.logger.info(f"{self.name}_id starting")

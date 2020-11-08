@@ -149,7 +149,9 @@ class ItemCard extends Component {
                         checked={    this.props.data["pump"] != null ? this.props.data.pump.state : false }
                         onChange={this.handleChange}
                         name={String(this.props.data.id).concat("/pumpstate")}
-                        color="primary"/>
+                        color="primary"
+                        disabled = {this.props.data["pump"] != null ? false : true }
+                        />
                 </Grid>
                 <Grid item xs={6}>
                 Heater
@@ -160,8 +162,10 @@ class ItemCard extends Component {
                         checked={    this.props.data["heater"] != null ? this.props.data.heater.state : false }
                         onChange={this.handleChange}
                         name={String(this.props.data.id).concat("/heaterstate")}
-                        color="primary"/>
-                    
+                        color="primary"
+                        disabled = {this.props.data["heater"] != null ? false : true }
+                        />
+                        
                 </Grid>
                 <Grid item xs={6}>
                 Target Temperaure

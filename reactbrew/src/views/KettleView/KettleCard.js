@@ -75,14 +75,12 @@ const DialogTitle = withStyles(styles)((props) => {
 
 class ItemCard extends Component {
 
-    state = { editOpen: false};
+    state = { editOpen: false, is_running : false};
     showEdit = () => {
-        console.log("editOpen <= true")
         this.state.editOpen = true;
       };
     
       hideEdit = () => {
-        console.log("editOpen <= false")
         this.state.editOpen = false;
       };
 
@@ -105,11 +103,15 @@ class ItemCard extends Component {
     }, 400);
 
   };
+  tmphandleChange = (event) => {
+    this.state.is_running = event.target.checked
+  };
 
   tempChange = (event, value, id) => {
     var baseStr = "/devices/Kettle/"
     var endpointStr = baseStr.concat(id)
-    var values={ target_temp: value }
+    endpointStr = endpointStr.concat("/targettemp")
+    var values={ temperature: value }
     setTimeout(() => {
         fetch(endpointStr, {
         method: 'PUT',
@@ -164,6 +166,18 @@ class ItemCard extends Component {
                     onChange={this.handleChange}
                     name={String(this.props.data.id).concat("/heaterstate")}
                     color="primary"
+                    disabled = {(this.props.data["heater"] == null || this.state.is_running) ? true : false }
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                Control
+                </Grid>
+                <Grid item xs={6}>
+                    <Switch
+                    checked={ this.state.is_running }
+                    onChange={this.tmphandleChange}
+                    name={String(this.props.data.id).concat("/heaterstate")}
+                    color="primary"
                     disabled = {this.props.data["heater"] != null ? false : true }
                     />
                 </Grid>
@@ -187,7 +201,7 @@ class ItemCard extends Component {
                 </Grid>
             </Grid>
         </Typography>
-        
+
         <Dialog onClose={this.showEdit} aria-labelledby="edit-dialog" open={this.state.editOpen}>
             <KettleCardUpdate handleClose={this.hideEdit} data={this.props.data}/>
         </Dialog>
@@ -195,11 +209,8 @@ class ItemCard extends Component {
           </CardContent>
         <CardActions>
         <IconButton aria-label="edit">
-                <EditIcon className={classes.Icon} onClick={this.showEdit}/>
-                </IconButton>
-            <IconButton aria-label="delete">
-                <DeleteForeverIcon className={classes.Icon} />
-            </IconButton>
+          <EditIcon className={classes.Icon} onClick={this.showEdit}/>
+        </IconButton>
       </CardActions>
       </Card>
     );

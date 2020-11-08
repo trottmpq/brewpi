@@ -21,10 +21,28 @@ const styles = theme => ({
 });
 
 class KettleCardUpdate extends Component {
+  state = { createOpen: false}
   close = () => {
     this.props.handleClose();
   };
+  deleteKettle = () => {
+    console.log("Deleting")
+    var baseStr = "/devices/Kettle/"
+    var endpointStr = baseStr.concat(this.props.data.id)
+    console.log(endpointStr)
+    setTimeout(() => {
+      fetch(endpointStr, {
+        method: 'DELETE',
+        body: "",
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(res => res.json())
+        .catch(error => console.error('Error:', error))
+        .then(response => console.log('Success:', response));
 
+      this.close();
+    }, 400);
+  };
   render() {
     const { classes, data } = this.props;
 
@@ -95,12 +113,29 @@ class KettleCardUpdate extends Component {
                     variant="outlined"
                   />
                   <Box my={2}>
-                  <Button variant="outlined" onClick={this.close}>Cancel</Button>
+                  <Button 
+                  disabled={isSubmitting}
+                  fullWidth
+                  size="large"
+                  variant="outlined" 
+                  onClick={this.close}>
+                    Cancel</Button>
+                  </Box>
+                  <Box my={2}>
+                  <Button 
+                  disabled={isSubmitting}
+                  fullWidth
+                  size="large"
+                  variant="outlined" 
+                  onClick={this.deleteKettle}>
+                    Delete</Button>
+                  </Box>
+                  <Box my={2}>
                     <Button
                       color="primary"
                       disabled={isSubmitting}
-                      
-                     
+                      fullWidth
+                      size="large"
                       type="submit"
                       variant="contained" 
                     >

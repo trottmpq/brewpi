@@ -121,8 +121,7 @@ try:
                 temp = -242.02
                 temp += 2.2228 * raw_reading
                 temp += 2.5859e-3 * math.pow(raw_reading, 2)
-
-            return temp
+            return "{:.2f}".format(round(temp * max / 2, 2))
 
 
 except ImportError:
@@ -142,7 +141,7 @@ except ImportError:
             n = datetime.now().time()
             seconds = float(n.second) + float(n.microsecond) / 1000000.0
             temp_sin = math.sin(seconds * 2 * math.pi / 60 / (self.gpio + 1))
-            return temp_sin * max / 2
+            return "{:.2f}".format(round(temp_sin * max / 2, 2))
 
 
 if "__main__" == __name__:

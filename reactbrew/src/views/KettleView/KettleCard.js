@@ -112,6 +112,23 @@ class ItemCard extends Component {
     }, 400);
 
   };
+
+  tempChange = (event, value, id) => {
+    var baseStr = "/devices/Kettle/"
+    var endpointStr = baseStr.concat(id)
+    var values={ target_temp: value }
+    setTimeout(() => {
+        fetch(endpointStr, {
+        method: 'PUT',
+        body: JSON.stringify(values, null, 2),
+        headers: { 'Content-Type': 'application/json' }
+        })
+        .then(res => res.json())
+        .catch(error => console.error('Error:', error))
+        .then(response => console.log('Success:', response));
+    }, 400);
+  };
+
   valuetext(value) {
     return `${value}°C`;
   }
@@ -161,14 +178,17 @@ class ItemCard extends Component {
                 </Grid>
                 <Grid item xs={6}>
                 <Slider
-                    defaultValue={30}
+                    name="SetTemp"
+                    defaultValue={0}
                     getAriaValueText={this.valuetext}
                     aria-labelledby="discrete-slider"
                     valueLabelDisplay="auto"
+                    color="secondary"
                     step={1}
-                    marks
                     min={10}
-                    max={110}
+                    max={100}
+                    // value = {this.props.data.target_temp}
+                    onChangeCommitted={(e, val) => this.tempChange(e, val, this.props.data.id)}
                     />
                 </Grid>
             </Grid>

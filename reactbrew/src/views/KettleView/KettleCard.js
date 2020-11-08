@@ -1,35 +1,26 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Backdrop from '@material-ui/core/Backdrop';
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
-import Modal from '@material-ui/core/Modal';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/styles';
-import ItemCardUpdate from 'src/components/ItemCardUpdate';
 import CardActions from '@material-ui/core/CardActions';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Switch from '@material-ui/core/Switch';
 import EditIcon from '@material-ui/icons/Edit';
-import Paper from '@material-ui/core/Paper';
 import Slider from '@material-ui/core/Slider';
-
-
-
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-
 import ListItemText from '@material-ui/core/ListItemText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-
 import { blue } from '@material-ui/core/colors';
+
 const emails = ['username@gmail.com', 'user02@gmail.com'];
 const useStyles = makeStyles({
   avatar: {
@@ -157,15 +148,13 @@ class ItemCard extends Component {
                 Heater
                 </Grid>
                 <Grid item xs={6}>
-                    
-                        <Switch
-                        checked={    this.props.data["heater"] != null ? this.props.data.heater.state : false }
-                        onChange={this.handleChange}
-                        name={String(this.props.data.id).concat("/heaterstate")}
-                        color="primary"
-                        disabled = {this.props.data["heater"] != null ? false : true }
-                        />
-                        
+                    <Switch
+                    checked={    this.props.data["heater"] != null ? this.props.data.heater.state : false }
+                    onChange={this.handleChange}
+                    name={String(this.props.data.id).concat("/heaterstate")}
+                    color="primary"
+                    disabled = {this.props.data["heater"] != null ? false : true }
+                    />
                 </Grid>
                 <Grid item xs={6}>
                 Target Temperaure
@@ -184,9 +173,7 @@ class ItemCard extends Component {
                 </Grid>
             </Grid>
         </Typography>
-      
           </CardContent>
-      
         <CardActions>
         <IconButton aria-label="edit">
                 <EditIcon className={classes.Icon}/>

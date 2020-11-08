@@ -4,7 +4,10 @@ import { Container, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 import Page from 'src/components/Page';
 import ItemCardList from 'src/components/ItemCardList';
-import TempSensorForm from './tempsensorform';
+import ItemCardCreate from 'src/components/ItemCardCreate';
+import Dialog from '@material-ui/core/Dialog';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 
 const styles = theme => ({
   root: {
@@ -24,6 +27,16 @@ const styles = theme => ({
 });
 
 class TempSensor extends Component {
+  state = { createOpen: false}
+  openCreate = () => {
+    console.log("Opening create dialog")
+    this.setState({createOpen: true})
+  }
+
+  closeCreate = () => {
+    console.log("Closing create dialog")
+    this.setState({createOpen: false})
+  }
   render() {
     const { classes } = this.props;
     return (
@@ -33,8 +46,17 @@ class TempSensor extends Component {
             Temp Sensor List
           </Typography>
           <ItemCardList URL='/devices/TempSensor/'/>
-          <TempSensorForm/>
+          <Dialog onClose={this.closeCreate} open={this.state.createOpen}>
+            <ItemCardCreate URL='/devices/TempSensor/'/>
+          </Dialog>
         </Container>
+        <Fab
+        color="secondary"
+        aria-label="add"
+        className={classes.fab}
+        onClick={this.openCreate}
+      ><AddIcon />
+      </Fab>
       </Page>
     );
   }

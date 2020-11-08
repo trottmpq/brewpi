@@ -30,7 +30,7 @@ export default class ItemCardList extends Component {
       <Grid container spacing={3}>
         {this.state.datalist.map(data => (
           <Grid item lg={3} sm={6} xl={3} xs={12} key={data.id}>
-            <ItemCard data={data} />
+            <ItemCard data={data} type={this.props.type} />
           </Grid>
         ))}
       </Grid>
@@ -39,5 +39,6 @@ export default class ItemCardList extends Component {
 }
 
 ItemCardList.propTypes = {
-    URL: PropTypes.object.isRequired
+    URL: PropTypes.object.isRequired,
+    type : PropTypes.object.isRequired
   };

@@ -68,7 +68,7 @@ class ItemCard extends Component {
             timeout: 500
           }}
         >
-          <ItemCardUpdate handleClose={this.hideModal} data={this.props.data}/>
+          <ItemCardUpdate type={this.props.type} handleClose={this.hideModal} data={this.props.data}/>
         </Modal>
       </Card>
     );
@@ -76,6 +76,7 @@ class ItemCard extends Component {
 }
 
 ItemCard.propTypes = {
+  type: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired
 };
 

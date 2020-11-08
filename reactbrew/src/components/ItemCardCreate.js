@@ -1,79 +1,42 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import AddIcon from '@material-ui/icons/Add';
-import Backdrop from '@material-ui/core/Backdrop';
+import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
-import Fab from '@material-ui/core/Fab';
-import Modal from '@material-ui/core/Modal';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 
-const useStyles = makeStyles(theme => ({
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
+const styles = theme => ({
   paper: {
     backgroundColor: theme.palette.background.paper,
     border: '0px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3)
-  },
-  fab: {
-    margin: 0,
-    top: 'auto',
-    left: 'auto',
-    bottom: 20,
-    right: 20,
-    position: 'fixed'
   }
-}));
+});
 
-export default function TempSensorForm() {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
+class ItemCardUpdate extends Component {
+  close = () => {
+    // this.props.handleClose();
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  render() {
+    const { classes } = this.props;
 
-  return (
-    <div>
-      <Fab
-        color="primary"
-        aria-label="add"
-        className={classes.fab}
-        onClick={handleOpen}
-      >
-        <AddIcon />
-      </Fab>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500
-        }}
-      >
+    return (
+      <div>
+        
         <Paper className={classes.paper}>
           <Container maxWidth="sm">
             <Formik
-              initialValues={{ name: '', gpio_num: '' }}
+              initialValues={{ name: "New Name", gpio_num: 0}}
               validationSchema={Yup.object().shape({
                 name: Yup.string()
                   .max(255)
@@ -83,8 +46,11 @@ export default function TempSensorForm() {
                   .required('GPIO Number is required')
               })}
               onSubmit={(values, { setSubmitting }) => {
+                console.log("Creating")
+                console.log(this.props.URL)
+
                 setTimeout(() => {
-                  fetch('/api/tempsensor', {
+                  fetch(this.props.URL, {
                     method: 'POST',
                     body: JSON.stringify(values, null, 2),
                     headers: { 'Content-Type': 'application/json' }
@@ -93,7 +59,7 @@ export default function TempSensorForm() {
                     .catch(error => console.error('Error:', error))
                     .then(response => console.log('Success:', response));
                   setSubmitting(false);
-                  handleClose();
+                  this.close();
                 }, 400);
               }}
             >
@@ -110,14 +76,14 @@ export default function TempSensorForm() {
                 <form onSubmit={handleSubmit}>
                   <Box mb={3}>
                     <Typography color="textPrimary" variant="h2">
-                      Create new Temp Sensor
+                      Create Item
                     </Typography>
                     <Typography
                       color="textSecondary"
                       gutterBottom
                       variant="body2"
                     >
-                      Use this Form to create a new temp sensor.
+                      Use this Form to create this item.
                     </Typography>
                   </Box>
                   <Divider />
@@ -164,7 +130,12 @@ export default function TempSensorForm() {
             </Formik>
           </Container>
         </Paper>
-      </Modal>
-    </div>
-  );
+      </div>
+    );
+  }
 }
+ItemCardUpdate.propTypes = {
+  URL : PropTypes.object.isRequired,
+  handleClose: PropTypes.object.isRequired
+};
+export default withStyles(styles)(ItemCardUpdate);

@@ -43,8 +43,15 @@ class ItemCardUpdate extends Component {
                   .required('GPIO Number is required')
               })}
               onSubmit={(values, { setSubmitting }) => {
+                console.log("Updating")
+                var baseStr = "/devices/"
+                baseStr = baseStr.concat(this.props.type)
+                baseStr = baseStr.concat("/")
+                baseStr = baseStr.concat(this.props.data.id)
+                console.log(baseStr)
+
                 setTimeout(() => {
-                  fetch('/devices/TempSensor/1', {
+                  fetch(baseStr, {
                     method: 'PUT',
                     body: JSON.stringify(values, null, 2),
                     headers: { 'Content-Type': 'application/json' }
@@ -129,6 +136,7 @@ class ItemCardUpdate extends Component {
   }
 }
 ItemCardUpdate.propTypes = {
+  type : PropTypes.object.isRequired, 
   data: PropTypes.object.isRequired,
   handleClose: PropTypes.object.isRequired
 };

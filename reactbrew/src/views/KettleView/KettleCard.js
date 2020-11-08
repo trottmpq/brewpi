@@ -13,59 +13,15 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Switch from '@material-ui/core/Switch';
 import EditIcon from '@material-ui/icons/Edit';
 import Slider from '@material-ui/core/Slider';
-import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+
 import Dialog from '@material-ui/core/Dialog';
-import { blue } from '@material-ui/core/colors';
+import Button from '@material-ui/core/Button';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import CloseIcon from '@material-ui/icons/Close';
 
-const emails = ['username@gmail.com', 'user02@gmail.com'];
-const useStyles = makeStyles({
-  avatar: {
-    backgroundColor: blue[100],
-    color: blue[600],
-  },
-});
-function SimpleDialog(props) {
-    const classes = useStyles();
-    const { onClose, selectedValue, open } = props;
-  
-    const handleClose = () => {
-      onClose(selectedValue);
-    };
-  
-    const handleListItemClick = (value) => {
-      onClose(value);
-    };
-  
-    return (
-      <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-        <DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>
-        <List>
-          {emails.map((email) => (
-            <ListItem button onClick={() => handleListItemClick(email)} key={email}>
-            
-              <ListItemText primary={email} />
-            </ListItem>
-          ))}
-  
-          <ListItem autoFocus button onClick={() => handleListItemClick('addAccount')}>
-            
-            <ListItemText primary="Add account" />
-          </ListItem>
-        </List>
-      </Dialog>
-    );
-  }
-  
-  SimpleDialog.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
-    selectedValue: PropTypes.string.isRequired,
-  };
-
+import KettleCardUpdate from './KettleCardUpdate'
 
 const styles = theme => ({
   modal: {
@@ -89,10 +45,47 @@ const styles = theme => ({
     gridGap: theme.spacing(3),
   },
 });
+const DialogTitle = withStyles(styles)((props) => {
+    const { children, classes, onClose, ...other } = props;
+    return (
+      <MuiDialogTitle disableTypography className={classes.root} {...other}>
+        <Typography variant="h6">{children}</Typography>
+        {onClose ? (
+          <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+            <CloseIcon />
+          </IconButton>
+        ) : null}
+      </MuiDialogTitle>
+    );
+  });
+  
+  const DialogContent = withStyles((theme) => ({
+    root: {
+      padding: theme.spacing(2),
+    },
+  }))(MuiDialogContent);
+  
+  const DialogActions = withStyles((theme) => ({
+    root: {
+      margin: 0,
+      padding: theme.spacing(1),
+    },
+  }))(MuiDialogActions);
+
 
 class ItemCard extends Component {
 
-  
+    state = { editOpen: false};
+    showEdit = () => {
+        console.log("editOpen <= true")
+        this.state.editOpen = true;
+      };
+    
+      hideEdit = () => {
+        console.log("editOpen <= false")
+        this.state.editOpen = false;
+      };
+
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.checked });
     var baseStr = "/devices/Kettle/"
@@ -132,6 +125,7 @@ class ItemCard extends Component {
   valuetext(value) {
     return `${value}°C`;
   }
+
 
   render() {
     const { classes } = this.props;
@@ -193,10 +187,15 @@ class ItemCard extends Component {
                 </Grid>
             </Grid>
         </Typography>
+        
+        <Dialog onClose={this.showEdit} aria-labelledby="edit-dialog" open={this.state.editOpen}>
+            <KettleCardUpdate handleClose={this.hideEdit} data={this.props.data}/>
+        </Dialog>
+
           </CardContent>
         <CardActions>
         <IconButton aria-label="edit">
-                <EditIcon className={classes.Icon}/>
+                <EditIcon className={classes.Icon} onClick={this.showEdit}/>
                 </IconButton>
             <IconButton aria-label="delete">
                 <DeleteForeverIcon className={classes.Icon} />

@@ -113,7 +113,22 @@ class ItemCard extends Component {
   
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.checked });
-    
+    var baseStr = "/devices/Kettle/"
+    var endpointStr = baseStr.concat(event.target.name)
+    console.log(endpointStr)
+  
+    var values={ state: event.target.checked }
+    setTimeout(() => {
+        fetch(endpointStr, {
+        method: 'PUT',
+        body: JSON.stringify(values, null, 2),
+        headers: { 'Content-Type': 'application/json' }
+        })
+        .then(res => res.json())
+        .catch(error => console.error('Error:', error))
+        .then(response => console.log('Success:', response));
+    }, 400);
+
   };
   valuetext(value) {
     return `${value}°C`;
@@ -122,11 +137,8 @@ class ItemCard extends Component {
   render() {
     const { classes } = this.props;
 
-    console.log(this.props.data);
     return (
       <Card>
-         
-        
           <CardHeader title={this.props.data.name} />
           <Divider />
           <CardContent>
@@ -145,7 +157,7 @@ class ItemCard extends Component {
                         <Switch
                         checked={    this.props.data["pump"] != null ? this.props.data.pump.state : false }
                         onChange={this.handleChange}
-                        name="pumpOn"
+                        name={String(this.props.data.id).concat("/pumpstate")}
                         color="primary"/>
                 </Grid>
                 <Grid item xs={6}>
@@ -154,9 +166,9 @@ class ItemCard extends Component {
                 <Grid item xs={6}>
                     
                         <Switch
-                        checked={this.state.checkedB}
+                        checked={    this.props.data["heater"] != null ? this.props.data.heater.state : false }
                         onChange={this.handleChange}
-                        name="controlOn"
+                        name={String(this.props.data.id).concat("/heaterstate")}
                         color="primary"/>
                     
                 </Grid>

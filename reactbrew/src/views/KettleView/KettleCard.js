@@ -44,11 +44,12 @@ class ItemCard extends Component {
 
     state = { editOpen: false};
     showEdit = () => {
-        this.state.editOpen = true;
+      this.setState({editOpen : true})
+        
       };
     
       hideEdit = () => {
-        this.state.editOpen = false;
+        this.setState({editOpen : false})
       };
 
   handleChange = (event) => {

@@ -21,8 +21,6 @@ class Kettle(PkModel):
     pump = relationship("Pump", back_populates="kettle", uselist=False)
     heater = relationship("Heater", back_populates="kettle", uselist=False)
 
-    _control_loop = None
-
     def __init__(self, name, **kwargs):
         """Create instance."""
         super().__init__(name=name, **kwargs)
@@ -66,31 +64,49 @@ class Kettle(PkModel):
 
     def hysteresis_loop(self):
         """Hysterises loop to turn hold the kettle as a set temperature."""
-        while self.is_running:
+        t = threading.currentThread()
+        while getattr(t, "is_running", True):
             temp_c = self.current_temp()  # Current temperature
 
-            if self.heater.state is True:
-                if temp_c > self.target_temp + self.hyst_window:
-                    self.heater_enable(False)
-            if self.heater.state is False:
-                if temp_c < self.target_temp - self.hyst_window:
-                    self.heater_enable(True)
+            if temp_c + self.hyst_window < self.target_temp:
+                self.heater_enable(True)
+            if temp_c - self.hyst_window < self.target_temp:
+                self.heater_enable(False)
             time.sleep(5)
+        self.heater_enable(False)
 
     def thread_function(self):
-        while self.is_running:
-            # current_app.logger.info("Thread: running")
+        """Dummy function to prove threading."""
+        t = threading.currentThread()
+        while getattr(t, "is_running", True):
             print("running")
             time.sleep(2)
         print("stopping")
-        # current_app.logger.info("Thread: stopped")
 
     def start_loop(self):
-        self._control_loop = threading.Thread(target=self.thread_function)
-        current_app.logger.info("Main    : before running thread")
-        self.is_running = True
-        self._control_loop.start()
+        """Start Thread if not already active."""
+        # Creat thread if doesn't already exist.
+        if not current_app.threads.get(f"{self.name}_id"):
+            current_app.threads[f"{self.name}_id"] = threading.Thread(
+                target=self.thread_function
+            )
+        if not current_app.threads[f"{self.name}_id"].is_alive():
+            current_app.logger.info(f"{self.name}_id starting")
+            current_app.threads[f"{self.name}_id"].start()
+            self.is_running = True
+            self.update()
+            return
+        current_app.logger.info(f"{self.name}_id is already running")
 
     def stop_loop(self):
-        current_app.logger.info("Thread: about to stop")
-        self.is_running = False
+        """Stop Thread if not already stopped."""
+        if current_app.threads.get(f"{self.name}_id"):
+            current_app.logger.info("Thread: about to stop")
+            self.is_running = False
+            current_app.threads[f"{self.name}_id"].is_running = False
+            current_app.threads[f"{self.name}_id"].join()
+            if not current_app.threads[f"{self.name}_id"].is_alive():
+                del current_app.threads[f"{self.name}_id"]
+            self.update()
+        else:
+            current_app.logger.info("thread has already stopped")

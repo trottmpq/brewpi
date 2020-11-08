@@ -23,6 +23,7 @@ def create_app(config_object="brewpi.settings"):
     register_shellcontext(app)
     register_commands(app)
     configure_logger(app)
+    register_thread_handles(app)
     return app
 
 
@@ -60,6 +61,10 @@ def register_errorhandlers(app):
         return jsonify(reason=e.description), 400
 
     return None
+
+
+def register_thread_handles(app):
+    app.threads = dict()
 
 
 def register_shellcontext(app):

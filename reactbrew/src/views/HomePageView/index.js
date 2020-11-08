@@ -1,6 +1,8 @@
 import React from 'react';
 import { Container, Grid, makeStyles } from '@material-ui/core';
 import Page from 'src/components/Page';
+import BeerPyDashboard from 'src/components/BeerPyDashboard';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,14 +16,15 @@ const useStyles = makeStyles(theme => ({
 const HomePage = () => {
   const classes = useStyles();
 
+
   return (
     <Page className={classes.root} title="Home">
       <Container maxWidth={false}>
-        <Grid container spacing={3}>
-          <Grid item lg={3} sm={6} xl={3} xs={12}>
-            <p>HOME PAGE</p>
-          </Grid>
-        </Grid>
+      <Typography variant="h1" component="h2">
+            Frog Hop Brewery Dashboard
+          </Typography>
+        
+            <BeerPyDashboard/>
       </Container>
     </Page>
   );

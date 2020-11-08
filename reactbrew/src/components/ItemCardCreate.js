@@ -43,7 +43,9 @@ class ItemCardUpdate extends Component {
                   .required('Name is required'),
                 gpio_num: Yup.number()
                   .integer()
-                  .required('GPIO Number is required')
+                  .required('GPIO Number is required'),
+                  kettle_id: Yup.number()
+                    .integer()
               })}
               onSubmit={(values, { setSubmitting }) => {
                 console.log("Creating")
@@ -113,6 +115,20 @@ class ItemCardUpdate extends Component {
                     margin="normal"
                     variant="outlined"
                   />
+                  <TextField
+                    type="number"
+                    name="kettle_id"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.kettle_id}
+                    error={Boolean(touched.kettle_id && errors.kettle_id)}
+                    fullWidth
+                    helperText={touched.kettle_id && errors.kettle_id}
+                    label="Kettle ID"
+                    margin="normal"
+                    variant="outlined"
+                  />
+
                   <Box my={2}>
                     <Button
                       color="primary"

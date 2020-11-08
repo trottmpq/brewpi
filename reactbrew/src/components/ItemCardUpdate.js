@@ -25,6 +25,26 @@ class ItemCardUpdate extends Component {
     this.props.handleClose();
   };
 
+  deleteItem = () => {
+    console.log("Deleting")
+    var baseStr = "/devices/"
+    baseStr = baseStr.concat(this.props.type)
+    baseStr = baseStr.concat("/")
+    baseStr = baseStr.concat(this.props.data.id)
+    console.log(baseStr)
+    setTimeout(() => {
+      fetch(baseStr, {
+        method: 'DELETE',
+        body: "",
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(res => res.json())
+        .catch(error => console.error('Error:', error))
+        .then(response => console.log('Success:', response));
+
+      this.close();
+    }, 400);
+  };
   render() {
     const { classes, data } = this.props;
 
@@ -33,14 +53,16 @@ class ItemCardUpdate extends Component {
         <Paper className={classes.paper}>
           <Container maxWidth="sm">
             <Formik
-              initialValues={{ name: data.name, gpio_num: data.gpio_num }}
+              initialValues={{ name: data.name, gpio_num: data.gpio_num, kettle_id: data.kettle_id }}
               validationSchema={Yup.object().shape({
                 name: Yup.string()
                   .max(255)
                   .required('Name is required'),
                 gpio_num: Yup.number()
                   .integer()
-                  .required('GPIO Number is required')
+                  .required('GPIO Number is required'),
+                kettle_id: Yup.number()
+                  .integer()
               })}
               onSubmit={(values, { setSubmitting }) => {
                 console.log("Updating")
@@ -114,7 +136,32 @@ class ItemCardUpdate extends Component {
                     margin="normal"
                     variant="outlined"
                   />
+                   <TextField
+                    type="number"
+                    name="kettle_id"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.kettle_id}
+                    error={Boolean(touched.kettle_id && errors.kettle_id)}
+                    fullWidth
+                    helperText={touched.kettle_id && errors.kettle_id}
+                    label="Kettle ID"
+                    margin="normal"
+                    variant="outlined"
+                  />
                   <Box my={2}>
+                  <Button
+                      color="primary"
+                      disabled={isSubmitting}
+                      fullWidth
+                      size="large"
+                      onClick={this.deleteItem}
+                      variant="outlined"
+                    >
+                      Delete
+                    </Button>
+                    </Box>
+                    <Box my={2}>
                     <Button
                       color="primary"
                       disabled={isSubmitting}

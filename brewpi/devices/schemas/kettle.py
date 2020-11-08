@@ -26,3 +26,9 @@ class KettleStateSchema(ma.Schema):
     """A schema for state in a kettle."""
 
     state = fields.Bool()
+
+
+class KettleTempSchema(ma.Schema):
+    """A schema for temperature in a kettle."""
+
+    temperature = fields.Float()

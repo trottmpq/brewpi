@@ -121,7 +121,7 @@ try:
                 temp = -242.02
                 temp += 2.2228 * raw_reading
                 temp += 2.5859e-3 * math.pow(raw_reading, 2)
-            return "{:.2f}".format(round(temp * max / 2, 2))
+            return round(temp, 2)
 
 
 except ImportError:

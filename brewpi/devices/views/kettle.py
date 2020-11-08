@@ -3,7 +3,7 @@ from flask import current_app, request
 from flask_restx import Namespace, Resource, fields
 
 from ..models import Kettle
-from ..schemas import KettleSchema, KettleStateSchema
+from ..schemas import KettleSchema, KettleStateSchema, KettleTempSchema
 from .heater import nsmodel as heatermodel
 from .pump import nsmodel as pumpmodel
 from .temp_sensor import nsmodel as tempsensormodel
@@ -47,6 +47,15 @@ nsmodelpumpstate = api.model(
     {
         "state": fields.Boolean(
             default=False, description="True = Pump On, False = Pump Off"
+        ),
+    },
+)
+
+nsmodelloopstate = api.model(
+    "KettleLoopState",
+    {
+        "state": fields.Boolean(
+            default=False, description="True = Loop running"
         ),
     },
 )
@@ -196,13 +205,14 @@ class KettleItemHeaterState(Resource):
 
         data = schema.load(request.get_json(), partial=True)
         if data:
-            print(data)
             if data.get("state") is True:
                 kettle.heater.turn_on()
             if data.get("state") is False:
                 kettle.heater.turn_off()
-
             return schema.dump({"state": kettle.heater.current_state})
+        current_app.logger.info(
+            f"{kettle.name}, {kettle.heater.name} on gpio {kettle.heater.gpio_num} set to {kettle.heater.current_state}"
+        )
         return api.abort(404, message="Invalid Fields. Cannot Update kettle")
 
 
@@ -243,11 +253,97 @@ class KettleItemPumpState(Resource):
 
         data = schema.load(request.get_json(), partial=True)
         if data:
-            print(data)
             if data.get("state") is True:
                 kettle.pump.turn_on()
             if data.get("state") is False:
                 kettle.pump.turn_off()
-
             return schema.dump({"state": kettle.pump.current_state})
+        current_app.logger.info(
+            f"{kettle.name}, {kettle.pump.name} on gpio {kettle.pump.gpio_num} set to {kettle.pump.current_state}"
+        )
+        return api.abort(404, message="Invalid Fields. Cannot Update kettle")
+
+
+@api.route("/<id>/targettemp")
+@api.param("id", "The kettle identifier")
+@api.response(404, "kettle not found")
+class KettleItemTargetTemp(Resource):
+    """Retrieve the target temp from the kettle."""
+
+    @api.doc("get_kettle_target_temp")
+    @api.doc(model=nsmodeltemp)
+    @api.marshal_with(nsmodeltemp)
+    def get(self, id):
+        """Fetch the current target temp."""
+
+        query = Kettle.get_by_id(id)
+        if not query:
+            api.abort(404, message=f"kettle {id} doesn't exist")
+
+        current_app.logger.info(f"{query.name}'s target temp is {query.current_target_temperature}C")
+        return {"temperature": query.current_target_temperature}
+
+    @api.expect(nsmodeltemp)
+    @api.marshal_with(nsmodeltemp)
+    def put(self, id):
+        """Update a kettles target temperature given its identifier."""
+        schema = KettleTempSchema()
+        kettle = Kettle.get_by_id(id)
+        if not kettle:
+            api.abort(404, message=f"Kettle {id} doesn't exist")
+
+        data = schema.load(request.get_json(), partial=True)
+        if data:
+            if data.get("temperature"):
+                kettle.current_target_temperature = data.get("temperature")
+            current_app.logger.info(f"{kettle.name}'s target temp is {kettle.current_target_temperature}C")
+            return schema.dump({"temperature": kettle.current_target_temperature})
+        return api.abort(404, message="Invalid Fields. Cannot Update kettle")
+
+
+@api.route("/<id>/startloop")
+@api.param("id", "The kettle identifier")
+@api.response(404, "kettle not found")
+class KettleItemStartLoop(Resource):
+    """Retrieve the target temp from the kettle."""
+
+    @api.expect(nsmodelloopstate)
+    @api.marshal_with(nsmodelloopstate)
+    def put(self, id):
+        """Update a kettles target temperature given its identifier."""
+        schema = KettleStateSchema()
+        kettle = Kettle.get_by_id(id)
+        if not kettle:
+            api.abort(404, message=f"Kettle {id} doesn't exist")
+
+        data = schema.load(request.get_json(), partial=True)
+        if data:
+            if data.get("state"):
+                kettle.start_loop()
+            # current_app.logger.info(f"{kettle.name}'s target temp is {kettle.current_target_temperature}C")
+            return schema.dump({"state": "started"})
+        return api.abort(404, message="Invalid Fields. Cannot Update kettle")
+
+
+@api.route("/<id>/stoploop")
+@api.param("id", "The kettle identifier")
+@api.response(404, "kettle not found")
+class KettleItemStartLoop(Resource):
+    """Retrieve the target temp from the kettle."""
+
+    @api.expect(nsmodelloopstate)
+    @api.marshal_with(nsmodelloopstate)
+    def put(self, id):
+        """Update a kettles target temperature given its identifier."""
+        schema = KettleStateSchema()
+        kettle = Kettle.get_by_id(id)
+        if not kettle:
+            api.abort(404, message=f"Kettle {id} doesn't exist")
+
+        data = schema.load(request.get_json(), partial=True)
+        if data:
+            if data.get("state"):
+                kettle.stop_loop()
+            # current_app.logger.info(f"{kettle.name}'s target temp is {kettle.current_target_temperature}C")
+            return schema.dump({"state": "started"})
         return api.abort(404, message="Invalid Fields. Cannot Update kettle")

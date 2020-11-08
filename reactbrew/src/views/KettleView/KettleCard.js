@@ -100,16 +100,7 @@ const styles = theme => ({
 });
 
 class ItemCard extends Component {
-  state = { show: false, pumpOn: false };
-  
 
-  showModal = () => {
-    this.setState({ show: true });
-  };
-
-  hideModal = () => {
-    this.setState({ show: false });
-  };
   
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.checked });

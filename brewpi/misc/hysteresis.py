@@ -1,5 +1,6 @@
 #!python
 
+import argparse
 import requests
 import time
 
@@ -42,4 +43,16 @@ def temp_loop(kettle_id):
         time.sleep(5)
 
 if "__main__" == __name__:
+<<<<<<< HEAD
     temp_loop(3)
+=======
+    # Create the parser
+    my_parser = argparse.ArgumentParser(description='hysteresis loop for a kettle')
+
+    # Add the arguments
+    my_parser.add_argument('kettle_id', type=int, help='id of kettle in the db')
+
+    # Execute parse_args()
+    args = my_parser.parse_args()
+    temp_loop(args.kettle_id)
+>>>>>>> argparse for loop

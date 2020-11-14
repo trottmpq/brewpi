@@ -16,6 +16,7 @@ class KettleSchema(ma.SQLAlchemyAutoSchema):
         """A Heater Schema Metaclass."""
 
         model = Kettle
+        include_fk = True
 
     temp_sensor = fields.Nested(TempSensorSchema, many=False)
     pump = fields.Nested(PumpSchema, many=False)

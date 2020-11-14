@@ -5,6 +5,7 @@ import time
 
 import simple_pid
 from flask import current_app
+# from brewpi.extensions import celery
 
 from brewpi.database import Column, PkModel, db, relationship
 
@@ -20,6 +21,8 @@ class Kettle(PkModel):
 
     temp_sensor = relationship("TempSensor", back_populates="kettle", uselist=False)
     pump = relationship("Pump", back_populates="kettle", uselist=False)
+
+    heater_id = Column(db.Integer(), db.ForeignKey("heater.id"), nullable=True)
     heater = relationship("Heater", back_populates="kettle", uselist=False)
 
     def __init__(self, name, **kwargs):
@@ -101,36 +104,43 @@ class Kettle(PkModel):
 
     def thread_function(self):
         """Dummy function to prove threading."""
-        t = threading.currentThread()
-        while getattr(t, "is_running", True):
-            print("running")
-            time.sleep(2)
+        while self.is_running:
+            current_app.logger.info("running")
+            time.sleep(5)
         print("stopping")
+
+    def add(self, x, y):
+        return x + y
 
     def start_loop(self):
         """Start Thread if not already active."""
-        # Creat thread if doesn't already exist.
-        if not current_app.threads.get(f"{self.name}_id"):
-            current_app.threads[f"{self.name}_id"] = threading.Thread(
-                target=self.pid_loop
-            )
-        if not current_app.threads[f"{self.name}_id"].is_alive():
-            current_app.logger.info(f"{self.name}_id starting")
-            current_app.threads[f"{self.name}_id"].start()
-            self.is_running = True
-            self.update()
-            return
-        current_app.logger.info(f"{self.name}_id is already running")
+        # # Creat thread if doesn't already exist.
+        # if not current_app.threads.get(f"{self.name}_id"):
+        #     current_app.threads[f"{self.name}_id"] = threading.Thread(
+        #         target=self.pid_loop
+        #     )
+        # if not current_app.threads[f"{self.name}_id"].is_alive():
+        #     current_app.logger.info(f"{self.name}_id starting")
+        #     current_app.threads[f"{self.name}_id"].start()
+        #     self.is_running = True
+        #     self.update()
+        #     return
+        self.is_running = True
+        # current_app.threads[f"{self.name}_id"] = celery.submit(self.thread_function)
+        # id=current_app.threads[f"{self.name}_id"]
+        # current_app.logger.info(f"{id.running()} is already running")
+        return
 
     def stop_loop(self):
         """Stop Thread if not already stopped."""
-        if current_app.threads.get(f"{self.name}_id"):
-            current_app.logger.info("Thread: about to stop")
-            self.is_running = False
-            current_app.threads[f"{self.name}_id"].is_running = False
-            current_app.threads[f"{self.name}_id"].join()
-            if not current_app.threads[f"{self.name}_id"].is_alive():
-                del current_app.threads[f"{self.name}_id"]
-            self.update()
-        else:
-            current_app.logger.info("thread has already stopped")
+        # if current_app.threads.get(f"{self.name}_id"):
+        #     current_app.logger.info("Thread: about to stop")
+        #     self.is_running = False
+        #     current_app.threads[f"{self.name}_id"].is_running = False
+        #     current_app.threads[f"{self.name}_id"].join()
+        #     if not current_app.threads[f"{self.name}_id"].is_alive():
+        #         del current_app.threads[f"{self.name}_id"]
+        #     self.update()
+        # else:
+        self.is_running = False
+        current_app.logger.info("thread has already stopped")

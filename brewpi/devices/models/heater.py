@@ -13,7 +13,6 @@ class Heater(PkModel):
     gpio_num = Column(db.Integer(), nullable=False)
     state = Column(db.Boolean(), default=False, nullable=False)
     active_low = Column(db.Boolean(), default=False, nullable=False)
-    kettle_id = Column(db.Integer(), db.ForeignKey("kettles.id"), nullable=True)
     kettle = relationship("Kettle", back_populates="heater")
 
     def __init__(self, name, gpio_num, **kwargs):

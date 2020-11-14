@@ -125,6 +125,8 @@ try:
                 temp = -242.02
                 temp += 2.2228 * raw_reading
                 temp += 2.5859e-3 * math.pow(raw_reading, 2)
+            if temp < 0 or temp > 100:
+                return None
             return round(temp, 2)
 
 

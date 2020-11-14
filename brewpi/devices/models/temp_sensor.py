@@ -25,10 +25,12 @@ class TempSensor(PkModel):
     @property
     def current_temperature(self):
         """Return the current temperature."""
-        self.temperature = TempSensorDriver(self.gpio_num, self.active_low).get_temp_c()
-        self.update()
+        newTemp = TempSensorDriver(self.gpio_num, self.active_low).get_temp_c()
+        if(newTemp):
+            self.temperature = newTemp
+            self.update()
         return self.temperature
-
+        
     def __repr__(self):
         """Represent instance as a unique string."""
         return f"<TempSensor({self.name}: {self.gpio_num})>"

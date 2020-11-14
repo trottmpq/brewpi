@@ -22,7 +22,7 @@ class Kettle(PkModel):
     temp_sensor = relationship("TempSensor", back_populates="kettle", uselist=False)
     pump = relationship("Pump", back_populates="kettle", uselist=False)
 
-    heater_id = Column(db.Integer(), db.ForeignKey("heater.id"), nullable=True)
+    heater_id = Column(db.Integer(), db.ForeignKey("heaters.id"), nullable=True)
     heater = relationship("Heater", back_populates="kettle", uselist=False)
 
     def __init__(self, name, **kwargs):

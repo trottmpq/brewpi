@@ -19,11 +19,6 @@ nsmodel = api.model(
         "active_low": fields.Boolean(
             default=False, description="Heater State logic is reversed"
         ),
-        "kettle_id": fields.Integer(
-            default=None,
-            description="ID of the Kettle where the Heater is located.",
-            nullable=True,
-        ),
     },
 )
 

@@ -39,6 +39,10 @@ try:
             r = self.read_spi(self._MAX31865_CONFIG_REG, 1)[0]  # read config back
             if r != self.CONFIG:
                 current_app.logger.error("Error setting config")
+            self.write_spi(self.REG_HIFLT_MSB, [0xFF])
+            self.write_spi(self.REG_HIFLT_LSB, [0xFF])
+            self.write_spi(self.REG_LOFLT_MSB, [0])
+            self.write_spi(self.REG_LOFLT_LSB, [0])
 
         def chip_select(self, select):
             """Set chip select if not normal SPI CS."""

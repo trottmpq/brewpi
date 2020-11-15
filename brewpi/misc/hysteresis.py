@@ -39,7 +39,7 @@ def temp_loop(hlt_kettle_id, mash_kettle_id):
         hyst_window = get_hyst_window(mash_kettle_id)
 
         print(f"Mash Kettle: {mash_temp_c},{target_temp},{hyst_window}")
-        print(f"HLT Kettle:{hlt_kettle_id}")
+        print(f"HLT Kettle:{hlt_temp_c}")
         if abs(mash_temp_c - hlt_temp_c) > 5:
             print("SLOW THE FLOW")
 

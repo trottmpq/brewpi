@@ -5,12 +5,10 @@ import time
 
 def get_temp(kettle_id):
     resp = requests.get(f'http://localhost:5000/devices/Kettle/{kettle_id}/temperature')
-    print(resp.json())
     return resp.json().get("temperature")
 
 def get_targettemp(kettle_id):
     resp = requests.get(f'http://localhost:5000/devices/Kettle/{kettle_id}/targettemp')
-    print(resp.json())
     return resp.json().get("temperature")
 
 def set_heater(kettle_id, onoff):
@@ -22,7 +20,6 @@ def set_heater(kettle_id, onoff):
 
 def get_hyst_window(kettle_id):
     resp = requests.get(f'http://localhost:5000/devices/Kettle/{kettle_id}')
-    print(resp.json())
     return resp.json().get("hyst_window")
 
 def temp_loop(kettle_id):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Temperature models."""
-
+import datetime
 from brewpi.database import Column, PkModel, db, relationship
 from brewpi.devices.drivers.temp_sensor import TempSensorDriver
 
@@ -13,6 +13,7 @@ class TempSensor(PkModel):
     gpio_num = Column(db.Integer(), nullable=False)
     active_low = Column(db.Boolean(), default=True, nullable=False)
     temperature = Column(db.Float(), default=False, nullable=False)
+    temperature_updated = Column(db.DateTime(), default=datetime.datetime.utcnow)
     kettle_id = Column(db.Integer(), db.ForeignKey("kettles.id"), nullable=True)
     kettle = relationship("Kettle", back_populates="temp_sensor")
 
@@ -25,10 +26,19 @@ class TempSensor(PkModel):
     @property
     def current_temperature(self):
         """Return the current temperature."""
-        newTemp = TempSensorDriver(self.gpio_num, self.active_low).get_temp_c()
-        if(newTemp):
-            self.temperature = newTemp
-            self.update()
+        update = False
+        if self.temperature_updated: 
+            if (datetime.datetime.now() -self.temperature_updated).seconds > 5:
+                update = True
+        else:
+            update = True
+
+        if update:
+            newTemp = TempSensorDriver(self.gpio_num, self.active_low).get_temp_c()
+            if(newTemp):
+                self.temperature = newTemp
+                self.temperature_updated = datetime.datetime.utcnow()
+                self.update()
         return self.temperature
         
     def __repr__(self):

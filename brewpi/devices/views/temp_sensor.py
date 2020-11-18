@@ -16,6 +16,9 @@ nsmodel = api.model(
         "temperature": fields.Float(
             default=False, description="Temperature in degrees Celcius"
         ),
+        "temperature_updated": fields.DateTime(
+            description="Last update time of the temperature"
+        ),
         "active_low": fields.Boolean(
             default=False, description="TempSensor State logic is reversed"
         ),

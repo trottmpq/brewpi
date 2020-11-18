@@ -29,6 +29,8 @@ try:
             """Initialise SPI Chip."""
             self.gpio_number = gpio_number
             self.active_low = active_low
+            
+        def init(self):
             if self.gpio_number:
                 GPIO.setwarnings(False)
                 GPIO.setmode(GPIO.BCM)
@@ -99,36 +101,39 @@ try:
             rtdval /= 32768
             rtdval *= self.RREF
             return rtdval
-
         def get_temp_c(self):
             """Get Temperature in degrees Celcius."""
             # This maths originates from:
             # http://www.analog.com/media/en/technical-documentation/application-notes/AN709_0.pdf
 
             rtd_a = 3.9083e-3
-            rtd_b = -5.775e-7
+            rtd_b = -5.775e-7   
 
             z1 = -rtd_a
             z2 = math.pow(rtd_a, 2) - (4 * rtd_b)
             z3 = (4 * rtd_b) / self.RTD_NOM
             z4 = 2 * rtd_b
-
-            raw_reading = self.get_resistance()
-            temp = (z1 + math.sqrt(z2 + (z3 * raw_reading))) / z4
-            if temp <= 0:
-                # If temp is negative the above is invalid. 2nd order eq is
-                # accurate to +0.075°C/–0.17°C. Easily good enough for what we
-                # need. For the following maths to work, nominal RTD resistance
-                # must be normalized to 100 ohms.
-                raw_reading /= self.RTD_NOM
-                raw_reading *= 100
-                temp = -242.02
-                temp += 2.2228 * raw_reading
-                temp += 2.5859e-3 * math.pow(raw_reading, 2)
-            if temp < 0 or temp > 100:
+            try:
+                raw_reading = self.get_resistance()
+                temp = (z1 + math.sqrt(z2 + (z3 * raw_reading))) / z4
+                if temp <= 0:
+                    # If temp is negative the above is invalid. 2nd order eq is
+                    # accurate to +0.075°C/–0.17°C. Easily good enough for what we
+                    # need. For the following maths to work, nominal RTD resistance
+                    # must be normalized to 100 ohms.
+                    raw_reading /= self.RTD_NOM
+                    raw_reading *= 100
+                    temp = -242.02
+                    temp += 2.2228 * raw_reading
+                    temp += 2.5859e-3 * math.pow(raw_reading, 2)
+                if temp < 0 or temp > 100:
+                    return None
+                current_app.logger.info(f"Gpio={self.gpio_number} Temperature= {temp} ")
+                return round(temp, 2)
+            except: 
+                current_app.logger.error("Failed to read temperature")
+                self.init()
                 return None
-            return round(temp, 2)
-
 
 except ImportError:
     from datetime import datetime

@@ -114,7 +114,7 @@ class ItemCard extends Component {
 
 
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
 
     return (
       <Card>
@@ -229,7 +229,7 @@ class ItemCard extends Component {
           </CardContent>
         <CardActions>
         <IconButton aria-label="edit" onClick={this.showEdit}>
-          <EditIcon className={classes.Icon}/>
+          <EditIcon />
         </IconButton>
       </CardActions>
       </Card>

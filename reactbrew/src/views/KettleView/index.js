@@ -1,3 +1,4 @@
+import React from 'react';
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Container, Typography } from '@material-ui/core';
@@ -38,7 +39,7 @@ class Kettle extends Component {
       </Page>
     );
   }
-};
+}
 
 Kettle.propTypes = {
   classes: PropTypes.object.isRequired

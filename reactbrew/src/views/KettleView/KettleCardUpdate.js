@@ -44,11 +44,11 @@ class KettleCardUpdate extends Component {
     }, 400);
   };
   render() {
-    const { classes, data } = this.props;
+    const { data } = this.props;
 
     return (
       <div>
-        <Paper className={classes.paper}>
+        <Paper >
           <Container maxWidth="sm">
             <Formik
               initialValues={{ name: data.name}}

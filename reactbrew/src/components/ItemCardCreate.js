@@ -26,12 +26,12 @@ class ItemCardCreate extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
 
     return (
       <div>
         
-        <Paper className={classes.paper}>
+        <Paper >
           <Container maxWidth="sm">
             <Formik
               initialValues={{ name: "New Name", gpio_num: 0, kettle_id : 0}}

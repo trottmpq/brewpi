@@ -37,7 +37,7 @@ class ItemCard extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
 
     console.log(this.props.data);
     return (
@@ -59,7 +59,7 @@ class ItemCard extends Component {
         <Modal
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"
-          className={classes.modal}
+          // className={classes.modal}
           open={this.state.show}
           onClose={this.hideModal}
           closeAfterTransition

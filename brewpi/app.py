@@ -34,7 +34,7 @@ def register_extensions(app):
     csrf_protect.init_app(app)
     migrate.init_app(app, db)
     celery.init_app(app)
-    restx.init_app(app)
+    # restx.init_app(app)
     return None
 
 

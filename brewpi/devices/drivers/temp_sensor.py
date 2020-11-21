@@ -29,7 +29,7 @@ try:
             """Initialise SPI Chip."""
             self.gpio_number = gpio_number
             self.active_low = active_low
-            
+
         def init(self):
             if self.gpio_number:
                 GPIO.setwarnings(False)
@@ -101,13 +101,14 @@ try:
             rtdval /= 32768
             rtdval *= self.RREF
             return rtdval
+
         def get_temp_c(self):
             """Get Temperature in degrees Celcius."""
             # This maths originates from:
             # http://www.analog.com/media/en/technical-documentation/application-notes/AN709_0.pdf
 
             rtd_a = 3.9083e-3
-            rtd_b = -5.775e-7   
+            rtd_b = -5.775e-7
 
             z1 = -rtd_a
             z2 = math.pow(rtd_a, 2) - (4 * rtd_b)
@@ -130,10 +131,11 @@ try:
                     return None
                 current_app.logger.info(f"Gpio={self.gpio_number} Temperature= {temp} ")
                 return round(temp, 2)
-            except: 
+            except:
                 current_app.logger.error("Failed to read temperature")
                 self.init()
                 return None
+
 
 except ImportError:
     from datetime import datetime

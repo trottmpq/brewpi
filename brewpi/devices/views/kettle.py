@@ -25,9 +25,7 @@ nsmodel = api.model(
         "temp_sensor": fields.Nested(tempsensormodel, allow_null=True),
         "pump": fields.Nested(pumpmodel, allow_null=True),
         "heater_id": fields.Integer(
-            default=None,
-            description="ID of the Heater",
-            nullable=True,
+            default=None, description="ID of the Heater", nullable=True,
         ),
         "heater": fields.Nested(heatermodel, allow_null=True),
     },

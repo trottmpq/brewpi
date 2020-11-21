@@ -17,10 +17,11 @@ WTForms = "*"
 supervisor = "*"
 environs = "*"
 simple-pid = "*"
-spidev = {version = "*", sys_platform = "=='armv7l'"}
-"rpi.gpio" = {version = "*", sys_platform = "=='armv7l'"}
+spidev = "*"
+"rpi.gpio" = "*"
 pybeerxml = "*"
 flask-restx = "*"
+flask-execute = "*"
 
 [dev-packages]
 pytest = "*"

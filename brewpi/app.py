@@ -7,7 +7,7 @@ from flask import Flask, jsonify
 from flask_wtf.csrf import CSRFError
 
 from brewpi import commands, devices, recipes
-from brewpi.extensions import csrf_protect, db, ma, migrate, restx
+from brewpi.extensions import celery, csrf_protect, db, ma, migrate, restx
 
 
 def create_app(config_object="brewpi.settings"):
@@ -33,14 +33,15 @@ def register_extensions(app):
     ma.init_app(app)
     csrf_protect.init_app(app)
     migrate.init_app(app, db)
+    celery.init_app(app)
     restx.init_app(app)
     return None
 
 
 def register_blueprints(app):
     """Register Flask blueprints."""
-    app.register_blueprint(devices.views.blueprint)
-    app.register_blueprint(recipes.views.blueprint)
+    app.register_blueprint(devices.views.blueprint, url_prefix="/api/devices")
+    app.register_blueprint(recipes.views.blueprint, url_prefix="/api/recipes")
     return None
 
 

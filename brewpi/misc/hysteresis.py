@@ -7,25 +7,28 @@ import requests
 
 
 def get_temp(kettle_id):
-    resp = requests.get(f'http://localhost:5000/devices/Kettle/{kettle_id}/temperature')
+    resp = requests.get(f"http://localhost:5000/devices/Kettle/{kettle_id}/temperature")
     return resp.json().get("temperature")
 
 
 def get_targettemp(kettle_id):
-    resp = requests.get(f'http://localhost:5000/devices/Kettle/{kettle_id}/targettemp')
+    resp = requests.get(f"http://localhost:5000/devices/Kettle/{kettle_id}/targettemp")
     return resp.json().get("temperature")
 
 
 def set_heater(kettle_id, onoff):
-    if(onoff):
+    if onoff:
         print("Heater ON")
     else:
         print("Heater OFF")
-    requests.put(f'http://127.0.0.1:5000/devices/Kettle/{kettle_id}/heaterstate', json={'state': onoff})
+    requests.put(
+        f"http://127.0.0.1:5000/devices/Kettle/{kettle_id}/heaterstate",
+        json={"state": onoff},
+    )
 
 
 def get_hyst_window(kettle_id):
-    resp = requests.get(f'http://localhost:5000/devices/Kettle/{kettle_id}')
+    resp = requests.get(f"http://localhost:5000/devices/Kettle/{kettle_id}")
     return resp.json().get("hyst_window")
 
 
@@ -56,11 +59,13 @@ def temp_loop(hlt_kettle_id, mash_kettle_id):
 
 if "__main__" == __name__:
     # Create the parser
-    my_parser = argparse.ArgumentParser(description='hysteresis loop for a kettle')
+    my_parser = argparse.ArgumentParser(description="hysteresis loop for a kettle")
 
     # Add the arguments
-    my_parser.add_argument('hlt_kettle_id', type=int, help='id of HLT kettle in the db')
-    my_parser.add_argument('mash_kettle_id', type=int, help='id of Mash kettle in the db')
+    my_parser.add_argument("hlt_kettle_id", type=int, help="id of HLT kettle in the db")
+    my_parser.add_argument(
+        "mash_kettle_id", type=int, help="id of Mash kettle in the db"
+    )
 
     # Execute parse_args()
     args = my_parser.parse_args()

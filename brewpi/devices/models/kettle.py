@@ -5,9 +5,10 @@ import time
 
 import simple_pid
 from flask import current_app
-# from brewpi.extensions import celery
 
 from brewpi.database import Column, PkModel, db, relationship
+
+# from brewpi.extensions import celery
 
 
 class Kettle(PkModel):

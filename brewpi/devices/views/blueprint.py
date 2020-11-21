@@ -8,7 +8,7 @@ from .kettle import api as kettlens
 from .pump import api as pumpns
 from .temp_sensor import api as tempsensorns
 
-blueprint = Blueprint("devices", __name__, url_prefix="/devices")
+blueprint = Blueprint("devices", __name__)
 
 api = Api(
     blueprint,

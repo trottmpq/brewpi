@@ -11,6 +11,7 @@
 		"python.linting.flake8Enabled": true,
 		"python.linting.enabled": true,
 		"python.formatting.provider": "black",
-		"python.pythonPath": "/home/mtrott/.virtualenvs/brewpi-HFutNu6s/bin/python"
+		"python.pythonPath": "/home/mtrott/.virtualenvs/brewpi-HFutNu6s/bin/python",
+		"python.languageServer": "Pylance"
 	}
 }

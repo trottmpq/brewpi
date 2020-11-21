@@ -5,7 +5,7 @@ from flask_restx import Api
 
 from .recipe import api as recipens
 
-blueprint = Blueprint("recipes", __name__, url_prefix="/recipes")
+blueprint = Blueprint("recipes", __name__)
 
 api = Api(
     blueprint,

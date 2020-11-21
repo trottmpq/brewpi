@@ -47,7 +47,7 @@ class ItemCard extends Component {
           <Divider />
           <CardContent>
             {Object.keys(this.props.data).map((key, i) => (
-              <Typography color="textSecondary">
+              <Typography color="textSecondary" key={i}>
                 {key}:{' '}
                 {this.props.data[key] === null
                   ? 'Unkown'
@@ -76,7 +76,7 @@ class ItemCard extends Component {
 }
 
 ItemCard.propTypes = {
-  type: PropTypes.object.isRequired,
+  type: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired
 };
 

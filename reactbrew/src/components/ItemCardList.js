@@ -39,6 +39,6 @@ export default class ItemCardList extends Component {
 }
 
 ItemCardList.propTypes = {
-    URL: PropTypes.object.isRequired,
-    type : PropTypes.object.isRequired
+    URL: PropTypes.string.isRequired,
+    type : PropTypes.string.isRequired
   };

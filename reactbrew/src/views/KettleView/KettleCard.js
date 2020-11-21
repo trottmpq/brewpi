@@ -54,7 +54,7 @@ class ItemCard extends Component {
 
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.checked });
-    var baseStr = "/api/devices/Kettle/"
+    var baseStr = this.props.URL;
     var endpointStr = baseStr.concat(event.target.name)
     console.log(endpointStr)
   
@@ -74,7 +74,7 @@ class ItemCard extends Component {
  
   
   hystChange = (event, value, id) => {
-    var baseStr = "/api/devices/Kettle/"
+    var baseStr = this.props.URL;
     var endpointStr = baseStr.concat(id)
     
     var values={ hyst_window: value }
@@ -91,7 +91,7 @@ class ItemCard extends Component {
   };
 
   tempChange = (event, value, id) => {
-    var baseStr = "/api/devices/Kettle/"
+    var baseStr = this.props.URL;
     var endpointStr = baseStr.concat(id)
     endpointStr = endpointStr.concat("/targettemp")
     var values={ temperature: value }
@@ -121,16 +121,22 @@ class ItemCard extends Component {
           <CardHeader title={this.props.data.name} />
           <Divider />
           <CardContent>
-          <Typography color="textSecondary">
+          
             <Grid container spacing={3}>
                 <Grid item xs={6}>
+                <Typography color="textSecondary">
                 Temperature
+                </Typography>
                 </Grid>
                 <Grid item xs={6}>
+                <Typography color="textSecondary">
                 {    this.props.data["temp_sensor"] != null ? this.props.data.temp_sensor.temperature : 0 }
+                </Typography>
                 </Grid>
                 <Grid item xs={6}>
-                Pump
+                <Typography color="textSecondary">
+                  Pump
+                </Typography>
                 </Grid>
                 <Grid item xs={6}>
                         <Switch
@@ -142,7 +148,9 @@ class ItemCard extends Component {
                         />
                 </Grid>
                 <Grid item xs={6}>
+                <Typography color="textSecondary">
                 Heater
+                </Typography>
                 </Grid>
                 <Grid item xs={6}>
                     <Switch
@@ -154,7 +162,9 @@ class ItemCard extends Component {
                     />
                 </Grid>
                 <Grid item xs={6}>
+                <Typography color="textSecondary">
                 Control
+                </Typography>
                 </Grid>
                 <Grid item xs={6}>
                     <Switch
@@ -166,7 +176,9 @@ class ItemCard extends Component {
                     />
                 </Grid>
                 <Grid item xs={6}>
+                <Typography color="textSecondary">
                 Target Temperature
+                </Typography>
                 </Grid>
                 <Grid item xs={6}>
                 <Slider
@@ -186,7 +198,9 @@ class ItemCard extends Component {
 
 
                 <Grid item xs={6}>
-                Hysteresis
+                <Typography color="textSecondary">
+                  Hysteresis
+                </Typography>
                 </Grid>
                 <Grid item xs={6}>
                 <Slider
@@ -206,16 +220,16 @@ class ItemCard extends Component {
 
 
             </Grid>
-        </Typography>
+        
 
         <Dialog onClose={this.showEdit} aria-labelledby="edit-dialog" open={this.state.editOpen}>
-            <KettleCardUpdate handleClose={this.hideEdit} data={this.props.data}/>
+            <KettleCardUpdate handleClose={this.hideEdit} data={this.props.data} URL={this.props.URL}/>
         </Dialog>
 
           </CardContent>
         <CardActions>
-        <IconButton aria-label="edit">
-          <EditIcon className={classes.Icon} onClick={this.showEdit}/>
+        <IconButton aria-label="edit" onClick={this.showEdit}>
+          <EditIcon className={classes.Icon}/>
         </IconButton>
       </CardActions>
       </Card>
@@ -224,7 +238,8 @@ class ItemCard extends Component {
 }
 
 ItemCard.propTypes = {
-  data: PropTypes.object.isRequired
+  data: PropTypes.object.isRequired,
+  URL : PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(ItemCard);

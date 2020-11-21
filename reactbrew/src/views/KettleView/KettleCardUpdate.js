@@ -27,7 +27,7 @@ class KettleCardUpdate extends Component {
   };
   deleteKettle = () => {
     console.log("Deleting")
-    var baseStr = "/api/devices/Kettle/"
+    var baseStr = this.props.URL;
     var endpointStr = baseStr.concat(this.props.data.id)
     console.log(endpointStr)
     setTimeout(() => {
@@ -58,7 +58,7 @@ class KettleCardUpdate extends Component {
                   .required('Name is required')
               })}
               onSubmit={(values, { setSubmitting }) => {
-                var baseStr = "/api/devices/Kettle/"
+                var baseStr = this.props.URL;
                 var endpointStr = baseStr.concat(this.props.data.id)
                 console.log(endpointStr)
                 setTimeout(() => {
@@ -152,7 +152,8 @@ class KettleCardUpdate extends Component {
   }
 }
 KettleCardUpdate.propTypes = {
+  URL : PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,
-  handleClose: PropTypes.object.isRequired
+  handleClose: PropTypes.func.isRequired
 };
 export default withStyles(styles)(KettleCardUpdate);

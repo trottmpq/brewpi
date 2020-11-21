@@ -47,7 +47,7 @@ class TempSensor extends Component {
           </Typography>
           <ItemCardList URL='/api/devices/TempSensor/' type={"TempSensor"}/>
           <Dialog onClose={this.closeCreate} open={this.state.createOpen}>
-            <ItemCardCreate URL='/api/devices/TempSensor/'/>
+            <ItemCardCreate URL='/api/devices/TempSensor/' handleClose={this.closeCreate}/>
           </Dialog>
         </Container>
         <Fab

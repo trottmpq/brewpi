@@ -20,7 +20,7 @@ const styles = theme => ({
   }
 });
 
-class ItemCardUpdate extends Component {
+class ItemCardCreate extends Component {
   close = () => {
     // this.props.handleClose();
   };
@@ -34,7 +34,7 @@ class ItemCardUpdate extends Component {
         <Paper className={classes.paper}>
           <Container maxWidth="sm">
             <Formik
-              initialValues={{ name: "New Name", gpio_num: 0}}
+              initialValues={{ name: "New Name", gpio_num: 0, kettle_id : 0}}
               validationSchema={Yup.object().shape({
                 name: Yup.string()
                   .max(255)
@@ -148,8 +148,8 @@ class ItemCardUpdate extends Component {
     );
   }
 }
-ItemCardUpdate.propTypes = {
-  URL : PropTypes.object.isRequired,
-  handleClose: PropTypes.object.isRequired
+ItemCardCreate.propTypes = {
+  URL : PropTypes.string.isRequired,
+  handleClose: PropTypes.func.isRequired
 };
-export default withStyles(styles)(ItemCardUpdate);
+export default withStyles(styles)(ItemCardCreate);

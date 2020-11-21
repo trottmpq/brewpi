@@ -48,7 +48,7 @@ class Pump extends Component {
          
           <ItemCardList URL='/api/devices/Pump/' type={"Pump"}/>
           <Dialog onClose={this.closeCreate} open={this.state.createOpen}>
-            <ItemCardCreate URL='/api/devices/Pump/'/>
+            <ItemCardCreate URL='/api/devices/Pump/' handleClose={this.closeCreate}/>
           </Dialog>
         </Container>
         <Fab

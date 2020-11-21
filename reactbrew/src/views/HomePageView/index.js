@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Grid, makeStyles } from '@material-ui/core';
+import { Container, makeStyles } from '@material-ui/core';
 import Page from 'src/components/Page';
 import BeerPyDashboard from 'src/components/BeerPyDashboard';
 import Typography from '@material-ui/core/Typography';

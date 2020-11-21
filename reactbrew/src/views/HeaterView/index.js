@@ -48,7 +48,7 @@ class Heater extends Component {
           </Typography>
           <ItemCardList URL='/api/devices/Heater/' type={"Heater"}/>
           <Dialog onClose={this.closeCreate} open={this.state.createOpen}>
-            <ItemCardCreate URL='/api/devices/Heater/'/>
+            <ItemCardCreate URL='/api/devices/Heater/' handleClose={this.closeCreate}/>
           </Dialog>
         </Container>
          <Fab

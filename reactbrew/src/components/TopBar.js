@@ -24,6 +24,11 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
   return (
     <AppBar className={clsx(classes.root, className)} elevation={0} {...rest}>
       <Toolbar>
+        <Hidden lgUp>
+          <IconButton color="inherit" onClick={onMobileNavOpen}>
+            <MenuIcon />
+          </IconButton>
+        </Hidden>
         <RouterLink to="/">
           <Logo />
         </RouterLink>
@@ -31,11 +36,6 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
           M&H Brew Co.
         </Typography>
         <Box flexGrow={1} />
-        <Hidden lgUp>
-          <IconButton color="inherit" onClick={onMobileNavOpen}>
-            <MenuIcon />
-          </IconButton>
-        </Hidden>
       </Toolbar>
     </AppBar>
   );

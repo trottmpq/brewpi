@@ -14,6 +14,11 @@ const items = [
     title: 'Home'
   },
   {
+    href: '/app/kettles',
+    icon: GiCookingPot,
+    title: 'Kettles'
+  },
+  {
     href: '/app/tempsensors',
     icon: RiTempColdLine,
     title: 'Temp Sensors'
@@ -22,11 +27,6 @@ const items = [
     href: '/app/heaters',
     icon: GiHeatHaze,
     title: 'Heaters'
-  },
-  {
-    href: '/app/kettles',
-    icon: GiCookingPot,
-    title: 'Kettles'
   },
   {
     href: '/app/pumps',

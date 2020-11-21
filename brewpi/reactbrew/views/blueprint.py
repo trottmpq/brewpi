@@ -2,7 +2,7 @@
 """API views."""
 from flask import Blueprint
 
-blueprint = Blueprint("main", __name__, static_folder='../reactbrew/build')
+blueprint = Blueprint("main", __name__)
 
 @blueprint.route('/')
 def root():

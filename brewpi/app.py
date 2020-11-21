@@ -15,7 +15,7 @@ def create_app(config_object="brewpi.settings"):
 
     :param config_object: The configuration object to use.
     """
-    app = Flask(__name__, static_folder='../reactbrew/build', static_url_path='/')
+    app = Flask(__name__)
     app.config.from_object(config_object)
     register_extensions(app)
     register_blueprints(app)

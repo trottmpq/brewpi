@@ -9,7 +9,7 @@ import requests
 
 def set_heater(kettle_id, onoff):
     requests.put(
-        f"http://127.0.0.1:5000/devices/Kettle/{kettle_id}/heaterstate",
+        f"http://127.0.0.1:5000/api/devices/Kettle/{kettle_id}/heaterstate",
         json={"state": onoff},
     )
 

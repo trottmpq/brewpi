@@ -46,9 +46,9 @@ class Pump extends Component {
             Pumps List
           </Typography>
          
-          <ItemCardList URL='/devices/Pump/' type={"Pump"}/>
+          <ItemCardList URL='/api/devices/Pump/' type={"Pump"}/>
           <Dialog onClose={this.closeCreate} open={this.state.createOpen}>
-            <ItemCardCreate URL='/devices/Pump/'/>
+            <ItemCardCreate URL='/api/devices/Pump/'/>
           </Dialog>
         </Container>
         <Fab

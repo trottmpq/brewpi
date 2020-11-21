@@ -25,7 +25,7 @@ export default class LineGraph extends Component {
       }
     
       getapi() {
-        fetch("/devices/Kettle/1/temperature")
+        fetch("/api/devices/Kettle/1/temperature")
           .then(res => res.json())
           .then(data => {
             this.props.data.push(data.temperature)

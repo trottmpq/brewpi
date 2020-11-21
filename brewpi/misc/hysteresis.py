@@ -7,12 +7,16 @@ import requests
 
 
 def get_temp(kettle_id):
-    resp = requests.get(f"http://localhost:5000/devices/Kettle/{kettle_id}/temperature")
+    resp = requests.get(
+        f"http://localhost:5000/api/devices/Kettle/{kettle_id}/temperature"
+    )
     return resp.json().get("temperature")
 
 
 def get_targettemp(kettle_id):
-    resp = requests.get(f"http://localhost:5000/devices/Kettle/{kettle_id}/targettemp")
+    resp = requests.get(
+        f"http://localhost:5000/api/devices/Kettle/{kettle_id}/targettemp"
+    )
     return resp.json().get("temperature")
 
 
@@ -22,13 +26,13 @@ def set_heater(kettle_id, onoff):
     else:
         print("Heater OFF")
     requests.put(
-        f"http://127.0.0.1:5000/devices/Kettle/{kettle_id}/heaterstate",
+        f"http://127.0.0.1:5000/api/devices/Kettle/{kettle_id}/heaterstate",
         json={"state": onoff},
     )
 
 
 def get_hyst_window(kettle_id):
-    resp = requests.get(f"http://localhost:5000/devices/Kettle/{kettle_id}")
+    resp = requests.get(f"http://localhost:5000/api/devices/Kettle/{kettle_id}")
     return resp.json().get("hyst_window")
 
 

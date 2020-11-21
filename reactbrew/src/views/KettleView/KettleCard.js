@@ -54,7 +54,7 @@ class ItemCard extends Component {
 
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.checked });
-    var baseStr = "/devices/Kettle/"
+    var baseStr = "/api/devices/Kettle/"
     var endpointStr = baseStr.concat(event.target.name)
     console.log(endpointStr)
   
@@ -74,7 +74,7 @@ class ItemCard extends Component {
  
   
   hystChange = (event, value, id) => {
-    var baseStr = "/devices/Kettle/"
+    var baseStr = "/api/devices/Kettle/"
     var endpointStr = baseStr.concat(id)
     
     var values={ hyst_window: value }
@@ -91,7 +91,7 @@ class ItemCard extends Component {
   };
 
   tempChange = (event, value, id) => {
-    var baseStr = "/devices/Kettle/"
+    var baseStr = "/api/devices/Kettle/"
     var endpointStr = baseStr.concat(id)
     endpointStr = endpointStr.concat("/targettemp")
     var values={ temperature: value }

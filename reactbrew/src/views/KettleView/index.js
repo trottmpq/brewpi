@@ -32,7 +32,7 @@ class Kettle extends Component {
           <Typography variant="h1" component="h2">
             Kettle List
           </Typography>
-          <KettleCardList URL='/devices/Kettle/'/>
+          <KettleCardList URL='/api/devices/Kettle/'/>
           <KettleForm/>
         </Container>
       </Page>

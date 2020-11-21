@@ -27,7 +27,7 @@ class ItemCardUpdate extends Component {
 
   deleteItem = () => {
     console.log("Deleting")
-    var baseStr = "/devices/"
+    var baseStr = "/api/devices/"
     baseStr = baseStr.concat(this.props.type)
     baseStr = baseStr.concat("/")
     baseStr = baseStr.concat(this.props.data.id)
@@ -66,7 +66,7 @@ class ItemCardUpdate extends Component {
               })}
               onSubmit={(values, { setSubmitting }) => {
                 console.log("Updating")
-                var baseStr = "/devices/"
+                var baseStr = "/api/devices/"
                 baseStr = baseStr.concat(this.props.type)
                 baseStr = baseStr.concat("/")
                 baseStr = baseStr.concat(this.props.data.id)

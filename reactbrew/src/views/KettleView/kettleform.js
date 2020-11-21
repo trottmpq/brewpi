@@ -81,7 +81,7 @@ export default function KettleForm() {
               })}
               onSubmit={(values, { setSubmitting }) => {
                 setTimeout(() => {
-                  fetch('/devices/Kettle/', {
+                  fetch('/api/devices/Kettle/', {
                     method: 'POST',
                     body: JSON.stringify(values, null, 2),
                     headers: { 'Content-Type': 'application/json' }

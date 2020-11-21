@@ -1,7 +1,7 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import { Grid } from '@material-ui/core';
-// import ItemCard from 'src/components/ItemCard';
+import { Grid } from '@material-ui/core';
+import ItemCard from 'src/components/ItemCard';
 
 export default class ItemCardList extends Component {
   state = {

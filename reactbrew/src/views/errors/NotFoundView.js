@@ -1,6 +1,6 @@
-// import React from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core';
-// import Page from 'src/components/Page';
+import Page from 'src/components/Page';
 
 const useStyles = makeStyles(theme => ({
   root: {

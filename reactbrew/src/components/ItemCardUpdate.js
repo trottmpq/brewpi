@@ -183,8 +183,8 @@ class ItemCardUpdate extends Component {
   }
 }
 ItemCardUpdate.propTypes = {
-  type : PropTypes.object.isRequired, 
+  type : PropTypes.string.isRequired, 
   data: PropTypes.object.isRequired,
-  handleClose: PropTypes.object.isRequired
+  handleClose: PropTypes.func.isRequired
 };
 export default withStyles(styles)(ItemCardUpdate);

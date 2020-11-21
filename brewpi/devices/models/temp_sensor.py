@@ -29,7 +29,7 @@ class TempSensor(PkModel):
         """Return the current temperature."""
         update = False
         if self.temperature_updated:
-            if (datetime.datetime.now() - self.temperature_updated).seconds > 5:
+            if (datetime.datetime.now() - self.temperature_updated).seconds > 1:
                 update = True
         else:
             update = True

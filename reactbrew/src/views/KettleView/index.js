@@ -27,7 +27,7 @@ class Kettle extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <Page className={classes.root} title="Pumps">
+      <Page className={classes.root} title="Kettles">
         <Container maxWidth={false}>
           <Typography variant="h1" component="h2">
             Kettle List

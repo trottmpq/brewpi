@@ -6,7 +6,11 @@
 	],
 	"settings": {
 		"files.exclude": {
-			"**/__pycache__": true
+			"**/__pycache__": true,
+			".github": true,
+			".pytest_cache": true,
+			"**/node_modules": true,
+			".gitignore":true
 		},
 		"python.linting.flake8Enabled": true,
 		"python.linting.enabled": true,

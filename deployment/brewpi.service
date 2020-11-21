@@ -1,0 +1,12 @@
+[Unit]
+Description=Brew Pi
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/pi/brewpi
+ExecStart=pipenv run gunicorn -b 127.0.0.1:5000 brewpi:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

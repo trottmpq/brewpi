@@ -21,4 +21,7 @@ Page.propTypes = {
   title: PropTypes.string
 };
 
+
+Page.displayName = 'Something';
+
 export default Page;

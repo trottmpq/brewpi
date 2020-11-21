@@ -60,7 +60,7 @@ class TempSensor extends Component {
       </Page>
     );
   }
-};
+}
 
 TempSensor.propTypes = {
   classes: PropTypes.object.isRequired

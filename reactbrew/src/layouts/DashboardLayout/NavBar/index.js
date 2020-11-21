@@ -59,7 +59,6 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     if (openMobile && onMobileClose) {
       onMobileClose();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   const content = (

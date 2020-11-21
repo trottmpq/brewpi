@@ -3,10 +3,10 @@
 import logging
 import sys
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, current_app
 from flask_wtf.csrf import CSRFError
 
-from brewpi import commands, devices, recipes
+from brewpi import commands, devices, recipes, reactbrew
 from brewpi.extensions import celery, csrf_protect, db, ma, migrate, restx
 
 
@@ -15,7 +15,7 @@ def create_app(config_object="brewpi.settings"):
 
     :param config_object: The configuration object to use.
     """
-    app = Flask(__name__.split(".")[0])
+    app = Flask(__name__, static_folder='../reactbrew/build', static_url_path='/')
     app.config.from_object(config_object)
     register_extensions(app)
     register_blueprints(app)
@@ -40,6 +40,7 @@ def register_extensions(app):
 
 def register_blueprints(app):
     """Register Flask blueprints."""
+    app.register_blueprint(reactbrew.views.blueprint)
     app.register_blueprint(devices.views.blueprint, url_prefix="/api/devices")
     app.register_blueprint(recipes.views.blueprint, url_prefix="/api/recipes")
     return None
@@ -89,3 +90,6 @@ def configure_logger(app):
     handler = logging.StreamHandler(sys.stdout)
     if not app.logger.handlers:
         app.logger.addHandler(handler)
+
+def root():
+    return current_app.send_static_file('index.html')

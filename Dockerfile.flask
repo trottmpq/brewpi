@@ -2,7 +2,7 @@
 FROM python:3-alpine as flask
 
 WORKDIR /app
-COPY ["Pipfile", "shell_scripts/auto_pipenv.sh", "./"]
+COPY ["Pipfile", "./"]
 RUN pip install pipenv
 
 COPY . .

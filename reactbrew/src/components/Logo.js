@@ -4,7 +4,7 @@ const Logo = props => {
   return (
     <img
       alt="Logo"
-      src="/static/hopslogo.svg"
+      src={process.env.PUBLIC_URL + '/static/hopslogo.svg'}
       width="50"
       height="50"
       {...props}

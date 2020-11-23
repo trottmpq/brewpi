@@ -9,27 +9,27 @@ import NavItem from './NavItem';
 
 const items = [
   {
-    href: '/app/home',
+    href: '/',
     icon: FaBeer,
     title: 'Home'
   },
   {
-    href: '/app/kettles',
+    href: '/kettles',
     icon: GiCookingPot,
     title: 'Kettles'
   },
   {
-    href: '/app/tempsensors',
+    href: '/tempsensors',
     icon: RiTempColdLine,
     title: 'Temp Sensors'
   },
   {
-    href: '/app/heaters',
+    href: '/heaters',
     icon: GiHeatHaze,
     title: 'Heaters'
   },
   {
-    href: '/app/pumps',
+    href: '/pumps',
     icon: GiWaterDrop,
     title: 'Pumps'
   }

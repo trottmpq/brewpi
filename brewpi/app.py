@@ -27,10 +27,6 @@ def create_app(config_object="brewpi.settings"):
 
     with app.app_context():
         @app.route('/')
-        def go_to_index():
-            return redirect(url_for('index'))
-
-        @app.route('/app/home')
         def index():
             print("index")
             return render_template('index.html')

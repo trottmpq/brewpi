@@ -3,7 +3,7 @@
 import logging
 import sys
 
-from flask import Flask, render_template, jsonify, redirect, url_for
+from flask import Flask, render_template, jsonify
 from flask_wtf.csrf import CSRFError
 
 from brewpi import commands, devices, recipes
@@ -23,12 +23,11 @@ def create_app(config_object="brewpi.settings"):
     register_shellcontext(app)
     register_commands(app)
     configure_logger(app)
-    register_thread_handles(app)
+    register_config(app)
 
     with app.app_context():
         @app.route('/')
         def index():
-            print("index")
             return render_template('index.html')
 
     return app
@@ -71,8 +70,30 @@ def register_errorhandlers(app):
     return None
 
 
-def register_thread_handles(app):
-    app.threads = dict()
+def register_config(app):
+    app.brewpi_config = dict()
+    app.brewpi_config["Devices"] = dict()
+    app.brewpi_config["Devices"]["TempSensors"] = dict()
+    app.brewpi_config["Devices"]["Heaters"] = dict()
+    app.brewpi_config["Devices"]["Pumps"] = dict()
+    with app.app_context():
+        for tempsensor in devices.models.TempSensor.query.all():
+            app.brewpi_config["Devices"]["TempSensors"][tempsensor.id] = {
+                "name": tempsensor.name,
+                "gpio_num": tempsensor.gpio_num,
+                "active_low": tempsensor.active_low}
+        for heater in devices.models.Heater.query.all():
+            app.brewpi_config["Devices"]["Heaters"][heater.id] = {
+                "name": heater.name,
+                "gpio_num": heater.gpio_num,
+                "active_low": heater.active_low}
+        for pump in devices.models.Pump.query.all():
+            app.brewpi_config["Devices"]["Pumps"][pump.id] = {
+                "name": pump.name,
+                "gpio_num": pump.gpio_num,
+                "active_low": pump.active_low}
+    print(app.brewpi_config)
+
 
 
 def register_shellcontext(app):

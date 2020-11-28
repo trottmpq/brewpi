@@ -8,6 +8,7 @@ import TempSensorView from 'src/views/TempSensorView';
 import HeaterView from 'src/views/HeaterView';
 import KettleView from 'src/views/KettleView';
 import PumpView from 'src/views/PumpView';
+import RecipeView from 'src/views/RecipeView';
 
 const routes = [
   {
@@ -19,6 +20,7 @@ const routes = [
       { path: 'heaters', element: <HeaterView /> },
       { path: 'kettles', element: <KettleView /> },
       { path: 'pumps', element: <PumpView /> },
+      { path: 'recipes', element: <RecipeView /> },
       { path: '404', element: <NotFoundView /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]

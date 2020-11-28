@@ -12,9 +12,9 @@ nsmodel = api.model(
     {
         "id": fields.Integer(readonly=True, description="Recipe Identifier"),
         "xml": fields.String(
-            required=True,
-            description="Recipe XML file",
-            example="brewpi/recipes/xml/sierranevada.xml",
+            required=False,
+            description="Recipe XML",
+            example="<RECIPES><RECIPE> .... ",
         ),
     },
 )
@@ -39,7 +39,7 @@ class RecipeList(Resource):
         schema = RecipeSchema()
         data = schema.load(request.get_json())
         if not schema.validate(data):
-            current_app.logger.info(f"New Item Data: {data}")
+            # current_app.logger.info(f"New Item Data: {data}")
             new_item = Recipe.create(**data)
             return schema.dump(new_item)
         return api.abort(404, message="Invalid Fields. Cannot Create Item")

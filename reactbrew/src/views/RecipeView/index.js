@@ -30,6 +30,7 @@ class Recipe extends Component {
   state = { recipelist : []}
 
   componentDidMount() {
+    this.getapi = this.getapi.bind(this);
     this.getapi()
   }
   openCreate = () => {
@@ -43,7 +44,6 @@ class Recipe extends Component {
   }
 
   getapi() {
-    console.log("Getting recipes")
     fetch("api/recipes/Recipe/")
       .then(res => res.json())
       .then(data => {
@@ -52,9 +52,9 @@ class Recipe extends Component {
       })
       .catch(console.log);
   }
+
   onChangeHandler=event=>{
     console.log(event.target.files[0].name)
-
     event.preventDefault()
     const reader = new FileReader()
     reader.onload = async (event) => { 
@@ -77,8 +77,6 @@ class Recipe extends Component {
     reader.readAsText(event.target.files[0])
   }
       
-
-
   render() {
     const { classes } = this.props;
     return (
@@ -90,8 +88,8 @@ class Recipe extends Component {
           <input type="file" name="file" onChange={(e) => this.onChangeHandler(e)} />
           <Grid container spacing={3}>
             {this.state.recipelist.map(data => (
-            <Grid item lg={6} sm={6} xl={6} xs={12} key={data.id}>
-              <RecipeCard data={data} />
+            <Grid item lg={12} sm={12} xl={12} xs={12} key={data.id}>
+              <RecipeCard data={data} onChange={this.getapi}/>
             </Grid>
           ))}
         </Grid>

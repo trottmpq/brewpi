@@ -77,6 +77,23 @@ function InfoTable(props) {
                 <TableCell >{props.data.abv.toFixed(2)}</TableCell>
               </TableRow>
           </TableBody>
+          <TableHead>
+            <TableRow>
+              <TableCell>Boil Time</TableCell>
+              <TableCell >Mash pH</TableCell>
+              <TableCell >Carbonation</TableCell>
+              <TableCell >ABV</TableCell>
+              
+            </TableRow>
+          </TableHead>
+          <TableBody>
+              <TableRow key={props.data.name}>
+                <TableCell > {props.data.boil_time} </TableCell>
+                <TableCell >{props.data.mash.ph}</TableCell>
+                <TableCell >{props.data.carbonation}</TableCell>
+                <TableCell >{props.data.abv.toFixed(2)}</TableCell>
+              </TableRow>
+          </TableBody>
         </Table>
       </TableContainer>
     );
@@ -135,7 +152,7 @@ function InfoTable(props) {
                 <TableCell > {hop.name} </TableCell>
                 <TableCell >{(hop.amount*1000).toFixed(2)}</TableCell>
                 <TableCell >{hop.use}</TableCell>
-                <TableCell >{(hop.time < props.data.boil_time) ? (hop.time + " mins") : (hop.time/60/24 + " days")}</TableCell>
+                <TableCell >{(hop.time <= props.data.boil_time) ? (hop.time + " mins") : (hop.time/60/24 + " days")}</TableCell>
               </TableRow>
               ))}
           </TableBody>
@@ -333,12 +350,20 @@ export default function RecipeCard(props) {
             <Grid item xs={12}>
         {InfoTable(props)}
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} hidden={props.data.notes ? false : true}>
         <Typography variant="h3" component="p">
           Brewers Notes
         </Typography>
         <Typography variant="body2" color="textSecondary" component="p">
           {props.data.notes}
+        </Typography>
+        </Grid>
+        <Grid item xs={12}  hidden={props.data.taste_notes ? false : true}>
+        <Typography variant="h3" component="p">
+          Tasting Notes
+        </Typography>
+        <Typography variant="body2" color="textSecondary" component="p">
+          {props.data.taste_notes}
         </Typography>
         </Grid>
         </Grid>

@@ -88,7 +88,7 @@ class Recipe extends Component {
           <input type="file" name="file" onChange={(e) => this.onChangeHandler(e)} />
           <Grid container spacing={3}>
             {this.state.recipelist.map(data => (
-            <Grid item lg={12} sm={12} xl={12} xs={12} key={data.id}>
+            <Grid item lg={6} sm={6} xl={6} xs={6} key={data.id}>
               <RecipeCard data={data} onChange={this.getapi}/>
             </Grid>
           ))}

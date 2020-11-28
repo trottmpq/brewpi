@@ -12,6 +12,7 @@ class Recipe(PkModel):
     __tablename__ = "recipe"
     name = Column(db.String(256), unique=False, nullable=True)
     xml = Column(db.String(128000), nullable=True)
+    favourite = Column(db.Boolean(), nullable=False)
     beerpy = Column(db.PickleType())
 
     def __init__(self, xml, **kwargs):

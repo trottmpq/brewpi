@@ -59,7 +59,7 @@ class Recipe extends Component {
     const reader = new FileReader()
     reader.onload = async (event) => { 
       const text = (event.target.result)
-      var values = {"xml" : text}
+      var values = {"xml" : text, "favourite" : false}
       console.log(values)
       setTimeout(() => {
         fetch("api/recipes/Recipe/", {

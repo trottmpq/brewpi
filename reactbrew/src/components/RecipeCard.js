@@ -24,7 +24,12 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -206,18 +211,75 @@ function InfoTable(props) {
     data: PropTypes.object.isRequired
   };
 
+
+
+
 export default function RecipeCard(props) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
-  const [favourite, setFavourite] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [brewOpen, setOpen] = React.useState(false);
+
+//   const Transition = React.forwardRef(function Transition(props, ref) {
+//     return <Slide direction="up" ref={ref} {...props} />;
+//   });
+
+  const handleBrewOpen = () => {
+    setOpen(true);
+  };
+
+  const handleBrewClose = () => {
+    setOpen(false);
+  };
+
+  function BrewAlert() {
+    return (
+  <Dialog
+  open={brewOpen}
+  keepMounted
+  onClose={handleBrewClose}
+  aria-labelledby="alert-dialog-slide-title"
+  aria-describedby="alert-dialog-slide-description"
+>
+  <DialogTitle id="alert-dialog-slide-title">{"Start Brew?"}</DialogTitle>
+  <DialogContent>
+    <DialogContentText id="alert-dialog-slide-description">
+      Ready to brew? 
+    </DialogContentText>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleBrewClose} color="primary">
+      No...
+    </Button>
+    <Button onClick={handleBrewClose} color="primary">
+      Yes!
+    </Button>
+  </DialogActions>
+</Dialog> );
+}
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
   const handleFavouriteClick = () => {
-    setFavourite(!favourite);
+    var endpointStr = "api/recipes/Recipe/".concat(props.data.id)
+    var values = {"favourite" : !props.data.favourite}
+    setTimeout(() => {
+        fetch(endpointStr, {
+          method: 'PUT',
+          body: JSON.stringify(values, null, 2),
+          headers: { 'Content-Type': 'application/json' }
+        })
+          .then(res => res.json())
+          .catch(error => console.error('Error:', error))
+          .then(response => {console.log('Success:', response);
+          props.onChange();
+        })
+          
+      }, 400);
+
+     
   };
 
   const handleMenuClick = (event) => {
@@ -243,7 +305,7 @@ export default function RecipeCard(props) {
       }, 400);
     setAnchorEl(null);
   };
-  
+
   return (
     <Card className={classes.root}>
         <Menu
@@ -256,6 +318,7 @@ export default function RecipeCard(props) {
             <MenuItem onClick={handleMenuClose}>Edit</MenuItem>
             <MenuItem onClick={handleMenuDelete}>Delete</MenuItem>
         </Menu>
+        {BrewAlert()}
       <CardHeader
         action={
           <IconButton  aria-controls="simple-menu" aria-haspopup="true"  onClick={handleMenuClick}>
@@ -283,9 +346,9 @@ export default function RecipeCard(props) {
 
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites" onClick={handleFavouriteClick}>
-          {favourite ? <StarIcon /> : <StarBorderIcon/>}
+          {props.data.favourite ? <StarIcon /> : <StarBorderIcon/>}
         </IconButton>
-        <IconButton aria-label="share">
+        <IconButton aria-label="share" onClick={handleBrewOpen}>
           <FaBeer />
         </IconButton>
         <IconButton

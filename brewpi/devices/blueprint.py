@@ -3,10 +3,7 @@
 from flask import Blueprint
 from flask_restx import Api
 
-from .heater import api as heaterns
-from .kettle import api as kettlens
-from .pump import api as pumpns
-from .temp_sensor import api as tempsensorns
+from .views import heater, kettle, pump, temp_sensor
 
 blueprint = Blueprint("devices", __name__)
 
@@ -17,7 +14,7 @@ api = Api(
     description="Api to control all the various devices in the brewery",
 )
 
-api.add_namespace(heaterns)
-api.add_namespace(pumpns)
-api.add_namespace(tempsensorns)
-api.add_namespace(kettlens)
+api.add_namespace(heater.api)
+api.add_namespace(kettle.api)
+api.add_namespace(pump.api)
+api.add_namespace(temp_sensor.api)

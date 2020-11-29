@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 """The api view module."""
-from .blueprint import blueprint  # noqa
+from . import heater, kettle, pump, temp_sensor  # noqa

@@ -2,8 +2,6 @@
 """Temperature models."""
 import datetime
 
-from flask.globals import current_app
-
 from brewpi.database import Column, PkModel, db, relationship
 from brewpi.devices.drivers.temp_sensor import TempSensorDriver
 
@@ -37,10 +35,9 @@ class TempSensor(PkModel):
             update = True
 
         if update:
-            newTemp = TempSensorDriver(self.gpio_num, self.active_low).get_temp_c()
-            if newTemp:
-                current_app.brewpi_config["Devices"]["TempSensors"][self.id]['temperature'] = newTemp
-                self.temperature = newTemp
+            new_temp = TempSensorDriver(self.gpio_num, self.active_low).get_temp_c()
+            if new_temp:
+                self.temperature = new_temp
                 self.temperature_updated = datetime.datetime.utcnow()
                 self.update()
         return self.temperature

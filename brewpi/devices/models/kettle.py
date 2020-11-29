@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 """Kettle models."""
-import threading
-import time
+# import time
 
-import simple_pid
+# import simple_pid
 from flask import current_app
 
 from brewpi.database import Column, PkModel, db, relationship
 
-# from brewpi.extensions import celery
+from ..tasks import add
 
 
 class Kettle(PkModel):
@@ -67,81 +66,67 @@ class Kettle(PkModel):
         self.target_temp = value
         self.update()
 
-    def hysteresis_loop(self):
-        """Hysterises loop to turn hold the kettle as a set temperature."""
-        t = threading.currentThread()
-        while getattr(t, "is_running", True):
-            temp_c = self.current_temp()  # Current temperature
+    # def hysteresis_loop(self):
+    #     """Hysterises loop to turn hold the kettle as a set temperature."""
+    #     t = threading.currentThread()
+    #     while getattr(t, "is_running", True):
+    #         temp_c = self.current_temp()  # Current temperature
 
-            if temp_c + self.hyst_window < self.target_temp:
-                self.heater_enable(True)
-            if temp_c - self.hyst_window < self.target_temp:
-                self.heater_enable(False)
-            time.sleep(5)
-        self.heater_enable(False)
+    #         if temp_c + self.hyst_window < self.target_temp:
+    #             self.heater_enable(True)
+    #         if temp_c - self.hyst_window < self.target_temp:
+    #             self.heater_enable(False)
+    #         time.sleep(5)
+    #     self.heater_enable(False)
 
-    def pid_loop(self):
-        """PID Loop. Values are from craftbeerpi which are roughly the same as ours. hopefully ok?."""
-        p = 44
-        i = 165
-        d = 4
-        sample_time = 5
-        pid = simple_pid.PID(
-            p, i, d, setpoint=self.target_temp
-        )  # dont think this can be changed once started.
-        pid.output_limits = (0, 100)
-        pid.sample_time = sample_time
+    # def pid_loop(self):
+    #     """PID Loop. Values are from craftbeerpi which are roughly the same as ours. hopefully ok?."""
+    #     p = 44
+    #     i = 165
+    #     d = 4
+    #     sample_time = 5
+    #     pid = simple_pid.PID(
+    #         p, i, d, setpoint=self.target_temp
+    #     )  # dont think this can be changed once started.
+    #     pid.output_limits = (0, 100)
+    #     pid.sample_time = sample_time
 
-        t = threading.currentThread()
-        while getattr(t, "is_running", True):
-            heat_percent = pid(self.current_temp())
-            heating_time = pid.sample_time * (heat_percent / 100)
-            wait_time = pid.sample_time - heating_time
-            self.heater_enable(True)
-            time.sleep(heating_time)
-            self.heater_enable(False)
-            time.sleep(wait_time)
-        self.heater_enable(False)
+    #     t = threading.currentThread()
+    #     while getattr(t, "is_running", True):
+    #         heat_percent = pid(self.current_temp())
+    #         heating_time = pid.sample_time * (heat_percent / 100)
+    #         wait_time = pid.sample_time - heating_time
+    #         self.heater_enable(True)
+    #         time.sleep(heating_time)
+    #         self.heater_enable(False)
+    #         time.sleep(wait_time)
+    #     self.heater_enable(False)
 
-    def thread_function(self):
-        """Dummy function to prove threading."""
-        while self.is_running:
-            current_app.logger.info("running")
-            time.sleep(5)
-        print("stopping")
-
-    def add(self, x, y):
-        return x + y
+    # def thread_function(self):
+    #     """Dummy function to prove threading."""
+    #     while self.is_running:
+    #         current_app.logger.info("running")
+    #         time.sleep(5)
+    #     print("stopping")
 
     def start_loop(self):
         """Start Thread if not already active."""
-        # # Creat thread if doesn't already exist.
-        # if not current_app.threads.get(f"{self.name}_id"):
-        #     current_app.threads[f"{self.name}_id"] = threading.Thread(
-        #         target=self.pid_loop
-        #     )
-        # if not current_app.threads[f"{self.name}_id"].is_alive():
-        #     current_app.logger.info(f"{self.name}_id starting")
-        #     current_app.threads[f"{self.name}_id"].start()
-        #     self.is_running = True
-        #     self.update()
-        #     return
-        self.is_running = True
-        # current_app.threads[f"{self.name}_id"] = celery.submit(self.thread_function)
-        # id=current_app.threads[f"{self.name}_id"]
-        # current_app.logger.info(f"{id.running()} is already running")
+        future = add.delay(1, 2, 1)
+        # self.is_running = future.running()
+        # current_app.logger.info(f"thread dir: {dir(future)}")
+        current_app.logger.info(f"thread id: {future.id}")
+        current_app.logger.info(f"thread status: {future.status}")
+        # current_app.logger.info(f"thread result: {future.result()}")
+
+        current_app.logger.info(f"thread answer: {future.get(timeout=1)}")
+        # future.start(4, 5)
+        # current_app.logger.info(f"thread answer: {future.get(timeout=1)}")
+        # current_app.logger.info(f"thread running: {future.running()}")
+        # current_app.logger.info(f"thread {future.result(timeout=1)}")
         return
 
-    def stop_loop(self):
+    def stop_loop(self, future):
         """Stop Thread if not already stopped."""
-        # if current_app.threads.get(f"{self.name}_id"):
-        #     current_app.logger.info("Thread: about to stop")
-        #     self.is_running = False
-        #     current_app.threads[f"{self.name}_id"].is_running = False
-        #     current_app.threads[f"{self.name}_id"].join()
-        #     if not current_app.threads[f"{self.name}_id"].is_alive():
-        #         del current_app.threads[f"{self.name}_id"]
-        #     self.update()
-        # else:
-        self.is_running = False
+        future.cancel()
+        self.is_running = future.is_running()
         current_app.logger.info("thread has already stopped")

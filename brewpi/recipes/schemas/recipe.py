@@ -246,6 +246,7 @@ class RecipeSchema(ma.SQLAlchemyAutoSchema):
         # recipe = data.beerpy
         ret_recipe = self.dump_recipe(data)
         ret_recipe["id"] = data.id
+        ret_recipe["favourite"] = data.favourite
         ret_recipe["hops"] = self.dump_hops(data)
         ret_recipe["fermentables"] = self.dump_fermentables(data)
         ret_recipe["yeasts"] = self.dump_yeasts(data)

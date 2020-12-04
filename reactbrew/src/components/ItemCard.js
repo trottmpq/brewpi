@@ -37,9 +37,6 @@ class ItemCard extends Component {
   };
 
   render() {
-    // const { classes } = this.props;
-
-    console.log(this.props.data);
     return (
       <Card>
         <CardActionArea onClick={this.showModal}>

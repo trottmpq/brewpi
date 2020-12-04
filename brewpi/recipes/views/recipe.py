@@ -11,13 +11,22 @@ nsmodel = api.model(
     "Recipe",
     {
         "id": fields.Integer(readonly=True, description="Recipe Identifier"),
+        "favourite": fields.Boolean(description="Starred Recipe"),
         "xml": fields.String(
-            required=True,
-            description="Recipe XML file",
-            example="brewpi/recipes/xml/sierranevada.xml",
+            required=False,
+            description="Recipe XML",
+            example="<RECIPES><RECIPE> .... ",
         ),
     },
 )
+
+nsmodelfav = api.model(
+    "Recipe",
+    {
+        "favourite": fields.Boolean(description="Starred Recipe")
+    },
+)
+
 
 
 @api.route("/")
@@ -39,7 +48,7 @@ class RecipeList(Resource):
         schema = RecipeSchema()
         data = schema.load(request.get_json())
         if not schema.validate(data):
-            current_app.logger.info(f"New Item Data: {data}")
+            # current_app.logger.info(f"New Item Data: {data}")
             new_item = Recipe.create(**data)
             return schema.dump(new_item)
         return api.abort(404, message="Invalid Fields. Cannot Create Item")
@@ -90,6 +99,46 @@ class RecipeItem(Resource):
             recipe.update()
             return schema.dump(recipe)
         return api.abort(404, message="Invalid Fields. Cannot Update recipe")
+
+
+@api.route("/<id>/favourite")
+@api.param("id", "The Recipe identifier")
+@api.response(404, "Recipe not found")
+class RecipeItemFavourite(Resource):
+    """Retrieve recipe Favourite."""
+    @api.doc(model=nsmodelfav)
+    @api.marshal_with(nsmodelfav)
+    @api.doc("get_recipe_favourite")
+    def get(self, id):
+        """Get if the recipe is a favourite"""
+        schema = RecipeSchema()
+        recipe = Recipe.get_by_id(id)
+        if not recipe:
+            api.abort(404, message="Recipe {} doesn't exist".format(id))
+        ret = dict()
+        ret["favourite"] = recipe.favourite
+        return ret
+
+    @api.doc(model=nsmodelfav, body=nsmodelfav)
+    @api.expect(nsmodelfav)
+    @api.doc("put_recipe_favourite")
+    def put(self, id):
+        """Update a recipe favourite given its identifier."""
+        schema = RecipeSchema()
+        recipe = Recipe.get_by_id(id)
+        if not recipe:
+            api.abort(404, message=f"Recipe {id} doesn't exist")
+
+        data = schema.load(request.get_json(), partial=True)
+        if data:
+            for key, value in data.items():
+                if value is not None:
+                    if hasattr(recipe, key):
+                        setattr(recipe, key, value)
+            recipe.update()
+            return schema.dump(recipe)
+        return api.abort(404, message="Invalid Fields. Cannot Update recipe")
+
 
 
 @api.route("/<id>/yeasts")

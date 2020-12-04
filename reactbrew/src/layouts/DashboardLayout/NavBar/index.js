@@ -6,32 +6,37 @@ import { FaBeer } from 'react-icons/fa';
 import { RiTempColdLine } from 'react-icons/ri';
 import { GiHeatHaze, GiCookingPot, GiWaterDrop } from 'react-icons/gi';
 import NavItem from './NavItem';
-
+import BallotIcon from '@material-ui/icons/Ballot';
 const items = [
   {
-    href: '/app/home',
+    href: '/',
     icon: FaBeer,
     title: 'Home'
   },
   {
-    href: '/app/kettles',
+    href: '/kettles',
     icon: GiCookingPot,
     title: 'Kettles'
   },
   {
-    href: '/app/tempsensors',
+    href: '/tempsensors',
     icon: RiTempColdLine,
     title: 'Temp Sensors'
   },
   {
-    href: '/app/heaters',
+    href: '/heaters',
     icon: GiHeatHaze,
     title: 'Heaters'
   },
   {
-    href: '/app/pumps',
+    href: '/pumps',
     icon: GiWaterDrop,
     title: 'Pumps'
+  },
+  {
+    href: '/recipes',
+    icon: BallotIcon,
+    title: 'Recipes'
   }
 ];
 

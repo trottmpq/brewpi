@@ -73,7 +73,7 @@ module.exports = function(webpackEnv) {
       isEnvDevelopment && require.resolve('style-loader'),
       isEnvProduction && {
         loader: MiniCssExtractPlugin.loader,
-        // css is located in `css`, use '../../' to locate index.html folder
+        // css is located in `static/css`, use '../../' to locate index.html folder
         // in production `paths.publicUrlOrPath` can be a relative path
         options: paths.publicUrlOrPath.startsWith('.')
           ? { publicPath: '../../' }
@@ -167,13 +167,13 @@ module.exports = function(webpackEnv) {
       // In development, it does not produce real files.
       filename: isEnvProduction
         ? 'js/[name].[contenthash:8].js'
-        : isEnvDevelopment && 'js/bundle.js',
+        : isEnvDevelopment && 'static/js/bundle.js',
       // TODO: remove this when upgrading to webpack 5
       futureEmitAssets: true,
       // There are also additional JS chunk files if you use code splitting.
       chunkFilename: isEnvProduction
         ? 'js/[name].[contenthash:8].chunk.js'
-        : isEnvDevelopment && 'js/[name].chunk.js',
+        : isEnvDevelopment && 'static/js/[name].chunk.js',
       // webpack uses `publicPath` to determine where the app is being served from.
       // It requires a trailing slash, or the file assets will get an incorrect path.
       // We inferred the "public path" (such as / or /my-project) from homepage.
@@ -514,8 +514,7 @@ module.exports = function(webpackEnv) {
           {},
           {
             inject: true,
-            template: paths.appHtml,
-            filename: "../../templates/index.html"
+            template: paths.appHtml
           },
           isEnvProduction
             ? {
@@ -531,6 +530,7 @@ module.exports = function(webpackEnv) {
                   minifyCSS: true,
                   minifyURLs: true,
                 },
+                filename: "../../templates/index.html", //added line
               }
             : undefined
         )

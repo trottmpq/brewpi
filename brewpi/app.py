@@ -3,10 +3,10 @@
 import logging
 import sys
 
-from flask import Flask, jsonify, current_app
+from flask import Flask, jsonify, render_template
 from flask_wtf.csrf import CSRFError
 
-from brewpi import commands, devices, recipes, reactbrew
+from brewpi import commands, devices, recipes
 from brewpi.extensions import celery, csrf_protect, db, ma, migrate, restx
 
 
@@ -23,7 +23,14 @@ def create_app(config_object="brewpi.settings"):
     register_shellcontext(app)
     register_commands(app)
     configure_logger(app)
-    register_thread_handles(app)
+    init_celery(app)
+
+    with app.app_context():
+
+        @app.route("/")
+        def index():
+            return render_template("index.html")
+
     return app
 
 
@@ -33,15 +40,13 @@ def register_extensions(app):
     ma.init_app(app)
     csrf_protect.init_app(app)
     migrate.init_app(app, db)
-    celery.init_app(app)
-    # restx.init_app(app)
+    restx.init_app(app)
     return None
 
 
 def register_blueprints(app):
     """Register Flask blueprints."""
-    app.register_blueprint(reactbrew.views.blueprint)
-    app.register_blueprint(devices.views.blueprint, url_prefix="/api/devices")
+    app.register_blueprint(devices.blueprint, url_prefix="/api/devices")
     app.register_blueprint(recipes.views.blueprint, url_prefix="/api/recipes")
     return None
 
@@ -65,8 +70,24 @@ def register_errorhandlers(app):
     return None
 
 
-def register_thread_handles(app):
-    app.threads = dict()
+def init_celery(app=None):
+    """Setup celery with an app context."""
+    app = app or create_app()
+    celery.conf.update(app.config)
+
+    TaskBase = celery.Task
+
+    class ContextTask(TaskBase):
+        """Make celery tasks work with Flask app context."""
+
+        abstract = True
+
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return TaskBase.__call__(self, *args, **kwargs)
+
+    celery.Task = ContextTask
+    return celery
 
 
 def register_shellcontext(app):
@@ -90,6 +111,3 @@ def configure_logger(app):
     handler = logging.StreamHandler(sys.stdout)
     if not app.logger.handlers:
         app.logger.addHandler(handler)
-
-def root():
-    return current_app.send_static_file('index.html')

@@ -7,7 +7,7 @@ from flask import current_app
 
 from brewpi.database import Column, PkModel, db, relationship
 
-from ..tasks import add
+from ..tasks import hysteresis_loop
 
 
 class Kettle(PkModel):
@@ -24,6 +24,8 @@ class Kettle(PkModel):
 
     heater_id = Column(db.Integer(), db.ForeignKey("heaters.id"), nullable=True)
     heater = relationship("Heater", back_populates="kettle", uselist=False)
+
+    task_id = Column(db.String(40), nullable=True)
 
     def __init__(self, name, **kwargs):
         """Create instance."""
@@ -66,67 +68,30 @@ class Kettle(PkModel):
         self.target_temp = value
         self.update()
 
-    # def hysteresis_loop(self):
-    #     """Hysterises loop to turn hold the kettle as a set temperature."""
-    #     t = threading.currentThread()
-    #     while getattr(t, "is_running", True):
-    #         temp_c = self.current_temp()  # Current temperature
+    @property
+    def is_loop_running(self):
+        """Return the status of the control loop."""
+        return self.is_running
 
-    #         if temp_c + self.hyst_window < self.target_temp:
-    #             self.heater_enable(True)
-    #         if temp_c - self.hyst_window < self.target_temp:
-    #             self.heater_enable(False)
-    #         time.sleep(5)
-    #     self.heater_enable(False)
-
-    # def pid_loop(self):
-    #     """PID Loop. Values are from craftbeerpi which are roughly the same as ours. hopefully ok?."""
-    #     p = 44
-    #     i = 165
-    #     d = 4
-    #     sample_time = 5
-    #     pid = simple_pid.PID(
-    #         p, i, d, setpoint=self.target_temp
-    #     )  # dont think this can be changed once started.
-    #     pid.output_limits = (0, 100)
-    #     pid.sample_time = sample_time
-
-    #     t = threading.currentThread()
-    #     while getattr(t, "is_running", True):
-    #         heat_percent = pid(self.current_temp())
-    #         heating_time = pid.sample_time * (heat_percent / 100)
-    #         wait_time = pid.sample_time - heating_time
-    #         self.heater_enable(True)
-    #         time.sleep(heating_time)
-    #         self.heater_enable(False)
-    #         time.sleep(wait_time)
-    #     self.heater_enable(False)
-
-    # def thread_function(self):
-    #     """Dummy function to prove threading."""
-    #     while self.is_running:
-    #         current_app.logger.info("running")
-    #         time.sleep(5)
-    #     print("stopping")
+    @is_loop_running.setter
+    def is_loop_running(self, value):
+        """Set is loop running."""
+        self.is_running = value
+        self.update()
 
     def start_loop(self):
         """Start Thread if not already active."""
-        future = add.delay(1, 2, 1)
-        # self.is_running = future.running()
-        # current_app.logger.info(f"thread dir: {dir(future)}")
-        current_app.logger.info(f"thread id: {future.id}")
-        current_app.logger.info(f"thread status: {future.status}")
-        # current_app.logger.info(f"thread result: {future.result()}")
+        self.is_loop_running = True
+        task = hysteresis_loop.delay(self.id)
+        self.task_id = task.id
+        self.update()
 
-        current_app.logger.info(f"thread answer: {future.get(timeout=1)}")
-        # future.start(4, 5)
-        # current_app.logger.info(f"thread answer: {future.get(timeout=1)}")
-        # current_app.logger.info(f"thread running: {future.running()}")
-        # current_app.logger.info(f"thread {future.result(timeout=1)}")
-        return
+        current_app.logger.info(f"thread id: {task.id}")
+        current_app.logger.info(f"thread status: {task.status}")
 
-    def stop_loop(self, future):
+    def stop_loop(self):
         """Stop Thread if not already stopped."""
-        future.cancel()
-        self.is_running = future.is_running()
-        current_app.logger.info("thread has already stopped")
+        hysteresis_loop.AsyncResult(self.task_id).revoke(terminate=True)
+        self.is_loop_running = False
+        self.heater_enable(False)
+        current_app.logger.info("thread has stopped")

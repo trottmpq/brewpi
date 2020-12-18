@@ -3,7 +3,7 @@
 import logging
 import sys
 
-from flask import Flask, render_template, jsonify
+from flask import Flask, jsonify, render_template
 from flask_wtf.csrf import CSRFError
 
 from brewpi import commands, devices, recipes
@@ -23,12 +23,13 @@ def create_app(config_object="brewpi.settings"):
     register_shellcontext(app)
     register_commands(app)
     configure_logger(app)
-    register_config(app)
+    init_celery(app)
 
     with app.app_context():
-        @app.route('/')
+
+        @app.route("/")
         def index():
-            return render_template('index.html')
+            return render_template("index.html")
 
     return app
 
@@ -39,14 +40,13 @@ def register_extensions(app):
     ma.init_app(app)
     csrf_protect.init_app(app)
     migrate.init_app(app, db)
-    celery.init_app(app)
     restx.init_app(app)
     return None
 
 
 def register_blueprints(app):
     """Register Flask blueprints."""
-    app.register_blueprint(devices.views.blueprint, url_prefix="/api/devices")
+    app.register_blueprint(devices.blueprint, url_prefix="/api/devices")
     app.register_blueprint(recipes.views.blueprint, url_prefix="/api/recipes")
     return None
 
@@ -70,30 +70,24 @@ def register_errorhandlers(app):
     return None
 
 
-def register_config(app):
-    app.brewpi_config = dict()
-    app.brewpi_config["Devices"] = dict()
-    app.brewpi_config["Devices"]["TempSensors"] = dict()
-    app.brewpi_config["Devices"]["Heaters"] = dict()
-    app.brewpi_config["Devices"]["Pumps"] = dict()
-    with app.app_context():
-        for tempsensor in devices.models.TempSensor.query.all():
-            app.brewpi_config["Devices"]["TempSensors"][tempsensor.id] = {
-                "name": tempsensor.name,
-                "gpio_num": tempsensor.gpio_num,
-                "active_low": tempsensor.active_low}
-        for heater in devices.models.Heater.query.all():
-            app.brewpi_config["Devices"]["Heaters"][heater.id] = {
-                "name": heater.name,
-                "gpio_num": heater.gpio_num,
-                "active_low": heater.active_low}
-        for pump in devices.models.Pump.query.all():
-            app.brewpi_config["Devices"]["Pumps"][pump.id] = {
-                "name": pump.name,
-                "gpio_num": pump.gpio_num,
-                "active_low": pump.active_low}
-    print(app.brewpi_config)
+def init_celery(app=None):
+    """Setup celery with an app context."""
+    app = app or create_app()
+    celery.conf.update(app.config)
 
+    TaskBase = celery.Task
+
+    class ContextTask(TaskBase):
+        """Make celery tasks work with Flask app context."""
+
+        abstract = True
+
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return TaskBase.__call__(self, *args, **kwargs)
+
+    celery.Task = ContextTask
+    return celery
 
 
 def register_shellcontext(app):

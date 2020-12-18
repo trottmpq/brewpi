@@ -1,5 +1,5 @@
 #!python
-
+"""Helper function for setting pump on and off."""
 # myls.py
 # Import the argparse library
 import argparse
@@ -8,6 +8,7 @@ import requests
 
 
 def set_pump(kettle_id, onoff):
+    """Set pump on or off."""
     requests.put(
         f"http://127.0.0.1:5000/api/devices/Kettle/{kettle_id}/pumpstate",
         json={"state": onoff},
@@ -15,6 +16,7 @@ def set_pump(kettle_id, onoff):
 
 
 def str2bool(v):
+    """Convert string to boolean."""
     if isinstance(v, bool):
         return v
     if v.lower() in ("yes", "true", "t", "y", "1"):

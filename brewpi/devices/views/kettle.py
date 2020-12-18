@@ -22,6 +22,7 @@ nsmodel = api.model(
         "hyst_window": fields.Float(
             default=0.0, description="Kettle temperature hysteresis"
         ),
+        "task_id": fields.String(readonly=True, description="task id of current loop."),
         "temp_sensor": fields.Nested(tempsensormodel, allow_null=True),
         "pump": fields.Nested(pumpmodel, allow_null=True),
         "heater_id": fields.Integer(
@@ -328,7 +329,7 @@ class KettleItemStartLoop(Resource):
             if data.get("state") is True:
                 kettle.start_loop()
                 current_app.logger.info(f"{kettle.name}'s control loop started")
-                return schema.dump({"state": True})
+                return schema.dump({"state": kettle.is_running})
             if data.get("state") is False:
                 kettle.stop_loop()
                 current_app.logger.info(f"{kettle.name}'s control loop stopped")

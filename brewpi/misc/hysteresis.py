@@ -1,4 +1,5 @@
 #!python
+"""Helper function to run kettle control loop."""
 
 import argparse
 import time
@@ -7,6 +8,7 @@ import requests
 
 
 def get_temp(kettle_id):
+    """Get Temperature."""
     resp = requests.get(
         f"http://localhost:5000/api/devices/Kettle/{kettle_id}/temperature"
     )
@@ -14,6 +16,7 @@ def get_temp(kettle_id):
 
 
 def get_targettemp(kettle_id):
+    """Get Target Temp."""
     resp = requests.get(
         f"http://localhost:5000/api/devices/Kettle/{kettle_id}/targettemp"
     )
@@ -21,6 +24,7 @@ def get_targettemp(kettle_id):
 
 
 def set_heater(kettle_id, onoff):
+    """Set Heater on or off."""
     if onoff:
         print("Heater ON")
     else:
@@ -32,13 +36,14 @@ def set_heater(kettle_id, onoff):
 
 
 def get_hyst_window(kettle_id):
+    """Get Hysteresis Windows."""
     resp = requests.get(f"http://localhost:5000/api/devices/Kettle/{kettle_id}")
     return resp.json().get("hyst_window")
 
 
 def temp_loop(hlt_kettle_id, mash_kettle_id):
     """Hysterises loop to turn hold the kettle as a set temperature."""
-    heaterOn = False
+    heater_on = False
     while True:
         hlt_temp_c = get_temp(hlt_kettle_id)  # Current temperature
         mash_temp_c = get_temp(mash_kettle_id)  # Current temperature
@@ -50,14 +55,14 @@ def temp_loop(hlt_kettle_id, mash_kettle_id):
         if abs(mash_temp_c - hlt_temp_c) > 5:
             print("SLOW THE FLOW")
 
-        if heaterOn:
+        if heater_on:
             if mash_temp_c > (target_temp + hyst_window):
-                heaterOn = False
-                set_heater(mash_kettle_id, heaterOn)
+                heater_on = False
+                set_heater(mash_kettle_id, heater_on)
         else:
             if mash_temp_c < (target_temp - hyst_window):
-                heaterOn = True
-                set_heater(mash_kettle_id, heaterOn)
+                heater_on = True
+                set_heater(mash_kettle_id, heater_on)
         time.sleep(5)
 
 

@@ -2,8 +2,6 @@
 """Temperature models."""
 import datetime
 
-from flask.globals import current_app
-
 from brewpi.database import Column, PkModel, db, relationship
 from brewpi.devices.drivers.temp_sensor import TempSensorDriver
 

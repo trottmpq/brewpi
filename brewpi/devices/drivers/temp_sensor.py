@@ -174,7 +174,7 @@ except ImportError:
             max = 100
             n = datetime.now().time()
             seconds = float(n.second) + float(n.microsecond) / 1000000.0
-            temp_sin = math.sin(seconds * 2 * math.pi / 60 / (self.gpio + 1))+1
+            temp_sin = math.sin(seconds * 2 * math.pi / 60 / (self.gpio + 1)) + 1
             return "{:.2f}".format(round(temp_sin * max / 2, 2))
 
 

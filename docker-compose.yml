@@ -31,7 +31,8 @@ services:
       - "3000:3000"
     volumes:
       - ./:/app
-
+  redis:
+    image: "redis:alpine"
 volumes:
   static-build:
   dev-db:

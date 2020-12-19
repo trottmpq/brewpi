@@ -87,6 +87,14 @@ def init_celery(app=None):
                 return TaskBase.__call__(self, *args, **kwargs)
 
     celery.Task = ContextTask
+
+    celery.conf.beat_schedule = {
+        "add-every-1-second": {
+            "task": "brewpi.devices.tasks.update_temperature",
+            "schedule": 1.0,
+        },
+    }
+
     return celery
 
 

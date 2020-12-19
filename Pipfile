@@ -22,6 +22,7 @@ spidev = {version = "*", sys_platform = "=='armv7l'"}
 pybeerxml = "*"
 flask-restx = "*"
 celery = "*"
+redis = "*"
 
 [dev-packages]
 pytest = "*"

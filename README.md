@@ -2,6 +2,13 @@
 
 A flasky app.
 
+To run the app ensure each command is running in seperate terminals
+```bash
+flask run
+celery -A brewpi.celery_app.celery worker -B
+```
+
+
 ## Docker Quickstart
 
 This app can be run completely using `Docker` and `docker-compose`. **Using Docker is recommended, as it guarantees the application is run using compatible versions of Python and Node**.

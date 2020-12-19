@@ -73,7 +73,7 @@ export default function KettleForm() {
         <Paper>
           <Container maxWidth="sm">
             <Formik
-              initialValues={{ name: ''}}
+              initialValues={{ name: '', heater_id : undefined}}
               validationSchema={Yup.object().shape({
                 name: Yup.string()
                   .max(255)
@@ -131,6 +131,20 @@ export default function KettleForm() {
                     margin="normal"
                     variant="outlined"
                   />
+                  <TextField
+                    type="number"
+                    name="heater_id"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.heater_id}
+                    error={Boolean(touched.heater_id && errors.heater_id)}
+                    fullWidth
+                    helperText={touched.heater_id && errors.heater_id}
+                    label="Heater ID"
+                    margin="normal"
+                    variant="outlined"
+                  />
+
                   <Box my={2}>
                     <Button
                       color="primary"

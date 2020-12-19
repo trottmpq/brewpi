@@ -1,5 +1,5 @@
 """Recipe views."""
-from flask import current_app, request
+from flask import request
 from flask_restx import Namespace, Resource, fields
 
 from ..models import Recipe
@@ -13,20 +13,14 @@ nsmodel = api.model(
         "id": fields.Integer(readonly=True, description="Recipe Identifier"),
         "favourite": fields.Boolean(description="Starred Recipe"),
         "xml": fields.String(
-            required=False,
-            description="Recipe XML",
-            example="<RECIPES><RECIPE> .... ",
+            required=False, description="Recipe XML", example="<RECIPES><RECIPE> .... ",
         ),
     },
 )
 
 nsmodelfav = api.model(
-    "Recipe",
-    {
-        "favourite": fields.Boolean(description="Starred Recipe")
-    },
+    "Recipe", {"favourite": fields.Boolean(description="Starred Recipe")},
 )
-
 
 
 @api.route("/")
@@ -106,11 +100,12 @@ class RecipeItem(Resource):
 @api.response(404, "Recipe not found")
 class RecipeItemFavourite(Resource):
     """Retrieve recipe Favourite."""
+
     @api.doc(model=nsmodelfav)
     @api.marshal_with(nsmodelfav)
     @api.doc("get_recipe_favourite")
     def get(self, id):
-        """Get if the recipe is a favourite"""
+        """Get if the recipe is a favourite."""
         schema = RecipeSchema()
         recipe = Recipe.get_by_id(id)
         if not recipe:
@@ -138,7 +133,6 @@ class RecipeItemFavourite(Resource):
             recipe.update()
             return schema.dump(recipe)
         return api.abort(404, message="Invalid Fields. Cannot Update recipe")
-
 
 
 @api.route("/<id>/yeasts")

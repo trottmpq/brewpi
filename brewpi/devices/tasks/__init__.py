@@ -3,9 +3,10 @@ import time
 
 from flask import current_app
 
-from brewpi.extensions import celery, db
+from brewpi.extensions import celery
 
 from .. import models
+from ..drivers import temp_sensor
 
 
 @celery.task
@@ -28,6 +29,7 @@ def add(x, y, kettle_id):
 def hysteresis_loop(kettle_id):
     """Hysterises loop to turn hold the kettle as a set temperature."""
     kettle = models.Kettle.get_by_id(kettle_id)
+    heater = models.Heater.get_by_id(kettle.heater_id)
     while True:
         temp_c = kettle.current_temp()  # Current temperature
         current_app.logger.info(f"kettle current temp:{temp_c}")
@@ -35,16 +37,18 @@ def hysteresis_loop(kettle_id):
         current_app.logger.info(f"kettle hyst window:{kettle.hyst_window}")
 
         current_app.logger.info(f"kettle heater state:{kettle.heater.current_state}")
-        if kettle.heater.current_state:
+        heater_state = kettle.heater.current_state
+        if heater_state:
             if temp_c > (kettle.target_temp + kettle.hyst_window):
-                kettle.heater_enable(True)
+                heater.turn_off()
+                heater_state = False
                 current_app.logger.info("Turning ON")
         else:
             if temp_c < (kettle.target_temp - kettle.hyst_window):
-                kettle.heater_enable(False)
+                heater.turn_on()
+                heater_state = True
                 current_app.logger.info("Turning OFF")
         time.sleep(5)
-
 
     # def pid_loop(self):
     #     """PID Loop. Values are from craftbeerpi which are roughly the same as ours. hopefully ok?."""
@@ -67,3 +71,8 @@ def hysteresis_loop(kettle_id):
     #         self.heater_enable(False)
     #         time.sleep(wait_time)
     #     self.heater_enable(False)
+
+
+@celery.task
+def update_temperature():
+    temp_sensor.save_temp_to_file()

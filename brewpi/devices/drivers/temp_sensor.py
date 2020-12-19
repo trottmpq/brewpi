@@ -1,12 +1,12 @@
 """Temp Sensor Driver. If we aren't on an RPi, this module still provides dummy data for testing."""
 import math
 import pickle
-from flask import current_app
 
 try:
+    import time
+
     import RPi.GPIO as GPIO  # noqa
     import spidev
-    import time
 
     class TempSensorHAL:
         """SPI Temp Sensor Driver."""
@@ -138,26 +138,29 @@ try:
                 return None
 
     def save_temp_to_file():
-        t16 = TempSensorHAL(16, True)
+        t16 = TempSensorHAL(0, True)
         t16.init()
         t19 = TempSensorHAL(19, True)
         t19.init()
         t20 = TempSensorHAL(20, True)
         t20.init()
         temps = dict()
-        temps["16"] = t16.read_temp_c()
+        temps["0"] = t16.read_temp_c()
         temps["19"] = t19.read_temp_c()
         temps["20"] = t20.read_temp_c()
-        with open('/tmp/temps.p', 'wb') as fp:
+        with open("/tmp/temps.p", "wb") as fp:
             pickle.dump(temps, fp, protocol=pickle.HIGHEST_PROTOCOL)
-    class TempSensorDriver: 
+
+    class TempSensorDriver:
         def get_temp_c(gpio):
             try:
-                with open('/tmp/temps.p', 'rb') as fp:
+                with open("/tmp/temps.p", "rb") as fp:
                     temps = pickle.load(fp)
                     return temps[str(gpio)]
             except:
                 return 0
+
+
 except ImportError:
     from datetime import datetime
 
@@ -173,6 +176,6 @@ except ImportError:
 
 
 if "__main__" == __name__:
-    while True: 
+    while True:
         save_temp_to_file()
         time.sleep(1)

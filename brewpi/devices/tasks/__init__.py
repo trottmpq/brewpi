@@ -42,12 +42,12 @@ def hysteresis_loop(kettle_id):
             if temp_c > (kettle.target_temp + kettle.hyst_window):
                 heater.turn_off()
                 heater_state = False
-                current_app.logger.info("Turning ON")
+                current_app.logger.info("Turning OFF")
         else:
             if temp_c < (kettle.target_temp - kettle.hyst_window):
                 heater.turn_on()
                 heater_state = True
-                current_app.logger.info("Turning OFF")
+                current_app.logger.info("Turning ON")
         time.sleep(5)
 
     # def pid_loop(self):

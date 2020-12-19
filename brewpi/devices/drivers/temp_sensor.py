@@ -1,13 +1,14 @@
 """Temp Sensor Driver. If we aren't on an RPi, this module still provides dummy data for testing."""
 import math
-
+import pickle
 from flask import current_app
 
 try:
     import RPi.GPIO as GPIO  # noqa
     import spidev
+    import time
 
-    class TempSensorDriver:
+    class TempSensorHAL:
         """SPI Temp Sensor Driver."""
 
         _MAX31865_CONFIG_REG = 0x00
@@ -40,7 +41,7 @@ try:
             self.write_spi(self._MAX31865_CONFIG_REG, [self.CONFIG])  # set up device
             r = self.read_spi(self._MAX31865_CONFIG_REG, 1)[0]  # read config back
             if r != self.CONFIG:
-                current_app.logger.error("Error setting config")
+                print("Error setting config")
             self.write_spi(self.REG_HIFLT_MSB, [0xFF])
             self.write_spi(self.REG_HIFLT_LSB, [0xFF])
             self.write_spi(self.REG_LOFLT_MSB, [0])
@@ -90,7 +91,7 @@ try:
             rtdval = r[0] * 256 + r[1]
             if (rtdval % 2) == 1:  # lowest bit is a fault flag
                 r = self.read_spi(self.REG_FLT_STATUS, 1)[0]
-                current_app.logger.error("Error 0x{:02x} detected".format(r))
+                print("Error 0x{:02x} detected".format(r))
                 self.write_spi(
                     self._MAX31865_CONFIG_REG, [self.CONFIG + 2]
                 )  # clear fault
@@ -102,7 +103,7 @@ try:
             rtdval *= self.RREF
             return rtdval
 
-        def get_temp_c(self):
+        def read_temp_c(self):
             """Get Temperature in degrees Celcius."""
             # This maths originates from:
             # http://www.analog.com/media/en/technical-documentation/application-notes/AN709_0.pdf
@@ -129,14 +130,34 @@ try:
                     temp += 2.5859e-3 * math.pow(raw_reading, 2)
                 if temp < 0 or temp > 100:
                     return None
-                current_app.logger.info(f"Gpio={self.gpio_number} Temperature= {temp} ")
+                print(f"Gpio={self.gpio_number} Temperature= {temp} ")
                 return round(temp, 2)
             except:
-                current_app.logger.error("Failed to read temperature")
+                print("Failed to read temperature")
                 self.init()
                 return None
 
-
+    def save_temp_to_file():
+        t16 = TempSensorHAL(16, True)
+        t16.init()
+        t19 = TempSensorHAL(19, True)
+        t19.init()
+        t20 = TempSensorHAL(20, True)
+        t20.init()
+        temps = dict()
+        temps["16"] = t16.read_temp_c()
+        temps["19"] = t19.read_temp_c()
+        temps["20"] = t20.read_temp_c()
+        with open('/tmp/temps.p', 'wb') as fp:
+            pickle.dump(temps, fp, protocol=pickle.HIGHEST_PROTOCOL)
+    class TempSensorDriver: 
+        def get_temp_c(gpio):
+            try:
+                with open('/tmp/temps.p', 'rb') as fp:
+                    temps = pickle.load(fp)
+                    return temps[str(gpio)]
+            except:
+                return 0
 except ImportError:
     from datetime import datetime
 
@@ -158,6 +179,6 @@ except ImportError:
 
 
 if "__main__" == __name__:
-    temp_sensor = TempSensorDriver(0)
-    print(temp_sensor.get_resistance())
-    print(temp_sensor.get_temp_c())
+    while True: 
+        save_temp_to_file()
+        time.sleep(1)

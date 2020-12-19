@@ -27,19 +27,20 @@ class TempSensor(PkModel):
     @property
     def current_temperature(self):
         """Return the current temperature."""
-        update = False
-        if self.temperature_updated:
-            if (datetime.datetime.now() - self.temperature_updated).seconds > 1:
-                update = True
-        else:
-            update = True
+        # update = True
+        # if self.temperature_updated:
+        #     if (datetime.datetime.now() - self.temperature_updated).seconds > 1:
+        #         update = True
+        # else:
+        #     update = True
 
-        if update:
-            new_temp = TempSensorDriver(self.gpio_num, self.active_low).get_temp_c()
-            if new_temp:
-                self.temperature = new_temp
-                self.temperature_updated = datetime.datetime.utcnow()
-                self.update()
+        # if update:
+        newTemp = TempSensorDriver.get_temp_c(self.gpio_num)
+        # if newTemp:
+        #     current_app.brewpi_config["Devices"]["TempSensors"][self.id]['temperature'] = newTemp
+        self.temperature = newTemp
+        # self.temperature_updated = datetime.datetime.utcnow()
+        self.update()
         return self.temperature
 
     def __repr__(self):

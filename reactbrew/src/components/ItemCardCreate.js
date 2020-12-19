@@ -34,7 +34,7 @@ class ItemCardCreate extends Component {
         <Paper >
           <Container maxWidth="sm">
             <Formik
-              initialValues={{ name: "New Name", gpio_num: 0, kettle_id : 0}}
+              initialValues={{ name: "New Name", gpio_num: 0, kettle_id : undefined}}
               validationSchema={Yup.object().shape({
                 name: Yup.string()
                   .max(255)

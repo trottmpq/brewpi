@@ -51,7 +51,7 @@ class KettleCardUpdate extends Component {
         <Paper >
           <Container maxWidth="sm">
             <Formik
-              initialValues={{ name: data.name}}
+              initialValues={{ name: data.name, heater_id : data.heater_id}}
               validationSchema={Yup.object().shape({
                 name: Yup.string()
                   .max(255)
@@ -109,6 +109,19 @@ class KettleCardUpdate extends Component {
                     fullWidth
                     helperText={touched.name && errors.name}
                     label="Name"
+                    margin="normal"
+                    variant="outlined"
+                  />
+                  <TextField
+                    type="number"
+                    name="heater_id"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.heater_id}
+                    error={Boolean(touched.heater_id && errors.heater_id)}
+                    fullWidth
+                    helperText={touched.heater_id && errors.heater_id}
+                    label="Heater ID"
                     margin="normal"
                     variant="outlined"
                   />

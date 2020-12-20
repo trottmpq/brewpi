@@ -145,7 +145,7 @@ try:
         t20 = TempSensorHAL(20, True)
         t20.init()
         temps = dict()
-        temps["0"] = t16.read_temp_c()
+        temps["16"] = t16.read_temp_c()
         temps["19"] = t19.read_temp_c()
         temps["20"] = t20.read_temp_c()
         with open("/tmp/temps.p", "wb") as fp:
@@ -173,6 +173,9 @@ except ImportError:
             seconds = float(n.second) + float(n.microsecond) / 1000000.0
             temp_sin = math.sin(seconds * 2 * math.pi / 60 / (gpio + 1)) + 1
             return "{:.2f}".format(round(temp_sin * max / 2, 2))
+
+    def save_temp_to_file():
+        pass
 
 
 if "__main__" == __name__:

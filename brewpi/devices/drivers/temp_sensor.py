@@ -129,13 +129,13 @@ try:
                     temp += 2.2228 * raw_reading
                     temp += 2.5859e-3 * math.pow(raw_reading, 2)
                 if temp < 0 or temp > 100:
-                    return None
+                    return -1
                 print(f"Gpio={self.gpio_number} Temperature= {temp} ")
                 return round(temp, 2)
             except:
                 print("Failed to read temperature")
                 self.init()
-                return None
+                return -1
 
     def save_temp_to_file():
         t16 = TempSensorHAL(0, True)

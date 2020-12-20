@@ -138,7 +138,7 @@ try:
                 return -1
 
     def save_temp_to_file():
-        t16 = TempSensorHAL(0, True)
+        t16 = TempSensorHAL(16, True)
         t16.init()
         t19 = TempSensorHAL(19, True)
         t19.init()

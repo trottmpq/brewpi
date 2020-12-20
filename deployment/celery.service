@@ -1,0 +1,16 @@
+[Unit]
+Description=Brew Pi
+After=brewpi.service
+
+[Service]
+Type=notify
+User=pi
+WorkingDirectory=/home/pi/brewpi
+ExecStart=pipenv run celery -A brewpi.celery_app.celery worker -B
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

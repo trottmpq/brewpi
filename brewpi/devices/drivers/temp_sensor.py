@@ -148,13 +148,13 @@ try:
         temps["16"] = t16.read_temp_c()
         temps["19"] = t19.read_temp_c()
         temps["20"] = t20.read_temp_c()
-        with open("/tmp/temps.p", "wb") as fp:
+        with open("temps.p", "wb") as fp:
             pickle.dump(temps, fp, protocol=pickle.HIGHEST_PROTOCOL)
 
     class TempSensorDriver:
         def get_temp_c(gpio):
             try:
-                with open("/tmp/temps.p", "rb") as fp:
+                with open("temps.p", "rb") as fp:
                     temps = pickle.load(fp)
                     return temps[str(gpio)]
             except:

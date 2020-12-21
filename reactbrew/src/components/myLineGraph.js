@@ -13,11 +13,11 @@ export default class LineGraph extends Component {
     chartRef = React.createRef();
     
     state = { time : [], 
-        kettle1 : { temperature : [ ], heater : [ ], target_temp : []}
+        kettle1 : { name : "", temperature : [ ], heater : [ ], target_temp : []}
         
     };
     componentDidMount() {
-        this.buildChart();
+        this.getapi();
         this.dataListId = setInterval(() => this.getapi(), 1000);
     }
 
@@ -34,11 +34,14 @@ export default class LineGraph extends Component {
           .then(res => res.json())
           .then(data => {
             //   console.log(data)
+            this.setState({name : data.name})
             let temps = this.state.kettle1.temperature;
             temps.push(data.temp_sensor.temperature)
- 
-            let heat = this.state.kettle1.heater;
-            heat.push(data.heater.state ? 100 : 0)
+            var heat;
+            if(data.heater){
+                heat = this.state.kettle1.heater;
+                heat.push(data.heater.state ? 100 : 0)
+            }
 
             let target_temp = this.state.kettle1.target_temp;
             target_temp.push(data.target_temp)
@@ -68,19 +71,19 @@ export default class LineGraph extends Component {
                 
                 datasets: [
                     {
-                        label: "Kettle 1 Temperature",
+                        label: this.state.name + " Temperature",
                         data: this.state.kettle1.temperature,
                         fill: false,
                         borderColor: "#6610f2"
                     },
                     {
-                        label: "Kettle 1 Heater",
+                        label: this.state.name + " Heater",
                         data: this.state.kettle1.heater,
                         fill: false,
                         borderColor: "#661000"
                     },
                     {
-                        label: "Kettle Set temp",
+                        label: this.state.name + " Set temp",
                         data: this.state.kettle1.target_temp,
                         fill: false,
                         borderColor: "#0010f2"

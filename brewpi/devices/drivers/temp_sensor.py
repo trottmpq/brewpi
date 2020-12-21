@@ -163,14 +163,14 @@ try:
 
 except ImportError:
     from datetime import datetime
-
+    import time
     class TempSensorDriver:
         """Dummy Temp Sensor Driver."""
         def get_temp_c(gpio):
             """Get Temperature in degrees Celcius."""
             max = 100
-            n = datetime.now().time()
-            seconds = float(n.second) + float(n.microsecond) / 1000000.0
+            
+            seconds = time.time()
             temp_sin = math.sin(seconds * 2 * math.pi / 60 / (gpio + 1)) + 1
             return "{:.2f}".format(round(temp_sin * max / 2, 2))
 

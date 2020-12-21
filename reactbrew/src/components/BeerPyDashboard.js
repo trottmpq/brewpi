@@ -16,14 +16,31 @@ export default class BeerPyDashboard extends Component {
         },
       },
     }));
-
-    state = { kettle_ids : [1, 2, 3 ]}
+    componentDidMount() {
+        this.getapi();
+        // this.dataListId = setInterval(() => this.getapi(), 1000);
+    }
+    
+      componentWillUnmount() {
+        // clearInterval(this.dataListId);
+      }
+    
+      getapi() {
+        fetch("/api/devices/Kettle/")
+          .then(res => res.json())
+          .then(data => {
+            var kettles = data.map(x => x.id);
+            this.setState({kettle_ids : kettles});
+          })
+          .catch(console.log);
+      }
+    state = { kettle_ids : []}
     render() {
         return (
             <div className={this.useStyles.root}>
                 <Grid container spacing={3}>
                 {this.state.kettle_ids.map(data => (
-                    <Grid item xs={6} key={data}> 
+                    <Grid item xs={4} key={data}> 
                         <Paper elevation={3} >
                             <KettleChart  kettle_id={data}/>
                         </Paper>

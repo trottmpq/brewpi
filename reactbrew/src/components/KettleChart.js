@@ -38,8 +38,11 @@ export default class KettleChart extends Component {
           .then(data => {
             //   console.log(data)
             this.setState({name : data.name})
-            let temps = this.state.kettle1.temperature;
-            temps.push(data.temp_sensor.temperature)
+            var temps;
+            if(data.temp_sensor){
+                temps = this.state.kettle1.temperature;
+                temps.push(data.temp_sensor.temperature)
+            }
             var heat;
             if(data.heater){
                 heat = this.state.kettle1.heater;

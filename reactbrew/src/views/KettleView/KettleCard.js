@@ -14,6 +14,10 @@ import EditIcon from '@material-ui/icons/Edit';
 import Slider from '@material-ui/core/Slider';
 import Dialog from '@material-ui/core/Dialog';
 import KettleCardUpdate from './KettleCardUpdate'
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
 
 const styles = theme => ({
   modal: {
@@ -107,7 +111,22 @@ class ItemCard extends Component {
     }, 400);
   };
 
-
+  controlTypeChanged= (event, value, id) =>{
+    var baseStr = this.props.URL;
+    var endpointStr = baseStr.concat(id)
+    var values={ control_type: value.props.value }
+    setTimeout(() => {
+        fetch(endpointStr, {
+        method: 'PUT',
+        body: JSON.stringify(values, null, 2),
+        headers: { 'Content-Type': 'application/json' }
+        })
+        .then(res => res.json())
+        .catch(error => console.error('Error:', error))
+        .then(response => console.log('Success:', response));
+    }, 400);
+  };
+  
   valuetext(value) {
     return `${value}°C`;
   }
@@ -175,6 +194,28 @@ class ItemCard extends Component {
                     disabled = {this.props.data["heater"] != null ? false : true }
                     />
                 </Grid>
+
+                <Grid item xs={6}>
+                <Typography color="textSecondary">
+                Control Type
+                </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                <FormControl >
+                  
+                  <Select
+                    labelId="demo-customized-select-label"
+                    id="demo-customized-select"
+                    value={this.props.data.control_type}
+                    onChange={(e, val) => this.controlTypeChanged(e, val, this.props.data.id)}
+                  >
+                    <MenuItem value={"ControlType.PWM"}>PWM</MenuItem>
+                    <MenuItem value={"ControlType.HYSTERESIS"}>Hysteresis</MenuItem>
+                    <MenuItem value={"ControlType.PID"}>PID</MenuItem>
+                  </Select>
+                </FormControl>
+                </Grid>
+
                 <Grid item xs={6}>
                 <Typography color="textSecondary">
                 Target Temperature

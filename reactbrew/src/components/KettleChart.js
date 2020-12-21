@@ -2,16 +2,19 @@ import React, { Component } from 'react'
 import Chart from "chart.js";
 import classes from "./LineGraph.module.css";
 import PropTypes from 'prop-types';
-let myLineChart;
+
 
 //--Chart Style Options--//
 // Chart.defaults.global.defaultFontFamily = "'PT Sans', sans-serif"
 // Chart.defaults.global.legend.display = false;
 //--Chart Style Options--//
 
-export default class LineGraph extends Component {
-    chartRef = React.createRef();
-    
+export default class KettleChart extends Component {
+    constructor(props) {
+        super(props);
+        this.chartRef = React.createRef();
+        // var this.myLineChart = undefined;
+      }
     state = { time : [], 
         kettle1 : { name : "", temperature : [ ], heater : [ ], target_temp : []}
         
@@ -20,7 +23,7 @@ export default class LineGraph extends Component {
         this.getapi();
         this.dataListId = setInterval(() => this.getapi(), 1000);
     }
-
+    
     componentDidUpdate() {
         this.buildChart();
     }
@@ -60,10 +63,12 @@ export default class LineGraph extends Component {
       }
     buildChart = () => {
         const myChartRef = this.chartRef.current.getContext("2d");
+        // const chartid = "myChart" + this.props.kettle_id;
+        // const myChartRef = document.getElementById(chartid).getContext("2d");
+        if (typeof this.myLineChart !== "undefined") 
+            this.myLineChart.destroy();
 
-        if (typeof myLineChart !== "undefined") myLineChart.destroy();
-
-        myLineChart = new Chart(myChartRef, {
+        this.myLineChart = new Chart(myChartRef, {
             type: "line",
             data: {
                 //Bring in data
@@ -129,6 +134,6 @@ export default class LineGraph extends Component {
         )
     }
 }
-LineGraph.propTypes = {
+KettleChart.propTypes = {
     kettle_id: PropTypes.number.isRequired
   };

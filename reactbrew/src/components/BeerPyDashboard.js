@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import MyLineGraph from 'src/components/myLineGraph';
+import KettleChart from 'src/components/KettleChart';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-
 
 export default class BeerPyDashboard extends Component {
     useStyles = makeStyles((theme) => ({
@@ -18,17 +17,18 @@ export default class BeerPyDashboard extends Component {
       },
     }));
 
-    state = { kettle_ids : 1}
+    state = { kettle_ids : [1, 2, 3 ]}
     render() {
-
         return (
             <div className={this.useStyles.root}>
                 <Grid container spacing={3}>
-                    <Grid item xs={6}> 
+                {this.state.kettle_ids.map(data => (
+                    <Grid item xs={6} key={data}> 
                         <Paper elevation={3} >
-                            <MyLineGraph  kettle_id={this.state.kettle_ids}/>
+                            <KettleChart  kettle_id={data}/>
                         </Paper>
                     </Grid>
+                    ))}
                 </Grid>
             </div>
         )

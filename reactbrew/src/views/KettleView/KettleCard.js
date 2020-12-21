@@ -209,9 +209,9 @@ class ItemCard extends Component {
                     value={this.props.data.control_type}
                     onChange={(e, val) => this.controlTypeChanged(e, val, this.props.data.id)}
                   >
-                    <MenuItem value={"ControlType.PWM"}>PWM</MenuItem>
-                    <MenuItem value={"ControlType.HYSTERESIS"}>Hysteresis</MenuItem>
-                    <MenuItem value={"ControlType.PID"}>PID</MenuItem>
+                    <MenuItem value={"PWM"}>PWM</MenuItem>
+                    <MenuItem value={"HYSTERESIS"}>Hysteresis</MenuItem>
+                    <MenuItem value={"PID"}>PID</MenuItem>
                   </Select>
                 </FormControl>
                 </Grid>

@@ -11,7 +11,11 @@ Flask-SQLAlchemy = "*"
 SQLAlchemy = "*"
 Flask-Migrate = "*"
 marshmallow-sqlalchemy = "*"
+marshmallow-enum = "*"
 flask-marshmallow = "*"
+celery = "*"
+redis = "*"
+flask-restx = "*"
 Flask-WTF = "*"
 WTForms = "*"
 supervisor = "*"
@@ -20,9 +24,6 @@ simple-pid = "*"
 spidev = {version = "*", sys_platform = "=='armv7l'"}
 "rpi.gpio" = {version = "*", sys_platform = "=='armv7l'"}
 pybeerxml = "*"
-flask-restx = "*"
-celery = "*"
-redis = "*"
 
 [dev-packages]
 pytest = "*"

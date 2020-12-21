@@ -22,7 +22,9 @@ nsmodel = api.model(
         "hyst_window": fields.Float(
             default=0.0, description="Kettle temperature hysteresis"
         ),
-        "control_type": fields.String(default="HYSTERESIS", description="type of control for the kettle"),
+        "control_type": fields.String(
+            description="type of control for the kettle",
+            enum=[x.name for x in Kettle.ControlType]),
         "task_id": fields.String(readonly=True, description="task id of current loop."),
         "temp_sensor": fields.Nested(tempsensormodel, allow_null=True),
         "pump": fields.Nested(pumpmodel, allow_null=True),
@@ -89,6 +91,11 @@ class KettleList(Resource):
         # print(api.payload)
         # return Kettle.create(**api.payload), 201
         data = schema.load(request.get_json())
+
+        # Need to validate enum by name not enum. bit hacky and may be a neater way
+        if data.get('control_type'):
+            data['control_type'] = data['control_type'].name
+
         if not schema.validate(data):
             current_app.logger.info(f"New Item Data: {data}")
             new_item = Kettle.create(**data)

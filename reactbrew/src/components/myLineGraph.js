@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Chart from "chart.js";
 import classes from "./LineGraph.module.css";
+import PropTypes from 'prop-types';
 let myLineChart;
 
 //--Chart Style Options--//
@@ -11,7 +12,10 @@ let myLineChart;
 export default class LineGraph extends Component {
     chartRef = React.createRef();
     
-    state = { time : [], data1 : [], data2 : [], data3 : []};
+    state = { time : [], 
+        kettle1 : { temperature : [ ], heater : [ ], target_temp : []}
+        
+    };
     componentDidMount() {
         this.buildChart();
         this.dataListId = setInterval(() => this.getapi(), 1000);
@@ -26,36 +30,33 @@ export default class LineGraph extends Component {
       }
     
       getapi() {
-        fetch("/api/devices/Kettle/1/temperature")
+        fetch("/api/devices/Kettle/".concat(this.props.kettle_id))
           .then(res => res.json())
           .then(data => {
-            this.state.data1.push(data.temperature)
-            this.state.time.push(new Date())
-            this.buildChart()
+            //   console.log(data)
+            let temps = this.state.kettle1.temperature;
+            temps.push(data.temp_sensor.temperature)
+ 
+            let heat = this.state.kettle1.heater;
+            heat.push(data.heater.state ? 100 : 0)
+
+            let target_temp = this.state.kettle1.target_temp;
+            target_temp.push(data.target_temp)
+
+            this.setState({kettle1 :{temperature : temps, heater : heat, target_temp: target_temp}})
+
+            let times = this.state.time;
+            times.push(new Date())
+            this.setState({time : times})
           })
           .catch(console.log);
 
-          fetch("/api/devices/Kettle/2/temperature")
-          .then(res => res.json())
-          .then(data => {
-            this.state.data2.push(data.temperature)
-            this.buildChart()
-          })
-          .catch(console.log);
-
-          fetch("/api/devices/Kettle/3/temperature")
-          .then(res => res.json())
-          .then(data => {
-            this.state.data3.push(data.temperature)
-            this.buildChart()
-          })
-          .catch(console.log);
+          
 
 
       }
     buildChart = () => {
         const myChartRef = this.chartRef.current.getContext("2d");
-        // const { data, labels } = this.props;
 
         if (typeof myLineChart !== "undefined") myLineChart.destroy();
 
@@ -64,25 +65,26 @@ export default class LineGraph extends Component {
             data: {
                 //Bring in data
                 labels: this.state.time,
+                
                 datasets: [
                     {
                         label: "Kettle 1 Temperature",
-                        data: this.state.data1,
+                        data: this.state.kettle1.temperature,
                         fill: false,
                         borderColor: "#6610f2"
                     },
                     {
-                        label: "Kettle 2 Temperature",
-                        data: this.state.data2,
+                        label: "Kettle 1 Heater",
+                        data: this.state.kettle1.heater,
+                        fill: false,
+                        borderColor: "#661000"
+                    },
+                    {
+                        label: "Kettle Set temp",
+                        data: this.state.kettle1.target_temp,
                         fill: false,
                         borderColor: "#0010f2"
                     },
-                    {
-                        label: "Kettle 3 Temperature",
-                        data: this.state.data3,
-                        fill: false,
-                        borderColor: "#661000"
-                    }
                     
                 ]
             },
@@ -124,3 +126,6 @@ export default class LineGraph extends Component {
         )
     }
 }
+LineGraph.propTypes = {
+    kettle_id: PropTypes.number.isRequired
+  };

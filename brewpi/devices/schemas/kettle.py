@@ -1,5 +1,6 @@
 """Heater schemas."""
 from marshmallow import fields
+from marshmallow.validate import OneOf
 
 from brewpi.extensions import ma
 
@@ -18,6 +19,7 @@ class KettleSchema(ma.SQLAlchemyAutoSchema):
         model = Kettle
         include_fk = True
 
+    control_type = fields.String(validate=OneOf(["PWM", "HYSTERESIS", "PID"]))
     temp_sensor = fields.Nested(TempSensorSchema, many=False)
     pump = fields.Nested(PumpSchema, many=False)
     heater = fields.Nested(HeaterSchema, many=False)

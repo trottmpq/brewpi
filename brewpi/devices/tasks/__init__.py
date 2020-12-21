@@ -72,6 +72,19 @@ def hysteresis_loop(kettle_id):
     #         time.sleep(wait_time)
     #     self.heater_enable(False)
 
+@celery.task
+def pwm_loop(kettle_id):
+    """PWM loop to keep the kettle at at boiling temperature with reduced power."""
+    kettle = models.Kettle.get_by_id(kettle_id)
+    heater = models.Heater.get_by_id(kettle.heater_id)
+    while True:
+        heater.turn_off()
+        current_app.logger.info("Turning OFF")
+        time.sleep(1)
+        heater.turn_on()
+        current_app.logger.info("Turning ON")
+        time.sleep(8)
+
 
 @celery.task
 def update_temperature():

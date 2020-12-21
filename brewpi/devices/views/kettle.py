@@ -22,6 +22,7 @@ nsmodel = api.model(
         "hyst_window": fields.Float(
             default=0.0, description="Kettle temperature hysteresis"
         ),
+        "control_type": fields.String(default="HYSTERESIS", description="type of control for the kettle"),
         "task_id": fields.String(readonly=True, description="task id of current loop."),
         "temp_sensor": fields.Nested(tempsensormodel, allow_null=True),
         "pump": fields.Nested(pumpmodel, allow_null=True),

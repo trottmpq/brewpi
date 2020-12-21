@@ -1,23 +1,29 @@
 # -*- coding: utf-8 -*-
 """Kettle models."""
-# import time
+import enum
 
 # import simple_pid
 from flask import current_app
 
 from brewpi.database import Column, PkModel, db, relationship
 
-from ..tasks import hysteresis_loop
+from ..tasks import hysteresis_loop, pwm_loop
 
 
 class Kettle(PkModel):
     """A Kettle."""
+
+    class ControlType(enum.Enum):
+        PWM = 1
+        HYSTERESIS = 2
+        PID = 3
 
     __tablename__ = "kettles"
     name = Column(db.String(80), unique=True, nullable=False)
     target_temp = Column(db.Float(), default=0.0)
     is_running = Column(db.Boolean(), default=False, nullable=False)
     hyst_window = Column(db.Float(), default=5.0)
+    control_type = Column(db.Enum(ControlType), default=ControlType.HYSTERESIS)
 
     temp_sensor = relationship("TempSensor", back_populates="kettle", uselist=False)
     pump = relationship("Pump", back_populates="kettle", uselist=False)
@@ -82,12 +88,18 @@ class Kettle(PkModel):
     def start_loop(self):
         """Start Thread if not already active."""
         self.is_loop_running = True
-        task = hysteresis_loop.delay(self.id)
-        self.task_id = task.id
-        self.update()
+        if self.control_type == self.ControlType.HYSTERESIS:
+            task = hysteresis_loop.delay(self.id)
+            self.task_id = task.id
+            self.update()
+        else:
+            task = pwm_loop.delay(self.id)
+            self.task_id = task.id
+            self.update()
 
         current_app.logger.info(f"thread id: {task.id}")
         current_app.logger.info(f"thread status: {task.status}")
+        current_app.logger.info(f"thread type: {self.control_type}")
 
     def stop_loop(self):
         """Stop Thread if not already stopped."""

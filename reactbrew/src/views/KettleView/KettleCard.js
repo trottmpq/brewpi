@@ -207,6 +207,7 @@ class ItemCard extends Component {
                     labelId="demo-customized-select-label"
                     id="demo-customized-select"
                     value={this.props.data.control_type}
+                    disabled = {this.props.data.is_running}
                     onChange={(e, val) => this.controlTypeChanged(e, val, this.props.data.id)}
                   >
                     <MenuItem value={"PWM"}>PWM</MenuItem>

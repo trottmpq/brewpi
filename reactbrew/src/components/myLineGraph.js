@@ -122,7 +122,7 @@ export default class LineGraph extends Component {
         return (
             <div className={classes.graphContainer}>
                 <canvas
-                    id="myChart"
+                    id={"myChart" + this.props.kettle_id}
                     ref={this.chartRef}
                 />
             </div>

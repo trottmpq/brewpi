@@ -40,7 +40,7 @@ export default class BeerPyDashboard extends Component {
             <div className={this.useStyles.root}>
                 <Grid container spacing={3}>
                 {this.state.kettle_ids.map(data => (
-                    <Grid item xs={4} key={data}> 
+                    <Grid item xs={12} key={data}> 
                         <Paper elevation={3} >
                             <KettleChart  kettle_id={data}/>
                         </Paper>

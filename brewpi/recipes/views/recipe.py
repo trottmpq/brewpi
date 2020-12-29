@@ -114,7 +114,7 @@ class RecipeItemFavourite(Resource):
         ret["favourite"] = recipe.favourite
         return ret
 
-    @api.doc(model=nsmodelfav, body=nsmodelfav)
+    @api.doc(model=nsmodelfav)
     @api.expect(nsmodelfav)
     @api.doc("put_recipe_favourite")
     def put(self, id):

@@ -128,7 +128,7 @@ class PumpItemState(Resource):
             api.abort(404, message="Pump {} doesn't exist".format(id))
         return schema.dump({"state": query.current_state})
 
-    @api.doc(model=nsmodelstat, body=nsmodelstat)
+    @api.doc(model=nsmodelstat)
     @api.expect(nsmodelstat)
     def put(self, id):
         """Update the pump state."""

@@ -3,6 +3,7 @@
 
 import pytest
 
+from brewpi.devices.drivers import GpioControl
 from brewpi.devices.models import Pump
 
 
@@ -51,11 +52,21 @@ class TestPump:
         pump.update(gpio_num=2)
         assert 2 == pump.gpio_num
 
-    def test_turn_on_turn_off(self):
+    def test_turn_on_turn_off(self, mocker):
         """Test turns on then off."""
-        pump = Pump.create(name="foo", gpio_num=1)
-        assert Pump.query.get(pump.id).current_state is False
+        mocker.patch("brewpi.devices.drivers.GpioControl.write")
+        Pump.create(name="foo", gpio_num=1)
+        pump = Pump.query.get(1)
+        assert pump.current_state is False
+        assert not GpioControl.write.called
         pump.turn_on()
-        assert Pump.query.get(pump.id).current_state is True
+        assert pump.current_state is True
+        assert GpioControl.write.assert_called_once
         pump.turn_off()
-        assert Pump.query.get(pump.id).current_state is False
+        assert pump.current_state is False
+        assert GpioControl.write.assert_called
+
+    def test_repr(self):
+        """Test for the repr method."""
+        pump = Pump.create(name="foo", gpio_num=1)
+        assert repr(pump) == "<Pump(foo: 1, False)>"

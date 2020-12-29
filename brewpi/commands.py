@@ -12,11 +12,32 @@ TEST_PATH = os.path.join(PROJECT_ROOT, "tests")
 
 
 @click.command()
-def test():
+@click.option(
+    "-c",
+    "--coverage",
+    default=False,
+    is_flag=True,
+    help="Display a coverage report after running the tests.",
+)
+def test(coverage):
     """Run the tests."""
+    if coverage:
+        import coverage
+
     import pytest
 
+    if coverage:
+        cov = coverage.Coverage(branch=True, include='brewpi/*')
+        cov.start()
+
     rv = pytest.main([TEST_PATH, "--verbose"])
+
+    if coverage:
+        cov.stop()
+        cov.save()
+        print('Coverage Summary:')
+        cov.report(show_missing=True, ignore_errors=True, skip_empty=False)
+
     exit(rv)
 
 

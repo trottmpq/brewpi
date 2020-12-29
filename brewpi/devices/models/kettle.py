@@ -14,6 +14,8 @@ class Kettle(PkModel):
     """A Kettle."""
 
     class ControlType(enum.Enum):
+        """Enum for types of control."""
+
         PWM = 1
         HYSTERESIS = 2
         PID = 3

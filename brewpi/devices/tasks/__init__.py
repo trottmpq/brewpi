@@ -6,7 +6,7 @@ from flask import current_app
 from brewpi.extensions import celery
 
 from .. import models
-from ..drivers import temp_sensor
+from ..drivers import save_temp_to_file
 
 
 @celery.task
@@ -89,4 +89,4 @@ def pwm_loop(kettle_id):
 
 @celery.task
 def update_temperature():
-    temp_sensor.save_temp_to_file()
+    save_temp_to_file()

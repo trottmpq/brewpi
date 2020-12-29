@@ -27,7 +27,7 @@ def test(coverage):
     import pytest
 
     if coverage:
-        cov = coverage.Coverage(branch=True, include='brewpi/*')
+        cov = coverage.Coverage(branch=True, include="brewpi/*")
         cov.start()
 
     rv = pytest.main([TEST_PATH, "--verbose"])
@@ -35,7 +35,7 @@ def test(coverage):
     if coverage:
         cov.stop()
         cov.save()
-        print('Coverage Summary:')
+        print("Coverage Summary:")
         cov.report(show_missing=True, ignore_errors=True, skip_empty=False)
 
     exit(rv)

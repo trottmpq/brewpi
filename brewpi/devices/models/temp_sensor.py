@@ -3,7 +3,7 @@
 import datetime
 
 from brewpi.database import Column, PkModel, db, relationship
-from brewpi.devices.drivers.temp_sensor import TempSensorDriver
+from brewpi.devices.drivers import TempSensorDriver
 
 
 class TempSensor(PkModel):
@@ -22,24 +22,12 @@ class TempSensor(PkModel):
         """Create instance."""
         super().__init__(name=name, gpio_num=gpio_num, **kwargs)
         self.temperature = 0.0
-        # self.temp_sensor = TempSensorDriver(self.gpio_num, self.active_low)
 
     @property
     def current_temperature(self):
         """Return the current temperature."""
-        # update = True
-        # if self.temperature_updated:
-        #     if (datetime.datetime.now() - self.temperature_updated).seconds > 1:
-        #         update = True
-        # else:
-        #     update = True
 
-        # if update:
-        newTemp = TempSensorDriver.get_temp_c(self.gpio_num)
-        # if newTemp:
-        #     current_app.brewpi_config["Devices"]["TempSensors"][self.id]['temperature'] = newTemp
-        self.temperature = newTemp
-        # self.temperature_updated = datetime.datetime.utcnow()
+        self.temperature = TempSensorDriver.get_temp_c(self.gpio_num)
         self.update()
         return self.temperature
 

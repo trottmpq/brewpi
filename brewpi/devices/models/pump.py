@@ -2,7 +2,7 @@
 """Pump models."""
 
 from brewpi.database import Column, PkModel, db, relationship
-from brewpi.devices.drivers.gpio_control import GpioControl
+from brewpi.devices.drivers import GpioControl
 
 
 class Pump(PkModel):

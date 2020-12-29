@@ -54,5 +54,5 @@ class TestTempSensor:
     def test_current_temperature(self):
         """Test current temperature gets the latest temp."""
         temp_sensor = TempSensor.create(name="foo", gpio_num=1)
-        assert TempSensor.get_by_id(1).current_temperature != 0.0
+        assert TempSensor.get_by_id(1).current_temperature == 0.0
         assert type(TempSensor.query.get(temp_sensor.id).current_temperature) is float

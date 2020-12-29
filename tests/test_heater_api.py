@@ -26,7 +26,6 @@ class TestHeater:
             "active_low": False,
             "gpio_num": 1,
             "id": 1,
-            "kettle_id": None,
             "name": "Heater1",
             "state": False,
         }
@@ -43,7 +42,6 @@ class TestHeater:
                 "active_low": False,
                 "gpio_num": 1,
                 "id": 1,
-                "kettle_id": None,
                 "name": "Heater1",
                 "state": False,
             },
@@ -51,7 +49,6 @@ class TestHeater:
                 "active_low": False,
                 "gpio_num": 2,
                 "id": 2,
-                "kettle_id": None,
                 "name": "Heater2",
                 "state": False,
             },

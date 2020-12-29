@@ -31,7 +31,12 @@ class TestKettle:
         kettle = Kettle.create(name="foo")
 
         assert "foo" == kettle.name
-        assert kettle.state is False
+        assert kettle.target_temp == 0.0
+        assert kettle.is_running is False
+        assert kettle.hyst_window == 5.0
+        assert kettle.control_type == Kettle.ControlType.HYSTERESIS
+        assert kettle.task_id is None
+        assert kettle.heater_id is None
         assert Kettle.get_by_id(kettle.id) is kettle
 
     def test_create_method_kwargs(self):
@@ -40,7 +45,12 @@ class TestKettle:
         kettle = Kettle.create(**data)
 
         assert "foo" == kettle.name
-        assert kettle.state is False
+        assert kettle.target_temp == 0.0
+        assert kettle.is_running is False
+        assert kettle.hyst_window == 5.0
+        assert kettle.control_type == Kettle.ControlType.HYSTERESIS
+        assert kettle.task_id is None
+        assert kettle.heater_id is None
         assert Kettle.get_by_id(kettle.id) is kettle
 
     def test_update_method(self):

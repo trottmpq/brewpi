@@ -3,6 +3,7 @@
 
 import pytest
 
+from brewpi.devices.drivers import GpioControl
 from brewpi.devices.models import Heater
 
 
@@ -51,11 +52,21 @@ class TestHeater:
         heater.update(gpio_num=2)
         assert 2 == heater.gpio_num
 
-    def test_turn_on_turn_off(self):
+    def test_turn_on_turn_off(self, mocker):
         """Test turns on then off."""
-        heater = Heater.create(name="foo", gpio_num=1)
-        assert Heater.query.get(heater.id).current_state is False
+        mocker.patch("brewpi.devices.drivers.GpioControl.write")
+        Heater.create(name="foo", gpio_num=1)
+        heater = Heater.query.get(1)
+        assert heater.current_state is False
+        assert not GpioControl.write.called
         heater.turn_on()
-        assert Heater.query.get(heater.id).current_state is True
+        assert heater.current_state is True
+        assert GpioControl.write.assert_called_once
         heater.turn_off()
-        assert Heater.query.get(heater.id).current_state is False
+        assert heater.current_state is False
+        assert GpioControl.write.assert_called
+
+    def test_repr(self):
+        """Test for the repr method."""
+        heater = Heater.create(name="foo", gpio_num=1)
+        assert repr(heater) == "<Heater(foo: 1, False)>"

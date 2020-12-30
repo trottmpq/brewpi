@@ -35,21 +35,22 @@ class Kettle(PkModel):
 
     task_id = Column(db.String(40), nullable=True)
 
-    def __init__(self, name, **kwargs):
+    def __init__(self, name, **kwargs) -> None:
         """Create instance."""
         super().__init__(name=name, **kwargs)
-        # self.control_loop = threading.Thread(target=self.hysteresis_loop)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Represent instance as a unique string."""
         return f"<Kettle({self.name})>"
 
-    def current_temp(self):
+    @property
+    def current_temp(self) -> float:
         """Get current temp of kettle."""
         if self.temp_sensor:
             return self.temp_sensor.current_temperature
+        return 0.0
 
-    def heater_enable(self, state):
+    def heater_enable(self, state: bool) -> None:
         """Turn heater in kettle on or off."""
         if self.heater:
             if state:
@@ -57,7 +58,7 @@ class Kettle(PkModel):
             else:
                 self.heater.turn_off()
 
-    def pump_enable(self, state):
+    def pump_enable(self, state: bool) -> None:
         """Turn pump in kettle on or off."""
         if self.pump:
             if state:
@@ -66,23 +67,23 @@ class Kettle(PkModel):
                 self.pump.turn_off()
 
     @property
-    def current_target_temperature(self):
+    def current_target_temperature(self) -> float:
         """Return the current temperature."""
         return self.target_temp
 
     @current_target_temperature.setter
-    def current_target_temperature(self, value):
+    def current_target_temperature(self, value: float) -> float:
         """Return the current temperature."""
         self.target_temp = value
         self.update()
 
     @property
-    def is_loop_running(self):
+    def is_loop_running(self) -> bool:
         """Return the status of the control loop."""
         return self.is_running
 
     @is_loop_running.setter
-    def is_loop_running(self, value):
+    def is_loop_running(self, value: bool) -> bool:
         """Set is loop running."""
         self.is_running = value
         self.update()

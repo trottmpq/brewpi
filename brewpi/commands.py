@@ -9,6 +9,7 @@ import click
 HERE = os.path.abspath(os.path.dirname(__file__))
 PROJECT_ROOT = os.path.join(HERE, os.pardir)
 TEST_PATH = os.path.join(PROJECT_ROOT, "tests")
+APP_PATH = os.path.join(PROJECT_ROOT, "brewpi")
 
 
 @click.command()
@@ -21,22 +22,14 @@ TEST_PATH = os.path.join(PROJECT_ROOT, "tests")
 )
 def test(coverage):
     """Run the tests."""
-    if coverage:
-        import coverage
-
     import pytest
 
     if coverage:
-        cov = coverage.Coverage(branch=True, include="brewpi/*")
-        cov.start()
+        args = [f"--cov={APP_PATH}", TEST_PATH, "--verbose"]
+    else:
+        args = [TEST_PATH, "--verbose"]
 
-    rv = pytest.main([TEST_PATH, "--verbose"])
-
-    if coverage:
-        cov.stop()
-        cov.save()
-        print("Coverage Summary:")
-        cov.report(show_missing=True, ignore_errors=True, skip_empty=False)
+    rv = pytest.main(args)
 
     exit(rv)
 

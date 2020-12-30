@@ -31,7 +31,7 @@ def hysteresis_loop(kettle_id):
     kettle = models.Kettle.get_by_id(kettle_id)
     heater = models.Heater.get_by_id(kettle.heater_id)
     while True:
-        temp_c = kettle.current_temp()  # Current temperature
+        temp_c = kettle.current_temp  # Current temperature
         current_app.logger.info(f"kettle current temp:{temp_c}")
         current_app.logger.info(f"kettle target temp:{kettle.target_temp}")
         current_app.logger.info(f"kettle hyst window:{kettle.hyst_window}")
@@ -63,7 +63,7 @@ def hysteresis_loop(kettle_id):
     #     pid.sample_time = sample_time
 
     #     while kettle.is_loop_running:
-    #         heat_percent = pid(self.current_temp())
+    #         heat_percent = pid(self.current_temp)
     #         heating_time = pid.sample_time * (heat_percent / 100)
     #         wait_time = pid.sample_time - heating_time
     #         self.heater_enable(True)
